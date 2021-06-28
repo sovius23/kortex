@@ -1,0 +1,53 @@
+.create-project__container{
+    position: fixed;
+    display: flex;
+    align-items: center;
+    width: 100%;
+    justify-content: center;
+    z-index: 1;
+}
+
+.backdrop{
+    position: absolute;
+    top:0px;
+    width: 100vw;
+    height: 100vh;
+    background-color: black;
+    opacity: 0.5;
+    z-index: -1;
+}
+
+.create-project__content{
+    margin-top: 20vh;
+
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-self: center;
+    box-shadow: none;
+}
+
+.cross{
+    font-size: 24px;
+    align-self: flex-end;
+    display: inline-block;
+    transform: translateY(-5px) rotate(45deg) ;
+    position: absolute;
+    cursor: pointer;
+}
+
+.create-project__form{
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 30vw;
+    max-width: 400px;
+    min-width: 300px;
+}
+
+.create-btn{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

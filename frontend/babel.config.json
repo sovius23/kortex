@@ -1,0 +1,19 @@
+{
+    "presets": [
+        ["@babel/preset-env",
+        {
+            "targets": {
+                "node" : "10"
+            }
+        }],
+        [
+            "@babel/preset-react",
+            {
+                "isTSX": true
+            }
+
+        ],
+        "@babel/preset-typescript"
+    ],
+    "plugins": ["@babel/plugin-proposal-class-properties", "graphql-tag", "import-graphql"]
+}

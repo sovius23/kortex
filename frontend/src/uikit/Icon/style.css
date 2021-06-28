@@ -1,0 +1,9 @@
+.icon-block{
+    padding:0px;
+    width: 59px;
+    height: 59px;
+    
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

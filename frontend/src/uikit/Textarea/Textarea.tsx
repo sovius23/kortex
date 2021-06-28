@@ -1,0 +1,48 @@
+import react, { useContext, useEffect, useState } from "react";
+import { Theme, ThemeContext } from "../../App";
+
+import {Text} from "../Text/Text";
+
+import "./style.css";
+
+interface ITextarea{
+    onChange:Function;
+    value?:string;
+}
+
+export const Textarea:react.FC<ITextarea> = (props) => {
+
+    var ta_theme = "light-ta";
+
+    const [value, setValue] = useState(props.value);
+
+    const [count, setCount] = useState(props.value?.length || 0);
+
+    const {theme} = useContext(ThemeContext);
+
+    const [flag, setFlag] = useState(0);
+
+    useEffect(() => {
+        if (flag == 0) {
+            setFlag(1);
+            setValue(props.value)
+            console.log(props.value, "asdfasd")
+        }
+    })
+
+    console.log(props.value, value);
+
+    if (theme == Theme.Dark) {
+        ta_theme = "dark-ta";
+    }
+
+    return <div className="ta-container">
+        <Text className="ta__head">{`Описание (${count}/200)`}</Text>
+        <textarea className={"ta " + ta_theme} onChange={(e) => {
+            props.onChange(e.target.value);
+
+            setCount(e.target.value.length);
+            setValue(e.target.value);
+        }} maxLength={200}>{value}</textarea>
+        </div>
+}

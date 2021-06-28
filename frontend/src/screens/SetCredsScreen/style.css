@@ -1,0 +1,29 @@
+.set-creds__global-container{
+    display: flex;
+    justify-content: center;
+}
+
+.set-creds__container{
+    display: flex;
+    width: 600px;
+    flex-direction: column;
+    gap: 80px;
+    margin-top: 48px;
+}
+
+.set-creds__content{
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+@media (max-width:640px) {
+    .set-creds__global-container{
+        width:100%;
+    }
+    .set-creds__container{
+        padding: 20px;
+        margin-top: 0px;
+    }
+    
+}

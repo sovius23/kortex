@@ -1,0 +1,43 @@
+.light-chb__disabled{
+    background: #DEE8F2;
+box-shadow: inset 2px 2px 5px rgba(105, 141, 173, 0.4);
+border: 1px solid;
+border-image-source: linear-gradient(113.28deg, #FFFFFF 3.93%, #C6D7EB 96.73%, #759CCA 96.73%);
+
+
+}
+
+.dark-chb__disabled{
+    background: rgba(19, 20, 22, 0.2);
+    box-shadow: inset 2px 2px 8px rgba(4, 4, 5, 0.6);
+}
+
+.light-chb__enabled{
+    background: #A1B8CF;
+    box-shadow: inset 2px 2px 8px rgba(94, 133, 170, 0.8);
+}
+
+.dark-chb__enabled{
+    background: rgba(19, 20, 22, 0.8);
+    box-shadow: inset 2px 2px 8px rgba(4, 4, 5, 0.6);
+}
+
+.check-bc__container{
+    border-radius: 12px;
+    display: inline-block;
+    width: 42px;
+    height: 42px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.check__text{
+    font-size: 18px;
+}
+
+.check__container{
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}

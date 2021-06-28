@@ -1,0 +1,302 @@
+mutation createUser($username:String, $password:String){
+  createUser(password:$password, username:$username){
+    ok
+  }
+}
+
+mutation getToken($username:String!, $password:String!){
+  tokenAuth(username:$username, password:$password){
+    token
+  }
+}
+
+mutation setVisitProfile(
+  $name:String, $surname:String,
+	$midname:String, $positionInCompany:String,
+  $description:String, $secondDescr:String,
+  $id:ID) {
+    changeVisitCardProfile(
+      description:$description, name:$name,
+      surname:$surname, midname:$midname,
+      positionInCompany:$positionInCompany,
+      secondDescr:$secondDescr,
+      visitCardId:$id
+    ){
+      ok
+    }
+  }
+
+
+query getVisit($token:String){
+  getVisitByUser(token:$token){
+    id
+    name, midname, surname, positionInCompany, description,
+    imageUrl
+    secondDescr,
+    contacts{
+      phone,
+      id,
+      website,
+      tgLink,
+      whatsappLink,
+      instLink,
+      vkLink,
+      facebookLink,
+      twitterLink
+    },
+    projectSet{
+      edges{
+        node{
+          id
+        }
+      }
+    },
+    photoSet{
+      edges{
+        node{
+          id
+        }
+      }
+    },
+     geopos{
+      lattitude,
+      longitude
+    }
+  }
+}
+
+query getVisitById($id:ID!){
+  visit(id:$id){
+    id
+    name, midname, surname, positionInCompany, description,
+    imageUrl,
+    secondDescr,
+    geoDescr,
+    photoDescr,
+    projectDescr,
+    theme
+    contacts{
+      phone,
+      id,
+      website,
+      tgLink,
+      whatsappLink,
+      instLink,
+      vkLink,
+      facebookLink,
+      twitterLink
+    },
+    projectSet{
+      edges{
+        node{
+          id, name, link
+        }
+      }
+    },
+    photoSet{
+      edges{
+        node{
+          id, url
+        }
+      }
+    },
+    geopos{
+      lattitude,
+      longitude
+    }
+  }
+}
+
+mutation changeContacts(
+  $contacts_id:String,
+  $phone:String, $website:String,
+  $tgLink:String, $whatsappLink:String,
+  $instLink:String, $vkLink:String,
+  $facebookLink:String, $twitterLink:String
+) {
+  changeContacts(
+    contactsId:$contacts_id,
+    phone:$phone, website:$website,
+    tgLink:$tgLink, whatsappLink:$whatsappLink,
+    instLink:$instLink, vkLink:$vkLink,
+    facebookLink:$facebookLink,
+    twitterLink:$twitterLink
+  ){
+    ok
+  }
+}
+
+mutation addProject($projectName:String, $link:String, $id:ID){
+  addProject(cardId:$id, link:$link, name:$projectName){
+		project{
+      id
+    }
+  }
+}
+
+mutation removeProject($projectId:ID!){
+	removeProject(projectId:$projectId){
+    ok
+  }
+}
+
+query getVisitId($token:String){
+  getVisitByUser(token:$token){
+    id
+  }
+}
+
+query getAva($token:String){
+	getVisitByUser(token:$token){
+  	imageUrl, id
+	}
+}
+
+mutation setAva($ava:Upload!, $id:ID) {
+  changeVisitCardProfilePhoto(visitCardId:$id, photo:$ava) {
+    newPath
+  }
+}
+
+query getCreds($token:String){
+  getVisitByUser(token:$token) {
+    id, name, surname, midname
+  }
+}
+
+query getPos($token:String){
+  getVisitByUser(token:$token) {
+    id, positionInCompany
+  }
+}
+
+query getDescr($token:String) {
+  getVisitByUser(token:$token) {
+    id, description
+  }
+}
+
+query getContacts($token:String) {
+  getVisitByUser(token:$token) {
+    contacts{
+      id,
+      facebookLink,
+      vkLink,
+      website,
+      whatsappLink,
+      twitterLink,
+      tgLink,
+    	phone,
+      instLink
+    }
+  }
+}
+
+query getSecDescr($token:String) {
+  getVisitByUser(token:$token) {
+    secondDescr,
+    id
+  }
+}
+
+query getProjects($token:String) {
+  getVisitByUser(token:$token) {
+    id, projectDescr
+    projectSet{
+			edges{
+        node{
+          name, link, id
+        }
+      }
+    }
+  }
+}
+
+
+mutation editProj($projectName:String, $link:String, $id:ID){
+  editProject(link:$link, name:$projectName, projectId:$id) {
+		ok
+  }
+} 
+
+query getImage($token:String) {
+  getVisitByUser(token:$token){
+    id, photoDescr
+    photoSet{
+			edges{
+				node{
+          id, url
+        }
+      }
+    }
+  }
+}
+mutation addImg($card_id:ID, $image:Upload) {
+	addPhoto(cardId:$card_id, photo:$image) {
+    photo{
+      id, url
+    }
+  }
+}
+
+mutation deleteImg($img_id:ID){
+  removePhoto(photoId:$img_id) {
+    ok
+  }
+}
+
+mutation changeImg($new_img:Upload, $id:ID) {
+  editPhoto(newPhoto:$new_img, photoId:$id) {
+    newImg{
+      url
+    }
+  }
+}
+
+query getGeo($token:String) {
+	getVisitByUser(token:$token) {
+    geoDescr,
+    id,
+    geopos{
+      id,
+      lattitude,
+      longitude
+    }
+  }
+}
+
+mutation setGeo($geoId:ID, $lat:Float, $long:Float) {
+  setGeopos(geoposId:$geoId, lat:$lat, long:$long) {
+    ok
+  }
+}
+
+mutation changeProjectDescr($card_id:ID, $proj_descr:String){
+  changeNames(cardId:$card_id, projectsName:$proj_descr) {
+    ok
+  }
+}
+
+mutation changeImageDescr($card_id:ID, $image_descr:String){
+  changeNames(cardId:$card_id, photoName:$image_descr) {
+    ok
+  }
+}
+
+mutation changeGeoDescr($card_id:ID, $geo_descr:String){
+  changeNames(cardId:$card_id, geoName:$geo_descr) {
+    ok
+  }
+}
+
+mutation changeState($token:String, $state:String){
+  changeTheme(token:$token, theme:$state){
+    ok
+  }
+}
+
+query getState($token:String) {
+  getVisitByUser(token:$token) {
+    theme
+  }
+}

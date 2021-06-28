@@ -1,0 +1,13 @@
+.image__container-block{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    width: 300px;
+    height: 140px;
+}
+
+.image__container-block>img{
+    width: 100%;
+    transform: scale(1.2);
+}

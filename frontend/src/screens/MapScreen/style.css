@@ -1,0 +1,21 @@
+.map-screen__container{
+    width: 600px;
+    border-radius: 10px;
+    gap: 80px;
+    display: flex;
+    flex-direction: column;
+    margin-top: 43px;
+}
+
+.map-screen__global-container{
+    display: flex;
+    justify-content: center;
+}
+
+
+
+@media (max-width: 650px) {
+    .map-screen-container{
+        width: calc(100vw - 80px);
+    }
+}

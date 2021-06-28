@@ -1,0 +1,56 @@
+.set-logo__global-container{
+    display: flex;
+    justify-content: center;
+    margin-top: 48px;
+    
+}
+
+.set-logo__header{
+    display: flex;
+    gap: 27px;
+    align-items: center;
+}
+
+.set-logo__container{
+    margin-top: 43px;
+    gap: 60px;
+    display: flex;
+    flex-direction: column;
+    width: 600px;
+}
+
+.image-upload__button{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.set-logo__footer{
+    display: inline-flex;
+    gap: 27px;
+    align-items: center;
+    align-self:flex-end;
+}
+
+.photo__container{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+}
+
+@media (max-width: 650px) {
+    .set-logo__container{
+        width: 400px;
+    }
+}
+
+.delete{
+}
+
+.delete__button{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}

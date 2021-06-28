@@ -1,0 +1,31 @@
+.project__global-container{
+    display: flex;
+    justify-content: center;
+}
+
+.project__container-edit{
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-gap: 36px;
+}
+
+.project__local-container{
+    width: 300px;
+    height: 140px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.project__projects{
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    padding-top: 43px;
+}
+
+@media (max-width:800px) {
+    .project__container-edit{
+        grid-template-columns: 1fr;
+    }
+}

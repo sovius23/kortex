@@ -1,0 +1,7 @@
+.footer__container{
+    display: flex;
+    align-items: center;
+    gap: 27px;
+    align-self: flex-end;
+    justify-content: flex-end;
+}

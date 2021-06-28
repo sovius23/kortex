@@ -1,0 +1,6 @@
+.header{
+    display: flex;
+    gap: 27px;
+    align-items: center;
+    align-self:flex-start;
+}

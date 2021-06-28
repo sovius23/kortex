@@ -1,0 +1,48 @@
+{% load render_bundle from webpack_loader %}
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasyCards</title>
+    {% load static %}
+    <link rel="stylesheet" href='{% static "css/index.css" %}'>
+    <link rel="preconnect" href="https://fonts.gstatic.com">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@500&display=swap" rel="stylesheet">
+    <meta charset="utf-8" />
+</head>
+<body>
+    <style>
+        html, body{
+          height: 100%;
+          padding: 0;
+          margin: 0;
+        }
+        body{
+          --back-color: #F0F0F3;
+          background: var(--back-color);
+          background-repeat: no-repeat;
+          background-size: cover;
+          background-position: center;
+          height: 100%;
+          width: 100%;
+          background-attachment: fixed;
+        }
+        *{
+          font-family: Rubik;
+          font-weight: 500;
+        }
+        a{
+          text-decoration: none;
+        }
+      </style>
+      <noscript>You need to enable JavaScript to run this app.</noscript>
+      <div id="message"></div>
+    <div id="root"></div>
+    {% render_bundle 'main' 'js' %}
+</body>
+</html>

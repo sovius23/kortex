@@ -1,0 +1,19 @@
+.set-position__public-container{
+    display: flex;
+    justify-content: center;
+}
+
+.set-position__container{
+    width: 600px;
+    display: flex;
+    flex-direction: column;
+    gap: 80px;
+    margin-top: 43px;
+}
+
+@media (max-width:650px) {
+    .set-position__container{
+        width: 100%;
+        padding: 20px;
+    }
+}
