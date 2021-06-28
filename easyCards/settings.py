@@ -183,6 +183,8 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 MEDIA_URL = "/media/"
 
+STATIC_ROOT = os.path.join(BASE_DIR, "frontend", "static")
+
 STATIC_URL = '/static/'
 
 # Heroku: Update database configuration from $DATABASE_URL.
