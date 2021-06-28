@@ -7,6 +7,7 @@ import {useGetGeoQuery, useSetGeoMutation, useChangeGeoDescrMutation} from "../.
 import { Footer } from "../../uikit/Footer/Footer";
 import { Header } from "../../uikit/Header/Header";
 import { Input } from "../../uikit/Input/Input";
+import { Text } from "../../uikit/Text/Text";
 
 import "./style.css";
 
@@ -53,37 +54,7 @@ export const MapScreen:react.FC = () => {
     return <div className="map-screen__global-container">
         <div className="map-screen__container">
             <Header>Геолокация</Header>
-            <YMaps  enterprise query={{
-                ns: "use-load-option",
-                apikey: "08d03d75-b54e-4081-a2a6-9fcaddc0ae72"
-            }}>
-                <Map defaultState={{ center: pos, zoom: 12 }} width="">
-                    <SearchControl onResultShow={() => {
-                        onResultShow()
-                    }} instanceRef={ref => {
-                    if (ref) search.current = ref;
-                }} options={{ float: 'right' }}  />
-
-                    <Placemark
-            geometry={pos}
-            properties={{
-              balloonContentBody: "Мое местоположение"
-            }}
-          />
-                </Map>
-                
-            </YMaps>
-            <Input
-            value={data?.getVisitByUser?.geoDescr}
-            className="map__input" placeholder={"Описание в визитке"} 
-            onChange={(e:string) => {
-                changeDescr({
-                    variables: {
-                        card_id: data?.getVisitByUser?.id,
-                        geo_descr: e
-                    }
-                })
-            }}></Input>
+            <Text>Геолокации пока нет, но скоро завезем</Text>
             <Footer link={`/${data?.getVisitByUser?.id}`}>Посмотреть визитку</Footer>
         </div>
     </div>

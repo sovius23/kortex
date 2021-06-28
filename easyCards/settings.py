@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     'frontend'
 ]
 GRAPHENE = {
-    'SCHEMA': 'evgenApp.schema.schema',
+    'SCHEMA': 'easyCards.schema.schema',
     'MIDDLEWARE': [
         'graphql_jwt.middleware.JSONWebTokenMiddleware',
     ],
@@ -99,7 +99,7 @@ CORS_ORIGIN_WHITELIST = [
     # your React App domain
 ]
 
-ROOT_URLCONF = 'evgenApp.urls'
+ROOT_URLCONF = 'easyCards.urls'
 
 TEMPLATES = [
     {
@@ -117,7 +117,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'evgenApp.wsgi.application'
+WSGI_APPLICATION = 'easyCards.wsgi.application'
 
 
 # Database
