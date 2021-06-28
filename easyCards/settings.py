@@ -26,7 +26,7 @@ SECRET_KEY = '&%x4%0rf7_^)by!jrj23_e^*_ov(rv9+!=4a*rx)g)zr1^)4q='
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["*"]
 
 WEBPACK_LOADER = {
     'DEFAULT': {
