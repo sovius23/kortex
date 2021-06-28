@@ -1,0 +1,1 @@
+web: gunicorn easyCards.wsgi --log-file -
