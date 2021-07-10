@@ -45,6 +45,8 @@ export const SetLogoScreen:react.FC = () => {
         return <div></div>
     }
 
+    console.log(data);
+
 
     return <>
         <div className="set-logo__container">
@@ -67,6 +69,9 @@ export const SetLogoScreen:react.FC = () => {
                 <Button type={ButtonTypes.white}>
                     Удалить
                 </Button>
+                <Button type={ButtonTypes.red} onClick={() => {
+                    console.log(data)
+                }}>asdf</Button>
                 <ShowCardButton></ShowCardButton>
             </div>
             
