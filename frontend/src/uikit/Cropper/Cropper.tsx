@@ -42,11 +42,13 @@ export const MyCropper:react.FC<IMYCropper> = (props) => {
         }
       };
     return <Hammer options={options} onPinchIn={() => {
+        console.log("on pintch")
         setZoom(zoom+0.1)
     }} onPinchOut={() => {
         setZoom(Math.max(zoom-0.1, 0.8))
     }}>
         <div onWheel={(e) => {
+            console.log("pinch out")
             setZoom(Math.max(e.deltaY * -0.002 + zoom, 0.8))
         }}>
         <AvatarEditor
