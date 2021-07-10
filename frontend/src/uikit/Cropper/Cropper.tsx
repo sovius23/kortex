@@ -43,9 +43,9 @@ export const MyCropper:react.FC<IMYCropper> = (props) => {
       };
     return <Hammer options={options} onPinchIn={() => {
         console.log("on pintch")
-        setZoom(zoom-0.03)
+        setZoom(Math.max(zoom-0.05, 0.8))
     }} onPinchOut={() => {
-        setZoom(Math.max(zoom+0.03, 0.8))
+        setZoom(Math.max(zoom+0.05, 0.8))
         console.log("pinch out")
     }}>
         <div onWheel={(e) => {
