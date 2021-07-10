@@ -6,8 +6,14 @@ import { Textarea } from "../../uikit/Textarea/Textarea";
 import {useGetDescrQuery, useSetVisitProfileMutation} from "../../generated/graphql";
 
 import "./style.css";
+import { Navigation } from "../../uikit/Navigation/Navigation";
+
+import {useDispatch} from "react-redux";
+import {setDescriptionFirst} from "../../store/profileReducer";
 
 export const SetDescriptionScreen:react.FC = () => {
+
+    const dispatch = useDispatch();
 
     const [descr, setDescr] = useState("");
     const [setDescrMutation] = useSetVisitProfileMutation();
@@ -26,18 +32,16 @@ export const SetDescriptionScreen:react.FC = () => {
 
     console.log(descr);
 
-    return <div className="setDescription__global-container">
-        <div className="setDescr__container">
-            <Header>Описание</Header>
+    return <div className="setDescr__container">
+            <Navigation nextLink="/set/contacts" nextName="Контакты" currentName="Описание"></Navigation>
             <div className="setDescr__content">
                 <Textarea onChange={(e:string) =>{
                     setDescrMutation({variables:{
                         id:data?.getVisitByUser?.id,
                         description:e
                     }});
+                    dispatch(setDescriptionFirst(e));
                 }} value={data?.getVisitByUser?.description!}></Textarea>
             </div>
-            <Footer link="/set/contacts">Контакты</Footer> 
         </div>
-    </div>
 }

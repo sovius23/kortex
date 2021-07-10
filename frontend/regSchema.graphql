@@ -148,7 +148,7 @@ query getVisitId($token:String){
 
 query getAva($token:String){
 	getVisitByUser(token:$token){
-  	imageUrl, id
+  	imageUrl, id, fullImgUrl
 	}
 }
 
@@ -297,6 +297,25 @@ mutation changeState($token:String, $state:String){
 
 query getState($token:String) {
   getVisitByUser(token:$token) {
-    theme
+    theme,
+    id
+  }
+}
+
+mutation setFullPhoto($id:ID, $photo:Upload){
+  changeFullPhoto(id:$id, photo:$photo){
+    newUrl
+  }
+}
+
+query getId($token:String){
+  getVisitByUser(token:$token){
+    id
+  }
+}
+
+mutation changeLogoCords($card_id:ID, $y:Float, $x:Float){
+  changeLogoCords(xCord:$x, yCord:$y, cardId:$card_id){
+    ok
   }
 }

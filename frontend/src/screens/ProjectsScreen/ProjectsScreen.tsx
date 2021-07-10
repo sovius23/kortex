@@ -18,17 +18,27 @@ import { DeleteProjectPopUp } from "../../uikit/PopUps/DeleteProjectPopUp/Delete
 import { Header } from "../../uikit/Header/Header";
 import { Footer } from "../../uikit/Footer/Footer";
 import { Input } from "../../uikit/Input/Input";
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+import { Navigation } from "../../uikit/Navigation/Navigation";
+
+import {useDispatch, useStore} from "react-redux";
+
+import {setProjectHead} from "../../store/profileReducer";
+
+import {removeProject, addProject, changeProject} from "../../store/ProjectsReducer";
 
 export const ProjectScreen:react.FC = () => {
 
     const [isCreation, setIsCreation] = useState(false);
-
+    const store = useStore();
     const [isEdition, setIsEdition] = useState("");
+
+    const dispatch = useDispatch();
 
     const [projectData, setProjectData] = useState<{name:string, link:string, id:string}[]>();
 
-    const [addProject] = useAddProjectMutation();
-    const [removeProject] = useRemoveProjectMutation();
+    const [addProjectM] = useAddProjectMutation();
+    const [removeProjectM] = useRemoveProjectMutation();
     const [editProject] = useEditProjMutation();
     const [changeProjectDesr] = useChangeProjectDescrMutation();
 
@@ -41,6 +51,7 @@ export const ProjectScreen:react.FC = () => {
             var projList = [];
             for (var i of e.getVisitByUser?.projectSet.edges!) {
                 projList.push({name:i?.node?.name!, link:i?.node?.link!, id:i?.node?.id!});
+                dispatch(addProject({name:i?.node?.name!, link:i?.node?.link!, id:i?.node?.id!}))
             }
             setProjectData(projList!);
         }
@@ -53,9 +64,19 @@ export const ProjectScreen:react.FC = () => {
     console.log(data);
     var object = {name: "", url: ""};
 
-    return <div className="project__global-container">
-        <div className="project__projects">
-            <Header>Проекты</Header>
+    return <div className="project__projects">
+            <Navigation nextName="Картинки" currentName="Проекты" nextLink="/set/photos"></Navigation>
+
+            <Input className="inpt" placeholder={"Описание в визитке"} value={
+                data?.getVisitByUser?.projectDescr 
+            } onChange={(e:string) => {
+                changeProjectDesr({variables:{
+                    card_id: data?.getVisitByUser?.id!,
+                    proj_descr: e
+                }});
+                dispatch(setProjectHead(e))
+            }}></Input>
+
             <div className="project__container-edit">
                 {
                     projectData?.map((e) => 
@@ -63,7 +84,7 @@ export const ProjectScreen:react.FC = () => {
                         setIsEdition(e.id);
                     }}>
                         <Block className="project__local-container">
-                            <Text>{e.name}</Text>
+                            <div>{e.name}</div>
                         </Block>
                     </div>
                         )
@@ -72,18 +93,13 @@ export const ProjectScreen:react.FC = () => {
                 setIsCreation(true);
             }}>
                 <Block className="project__local-container">
-                    <Text>Добавить +</Text>
+                    <div>Добавить +</div>
                 </Block>
             </div>
+            <ShowCardButton></ShowCardButton>
+
             </div>
-            <Input placeholder={"Описание в визитке"} value={
-                data?.getVisitByUser?.projectDescr 
-            } onChange={(e:string) => {
-                changeProjectDesr({variables:{
-                    card_id: data?.getVisitByUser?.id!,
-                    proj_descr: e
-                }})
-            }}></Input>
+
 
             
             {
@@ -97,11 +113,13 @@ export const ProjectScreen:react.FC = () => {
                         object = e;
                     }}
                     onComplete={() => {
-                        addProject({variables:{
+                        addProjectM({variables:{
                             projectName: object.name,
                             link: object.url,
                             id: data?.getVisitByUser?.id!
                         }}).then((e) => {
+                            dispatch(addProject({name:object.name, link:object.url, id:e.data?.addProject?.project?.id!}))
+                            console.log(store.getState());
                             setProjectData(projectData?.concat([
                                 {name:object.name, link:object.url, id:e.data?.addProject?.project?.id!}
                             ]))
@@ -122,9 +140,11 @@ export const ProjectScreen:react.FC = () => {
                         setIsEdition("")
                     }}
                     onDeleteButton={() => {
-                        removeProject({variables:{
+                        removeProjectM({variables:{
                             projectId:isEdition
                         }})
+                        dispatch(removeProject(isEdition))
+                        console.log(store.getState())
                         setProjectData(projectData?.filter(e => e.id != isEdition));
                         setIsEdition("");
                     }}
@@ -133,6 +153,10 @@ export const ProjectScreen:react.FC = () => {
                     }}
                     onEdit={() => {
                         console.log(EditObj);
+                        dispatch(changeProject({id:isEdition, project:
+                            {id:isEdition, ...EditObj}
+                        }))
+                        console.log(store.getState())
                         editProject({variables:{
                             link:EditObj.link,
                             projectName:EditObj.name,
@@ -158,7 +182,6 @@ export const ProjectScreen:react.FC = () => {
                     document.getElementById("message")!
                 ) : ""
             }
-            <Footer link="/set/photos">Фотографии</Footer>
         </div>
-    </div>
+
 }

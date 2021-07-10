@@ -8,6 +8,49 @@ from .gqlTypes import ProjectType, PhotoType
 from django.core.files import File
 
 
+class UpdateFullPhoto(graphene.Mutation):
+    class Arguments:
+        photo = Upload()
+        id = graphene.ID()
+
+    new_url = graphene.String()
+
+    @classmethod
+    def mutate(cls, root, info, photo, id):
+        card = VisitCard.objects.get(
+            id=from_global_id(id)[1]
+        )
+
+        if photo.name == "unnamed.u":
+            card.full_profile_photo = None
+        else:
+            card.full_profile_photo = photo
+
+        print(photo, card.full_profile_photo)
+
+        card.save()
+
+        return UpdateFullPhoto(new_url=card.full_profile_photo.url)
+
+
+class ChangeLogoCord(graphene.Mutation):
+    class Arguments:
+        x_cord = graphene.Float()
+        y_cord = graphene.Float()
+        card_id = graphene.ID()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, x_cord, y_cord, card_id):
+        card = VisitCard.objects.get(
+            id=from_global_id(card_id)[1]
+        )
+        card.x_logo = x_cord
+        card.y_logo = y_cord
+        card.save()
+
+
 class CreateUser(graphene.Mutation):
     class Arguments:
         username = graphene.String()
@@ -54,6 +97,7 @@ class ChangeVisitCardProfilePhoto(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, photo, visit_card_id):
+        print("fuck")
         visit_card = VisitCard.objects.get(id=from_global_id(visit_card_id)[1])
         my_photo = File(photo)
 
@@ -299,7 +343,7 @@ class ChangeTheme(graphene.Mutation):
     @classmethod
     def mutate(cls, root, info, theme, token):
         card = info.context.user.visitcard
-
+        print(theme)
         card.theme = theme
         card.save()
 
@@ -321,3 +365,5 @@ class Mutation(graphene.ObjectType):
     set_geopos = SetGeoPos.Field()
     change_names = ChangeNames.Field()
     change_theme = ChangeTheme.Field()
+    change_full_photo = UpdateFullPhoto.Field()
+    change_logo_cords = ChangeLogoCord.Field()

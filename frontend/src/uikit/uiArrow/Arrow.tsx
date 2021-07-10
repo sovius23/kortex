@@ -17,5 +17,5 @@ export const Arrow:react.FC<IArrow> = (props) => {
         img = "/static/images/arrowDark.svg";
     }
 
-    return <img src={img} alt="" className={props.reversed ? "img-rev" : ""} />
+    return <img width={19} height={19} src={"/static/images/arrow.svg"} alt="" className={props.reversed ? "img-rev" : ""} />
 }

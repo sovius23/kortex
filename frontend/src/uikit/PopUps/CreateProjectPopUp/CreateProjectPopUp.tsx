@@ -5,6 +5,7 @@ import {Text} from "../../Text/Text";
 import {Block} from "../../Block/Block";
 
 import {BasePopUp} from "../BasePopUp/BasePopUp";
+import { Button, ButtonTypes } from "../../Button/Button";
 
 interface ICreateProjectPopUp{
     deleteFunc:Function;
@@ -28,7 +29,7 @@ export const CreateProjectPopUp:react.FC<ICreateProjectPopUp> = (props) => {
                 <div onClick={() => {
                     props.onComplete()
                 }}>   
-                    <Block className="create-btn"><Text>Добавить</Text></Block>
+                    <Button type={ButtonTypes.red}>Добавить</Button>
 
                 </div>
     </BasePopUp>

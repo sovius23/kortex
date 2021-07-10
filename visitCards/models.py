@@ -8,6 +8,7 @@ from django.db.models.signals import post_save
 
 class VisitCard(models.Model):
     ProfilePhoto = models.ImageField(null=True)
+    full_profile_photo = models.ImageField(null=True)
     name = models.TextField(null=True)
     surname = models.TextField(default="")
     midname = models.TextField(default="")
@@ -15,6 +16,10 @@ class VisitCard(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
     description = models.CharField(max_length=200, null=True)
     second_descr = models.CharField(null=True, max_length=200)
+
+    x_logo = models.FloatField(default=0)
+    y_logo = models.FloatField(default=0)
+    zoom_logo = models.FloatField(default=1.3)
 
     project_descr = models.TextField(default="Мои проекты: ")
     geo_descr = models.TextField(default="Мой офис: ")

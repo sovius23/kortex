@@ -1,5 +1,6 @@
 import react from "react";
 import { Block } from "../../Block/Block";
+import { Button, ButtonTypes } from "../../Button/Button";
 import { DeleteButton } from "../../DeleteButton/DeleteButton";
 import { ImageUpload } from "../../ImageUpload/ImageUpload";
 import { Text } from "../../Text/Text";
@@ -19,10 +20,10 @@ export const ChangeImgPopUp:react.FC<IChangeImgPopUp> = (props) => {
         
         <ImageUpload className="image-upload__pop" onChange={(e:File) => {
             props.changeClick(e);
-        }}><Text>Загрузить новую</Text></ImageUpload>
+        }}><div>Загрузить новую</div></ImageUpload>
         
-        <DeleteButton onClick={() => {
+        <Button type={ButtonTypes.red} onClick={() => {
             props.deleteClick()
-        }}>Удалить</DeleteButton>
+        }}>Удалить</Button>
     </BasePopUp>
 }

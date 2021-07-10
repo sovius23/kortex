@@ -1,0 +1,17 @@
+.centered{
+    display: flex;
+    justify-content: center;
+    gap: 0px;
+}
+
+.global-container{
+    width: 800px;
+    display: flex;
+    justify-content: center;
+}
+
+@media (max-width: 900px) {
+    .global-container{
+        width: calc(100vw - 10px);
+    }
+}

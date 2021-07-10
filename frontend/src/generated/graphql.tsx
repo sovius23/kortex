@@ -45,6 +45,11 @@ export type ChangeGeopos = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
+export type ChangeLogoCord = {
+  __typename?: 'ChangeLogoCord';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
 export type ChangeNames = {
   __typename?: 'ChangeNames';
   ok?: Maybe<Scalars['Boolean']>;
@@ -116,6 +121,8 @@ export type Mutation = {
   setGeopos?: Maybe<SetGeoPos>;
   changeNames?: Maybe<ChangeNames>;
   changeTheme?: Maybe<ChangeTheme>;
+  changeFullPhoto?: Maybe<UpdateFullPhoto>;
+  changeLogoCords?: Maybe<ChangeLogoCord>;
   /** Obtain JSON Web Token mutation */
   tokenAuth?: Maybe<ObtainJsonWebToken>;
 };
@@ -219,6 +226,19 @@ export type MutationChangeNamesArgs = {
 export type MutationChangeThemeArgs = {
   theme?: Maybe<Scalars['String']>;
   token?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationChangeFullPhotoArgs = {
+  id?: Maybe<Scalars['ID']>;
+  photo?: Maybe<Scalars['Upload']>;
+};
+
+
+export type MutationChangeLogoCordsArgs = {
+  cardId?: Maybe<Scalars['ID']>;
+  xCord?: Maybe<Scalars['Float']>;
+  yCord?: Maybe<Scalars['Float']>;
 };
 
 
@@ -344,18 +364,26 @@ export type SetGeoPos = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
+export type UpdateFullPhoto = {
+  __typename?: 'UpdateFullPhoto';
+  newUrl?: Maybe<Scalars['String']>;
+};
+
 
 export type VisitCardType = Node & {
   __typename?: 'VisitCardType';
   /** The ID of the object. */
   id: Scalars['ID'];
   ProfilePhoto?: Maybe<Scalars['String']>;
+  fullProfilePhoto?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
   surname: Scalars['String'];
   midname: Scalars['String'];
   positionInCompany?: Maybe<Scalars['String']>;
   description?: Maybe<Scalars['String']>;
   secondDescr?: Maybe<Scalars['String']>;
+  xLogo: Scalars['Float'];
+  yLogo: Scalars['Float'];
   projectDescr: Scalars['String'];
   geoDescr: Scalars['String'];
   photoDescr: Scalars['String'];
@@ -365,6 +393,7 @@ export type VisitCardType = Node & {
   photoSet: PhotoTypeConnection;
   geopos?: Maybe<GeoPosType>;
   imageUrl?: Maybe<Scalars['String']>;
+  fullImgUrl?: Maybe<Scalars['String']>;
 };
 
 
@@ -811,6 +840,7 @@ export const GetAvaDocument = gql`
   getVisitByUser(token: $token) {
     imageUrl
     id
+    fullImgUrl
   }
 }
     `;
@@ -1513,6 +1543,7 @@ export const GetStateDocument = gql`
     query getState($token: String) {
   getVisitByUser(token: $token) {
     theme
+    id
   }
 }
     `;
@@ -1544,6 +1575,110 @@ export function useGetStateLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<G
 export type GetStateQueryHookResult = ReturnType<typeof useGetStateQuery>;
 export type GetStateLazyQueryHookResult = ReturnType<typeof useGetStateLazyQuery>;
 export type GetStateQueryResult = Apollo.QueryResult<GetStateQuery, GetStateQueryVariables>;
+export const SetFullPhotoDocument = gql`
+    mutation setFullPhoto($id: ID, $photo: Upload) {
+  changeFullPhoto(id: $id, photo: $photo) {
+    newUrl
+  }
+}
+    `;
+export type SetFullPhotoMutationFn = Apollo.MutationFunction<SetFullPhotoMutation, SetFullPhotoMutationVariables>;
+
+/**
+ * __useSetFullPhotoMutation__
+ *
+ * To run a mutation, you first call `useSetFullPhotoMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSetFullPhotoMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [setFullPhotoMutation, { data, loading, error }] = useSetFullPhotoMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      photo: // value for 'photo'
+ *   },
+ * });
+ */
+export function useSetFullPhotoMutation(baseOptions?: Apollo.MutationHookOptions<SetFullPhotoMutation, SetFullPhotoMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SetFullPhotoMutation, SetFullPhotoMutationVariables>(SetFullPhotoDocument, options);
+      }
+export type SetFullPhotoMutationHookResult = ReturnType<typeof useSetFullPhotoMutation>;
+export type SetFullPhotoMutationResult = Apollo.MutationResult<SetFullPhotoMutation>;
+export type SetFullPhotoMutationOptions = Apollo.BaseMutationOptions<SetFullPhotoMutation, SetFullPhotoMutationVariables>;
+export const GetIdDocument = gql`
+    query getId($token: String) {
+  getVisitByUser(token: $token) {
+    id
+  }
+}
+    `;
+
+/**
+ * __useGetIdQuery__
+ *
+ * To run a query within a React component, call `useGetIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetIdQuery({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useGetIdQuery(baseOptions?: Apollo.QueryHookOptions<GetIdQuery, GetIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetIdQuery, GetIdQueryVariables>(GetIdDocument, options);
+      }
+export function useGetIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetIdQuery, GetIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetIdQuery, GetIdQueryVariables>(GetIdDocument, options);
+        }
+export type GetIdQueryHookResult = ReturnType<typeof useGetIdQuery>;
+export type GetIdLazyQueryHookResult = ReturnType<typeof useGetIdLazyQuery>;
+export type GetIdQueryResult = Apollo.QueryResult<GetIdQuery, GetIdQueryVariables>;
+export const ChangeLogoCordsDocument = gql`
+    mutation changeLogoCords($card_id: ID, $y: Float, $x: Float) {
+  changeLogoCords(xCord: $x, yCord: $y, cardId: $card_id) {
+    ok
+  }
+}
+    `;
+export type ChangeLogoCordsMutationFn = Apollo.MutationFunction<ChangeLogoCordsMutation, ChangeLogoCordsMutationVariables>;
+
+/**
+ * __useChangeLogoCordsMutation__
+ *
+ * To run a mutation, you first call `useChangeLogoCordsMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeLogoCordsMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeLogoCordsMutation, { data, loading, error }] = useChangeLogoCordsMutation({
+ *   variables: {
+ *      card_id: // value for 'card_id'
+ *      y: // value for 'y'
+ *      x: // value for 'x'
+ *   },
+ * });
+ */
+export function useChangeLogoCordsMutation(baseOptions?: Apollo.MutationHookOptions<ChangeLogoCordsMutation, ChangeLogoCordsMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeLogoCordsMutation, ChangeLogoCordsMutationVariables>(ChangeLogoCordsDocument, options);
+      }
+export type ChangeLogoCordsMutationHookResult = ReturnType<typeof useChangeLogoCordsMutation>;
+export type ChangeLogoCordsMutationResult = Apollo.MutationResult<ChangeLogoCordsMutation>;
+export type ChangeLogoCordsMutationOptions = Apollo.BaseMutationOptions<ChangeLogoCordsMutation, ChangeLogoCordsMutationVariables>;
 export type CreateUserMutationVariables = Exact<{
   username?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
@@ -1630,7 +1765,7 @@ export type GetAvaQueryVariables = Exact<{
 }>;
 
 
-export type GetAvaQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', imageUrl?: Maybe<string>, id: string }> };
+export type GetAvaQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', imageUrl?: Maybe<string>, id: string, fullImgUrl?: Maybe<string> }> };
 
 export type SetAvaMutationVariables = Exact<{
   ava: Scalars['Upload'];
@@ -1774,4 +1909,28 @@ export type GetStateQueryVariables = Exact<{
 }>;
 
 
-export type GetStateQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', theme: string }> };
+export type GetStateQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', theme: string, id: string }> };
+
+export type SetFullPhotoMutationVariables = Exact<{
+  id?: Maybe<Scalars['ID']>;
+  photo?: Maybe<Scalars['Upload']>;
+}>;
+
+
+export type SetFullPhotoMutation = { __typename?: 'Mutation', changeFullPhoto?: Maybe<{ __typename?: 'UpdateFullPhoto', newUrl?: Maybe<string> }> };
+
+export type GetIdQueryVariables = Exact<{
+  token?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetIdQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string }> };
+
+export type ChangeLogoCordsMutationVariables = Exact<{
+  card_id?: Maybe<Scalars['ID']>;
+  y?: Maybe<Scalars['Float']>;
+  x?: Maybe<Scalars['Float']>;
+}>;
+
+
+export type ChangeLogoCordsMutation = { __typename?: 'Mutation', changeLogoCords?: Maybe<{ __typename?: 'ChangeLogoCord', ok?: Maybe<boolean> }> };

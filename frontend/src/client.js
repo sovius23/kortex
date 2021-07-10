@@ -14,9 +14,9 @@ const defaultOptions = {
 }
 
 const client = new ApolloClient({
-  uri: "https://easy-visits.herokuapp.com/graphql/", 
+  uri: "http://localhost:3000/graphql/", 
   cache: new InMemoryCache(),
-  link: createUploadLink({  uri: "https://easy-visits.herokuapp.com/graphql/"}),
+  link: createUploadLink({  uri: "http://localhost:3000/graphql/"}),
 })
 
 export default client;

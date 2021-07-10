@@ -9,6 +9,7 @@ from .models import VisitCard, Photo, Contacts, Project, GeoPos
 class VisitCardType(DjangoObjectType):
 
     image_url = graphene.String()
+    full_img_url = graphene.String()
 
     class Meta:
         model = VisitCard
@@ -17,6 +18,12 @@ class VisitCardType(DjangoObjectType):
     def resolve_image_url(self, info):
         try:
             return self.ProfilePhoto.url
+        except:
+            return ""
+
+    def resolve_full_img_url(self, inf):
+        try:
+            return self.full_profile_photo.url
         except:
             return ""
 

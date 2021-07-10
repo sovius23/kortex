@@ -1,25 +1,25 @@
 import react, { useState } from "react";
 
+import {Provider} from "react-redux";
+
 import {
     BrowserRouter as Router,
     Route,
     Switch,
     Redirect
 } from "react-router-dom";
-import { Block } from "./uikit/Block/Block";
-import { Textarea } from "./uikit/Textarea/Textarea";
-import { CheckBox } from "./uikit/CheckBox/CheckBox";
-import { Icon, IconType } from "./uikit/Icon/Icon";
-import { Scrollbar } from "./uikit/ScrollBar/Scrollbar";
-import { Arrow } from "./uikit/uiArrow/Arrow";
 import { ScreenWithCheckboxes } from "./screens/ScreenWithCheckboxes/ScreenWidthCheckboxes";
-import { SetScreenSelection } from "./screens/SetScreenSelection/SetScreenSelection";
 import { ViewCard } from "./screens/ViewCard/ViewCard";
-import { Switcher } from "./uikit/Switcher/Switcher";
-
 import {useGetStateQuery} from "./generated/graphql";
 import { Registration } from "./screens/Registration/Registration";
 import { Login } from "./screens/Login/Login";
+import { GlobalHeader } from "./uikit/GlobalHeader/GlobalHeader";
+
+import {ViewCardEdit} from "./screens/ViewCard/ViewCardEdit";
+
+import store from "./store/store";
+
+import "./App.css";
 
 export enum Theme{
     Light,
@@ -37,13 +37,13 @@ export const App:react.FC = () => {
     const {data, loading} = useGetStateQuery({
         variables:{token:localStorage.getItem("token")},
         onCompleted:(e) => {
-            setTheme(
-                e.getVisitByUser?.theme == "Light" ? Theme.Light : Theme.Dark
-            )
+            //setTheme(
+            //    e.getVisitByUser?.theme == "Light" ? Theme.Light : Theme.Dark
+            //)
         }
     })
 
-    const [theme, setTheme] = react.useState(Theme.Dark);
+    const [theme, setTheme] = react.useState(Theme.Light);
 
     const [visibility, setVisibility] = useState(true);
 
@@ -53,7 +53,7 @@ export const App:react.FC = () => {
     }
     else{
         let root = document.body;
-        root.style.setProperty("--back-color", "#F0F0F3");
+        root.style.setProperty("--back-color", "#fff");
     }
 
     if (loading) {
@@ -61,45 +61,45 @@ export const App:react.FC = () => {
     }
 
 
-    return <ThemeContext.Provider value={{
+    return <Provider store={store}>
+            <ThemeContext.Provider value={{
         theme:theme, setTheme:setTheme,
         setSwitcherVisibility: setVisibility
         }}>
-            {
-                visibility ?
-                <div>
-                <Switcher></Switcher>
-
-                <div style={{marginBottom: "50px", opacity: "0"}}>
-                    \   
-                </div>
-            </div> : ""
-            }
             
-        
         <Router>
-            <Switch>
-                <Route path={"/registration"}>
-                    <Registration></Registration>
-                </Route>
-                <Route path="/login">
-                    <Login></Login>
-                </Route>
-                <Route path="/index">
-                    <ScreenWithCheckboxes></ScreenWithCheckboxes>
-                </Route>
-                <Route path="/set">
-                    <SetScreenSelection></SetScreenSelection>
-                </Route>
-                <Route path="/:id">
-                    <ViewCard></ViewCard>
-                </Route>
-                <Route path="">
-                    <Redirect to={"index"}></Redirect>
-                </Route>
-            </Switch>
+            <GlobalHeader></GlobalHeader>   
+            <div className="centered">
+                <div className="global-container">
+                    <Switch>
+                    <Route path={"/registration"}>
+                        <Registration></Registration>
+                    </Route>
+                    <Route path="/login">
+                        <Login></Login>
+                    </Route>
+                    <Route path="/index">
+                        <ScreenWithCheckboxes></ScreenWithCheckboxes>
+                    </Route>
+                    <Route path="/set">
+                        <ScreenWithCheckboxes></ScreenWithCheckboxes>
+                    </Route>
+                    <Route path="/:id/view">
+                        <ViewCardEdit></ViewCardEdit>
+                    </Route>
+                    <Route path="/:id">
+                        <ViewCard></ViewCard>
+                    </Route>
+                    <Route path="">
+                        <Redirect to={"index"}></Redirect>
+                    </Route>
+                </Switch>
+                </div>
+            </div>
+            
         </Router>
     </ThemeContext.Provider>
 
+    </Provider> 
 }
 

@@ -4,7 +4,6 @@
 }
 
 .contacts__container{
-    width: 600px;
     display: flex;
     flex-direction: column;
     gap: 80px;
@@ -14,7 +13,7 @@
 .contacts-block{
     display: grid;
     grid-template-columns: 59px 1fr;
-    gap: 6px;
+    gap: 15px;
     align-items: center;
 }
 
@@ -34,14 +33,10 @@
     }
     .contacts__global-container{
         justify-content: start;
-        padding: 10px;
+        padding: 0px;
     }
 }
 
 .icon__sel{
     align-self: flex-end;
-}
-
-.contact__input{
-    width: calc(100% - 40px);
 }

@@ -4,10 +4,11 @@ import react, { RefObject, useEffect, useRef, useState } from "react";
 import {YMaps, Map, SearchControl, Placemark} from "react-yandex-maps";
 
 import {useGetGeoQuery, useSetGeoMutation, useChangeGeoDescrMutation} from "../../generated/graphql";
-import { Footer } from "../../uikit/Footer/Footer";
-import { Header } from "../../uikit/Header/Header";
 import { Input } from "../../uikit/Input/Input";
-import { Text } from "../../uikit/Text/Text";
+import { Navigation } from "../../uikit/Navigation/Navigation";
+
+import {useDispatch} from "react-redux";
+import {changeGeo} from "../../store/GeolocationReducer";
 
 import "./style.css";
 
@@ -15,6 +16,8 @@ export const MapScreen:react.FC = () => {
 
     const [setGeopos] = useSetGeoMutation();
     const [changeDescr] = useChangeGeoDescrMutation();
+
+    const dispatch = useDispatch();
 
     const {data, loading} = useGetGeoQuery({
         variables:{token:localStorage.getItem("token")},
@@ -44,6 +47,12 @@ export const MapScreen:react.FC = () => {
                 lat: res[0],
                 long: res[1]
             }})
+            dispatch(changeGeo(
+                {
+                    lat: res[0],
+                    long: res[1]
+                }
+            ))
         }  
     }
 
@@ -51,11 +60,38 @@ export const MapScreen:react.FC = () => {
         return <div></div>;
     }
 
-    return <div className="map-screen__global-container">
-        <div className="map-screen__container">
-            <Header>Геолокация</Header>
-            <Text>Геолокации пока нет, но скоро завезем</Text>
-            <Footer link={`/${data?.getVisitByUser?.id}`}>Посмотреть визитку</Footer>
+    return <div className="map-screen__container">
+            <Navigation nextName="Тема" currentName="Геолокация" nextLink="/set/theme"></Navigation>
+            <YMaps  enterprise query={{
+                ns: "use-load-option",
+                apikey: "08d03d75-b54e-4081-a2a6-9fcaddc0ae72"
+            }}>
+                <Map defaultState={{ center: pos, zoom: 12 }} width="">
+                    <SearchControl onResultShow={() => {
+                        onResultShow()
+                    }} instanceRef={ref => {
+                    if (ref) search.current = ref;
+                }} options={{ float: 'right' }}  />
+
+                    <Placemark
+            geometry={pos}
+            properties={{
+              balloonContentBody: "Мое местоположение"
+            }}
+          />
+                </Map>
+                
+            </YMaps>
+            <Input
+            value={data?.getVisitByUser?.geoDescr}
+            className="map__input" placeholder={"Описание в визитке"} 
+            onChange={(e:string) => {
+                changeDescr({
+                    variables: {
+                        card_id: data?.getVisitByUser?.id,
+                        geo_descr: e
+                    }
+                })
+            }}></Input>
         </div>
-    </div>
 }

@@ -18,10 +18,21 @@ import {
     useChangeImageDescrMutation
 } from "../../generated/graphql";
 import { Input } from "../../uikit/Input/Input";
+import { Navigation } from "../../uikit/Navigation/Navigation";
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+
+import {useDispatch, useStore} from "react-redux";
+import {setImgHead} from "../../store/profileReducer"
+
+import {editImg, addImg, removeImg} from "../../store/PhotoReducer";
 
 export const PhotoScreen:react.FC = () => {
 
-    const [addImg] = useAddImgMutation();
+
+    const dispatch = useDispatch();
+    const store = useStore();
+
+    const [addImgM] = useAddImgMutation();
     const [delImg] = useDeleteImgMutation();
     const [changeImg] = useChangeImgMutation();
     const [changeDescr] = useChangeImageDescrMutation();
@@ -33,7 +44,11 @@ export const PhotoScreen:react.FC = () => {
     const {loading, data} = useGetImageQuery({
         variables:{token:localStorage.getItem("token")},
         onCompleted:(e) => {
-            console.log(e, "e")
+            e.getVisitByUser?.photoSet.edges.map((e) => 
+            {
+                dispatch(addImg({id: e?.node?.id!, url: e?.node?.url!}))
+                return e;
+            })
             setPhotos(e.getVisitByUser?.photoSet.edges.map(
                 (e) => {return {url:e!.node!.url!, id:e!.node!.id!}!} 
             ))
@@ -46,10 +61,20 @@ export const PhotoScreen:react.FC = () => {
         return <div></div>
     }
 
+ 
+    return <div className="photo__container">
+            <Navigation currentName="Картинки" nextLink="/set/map" nextName="Геолокация"></Navigation>
 
-    return <div className="global-photo__container">
-        <div className="photo__container">
-            <Header>Картинки</Header>
+            <Input className="input__name-photo" 
+            placeholder={"Описание в визитке"} 
+            onChange={(e:string) => {
+                changeDescr({variables:{
+                    card_id: data?.getVisitByUser!.id,
+                    image_descr: e
+                }});
+                dispatch(setImgHead(e))
+            }} value={data?.getVisitByUser!.photoDescr}></Input>
+
             <div className="photo__content">
                 {
                     photos?.map((e) => <div onClick={() => {
@@ -58,48 +83,49 @@ export const PhotoScreen:react.FC = () => {
                         <Image src={e.url}></Image>
                     </div>)
                 }
-                <Block className="photo__container-local">
+                
+            </div>
+            <Block className="photo__container-local add_photo">
                     <label htmlFor="image">
-                        <Text>Добавить +</Text>
+                        <div>Добавить +</div>
                     </label>
                     <input type="file" id="image" accept="image/*" onChange={(e:any) => {
                         var elem = document.getElementById("image")! as any;
-                        console.log(data);
-                        addImg({variables:{
+                        addImgM({variables:{
                             card_id: data?.getVisitByUser?.id, 
                             image: elem.files[0]  
                         }}).then((e) => {
                             setPhotos(photos?.concat([{
                                 url:e.data?.addPhoto?.photo?.url!,
                                 id:e.data?.addPhoto?.photo?.id!}]))
+                            dispatch(addImg({
+                                url:e.data?.addPhoto?.photo?.url!,
+                                id:e.data?.addPhoto?.photo?.id!}));
+                            console.log(store.getState())
                         })
+                
                     }}/>
                 </Block>
-            </div>
-            <Input className="input__name-photo" 
-            placeholder={"Описание в визитке"} 
-            onChange={(e:string) => {
-                changeDescr({variables:{
-                    card_id: data?.getVisitByUser!.id,
-                    image_descr: e
-                }})
-            }} value={data?.getVisitByUser!.photoDescr}></Input>
-            <Footer link={"/set/map"}>Геолокация</Footer>
-        </div>
-        {
+            <ShowCardButton></ShowCardButton>
+            {
             editing.length ?
             ReactDom.createPortal(
                 <ChangeImgPopUp
                 
                 crossClick={() => {setEditing("")}}
                 changeClick={(img:File) => {
+                    
                     changeImg({
                         variables:{
                             id:editing,
                             new_img:img
                         }
                     }).then((data) => {
-
+                        dispatch(editImg({
+                            url: data.data?.editPhoto?.newImg?.url!,
+                            id: editing
+                        }))
+                        console.log(store.getState());
                         setPhotos(photos?.map((e) => {
                             return e.id == editing ?
                             {
@@ -113,6 +139,7 @@ export const PhotoScreen:react.FC = () => {
 
                 }}
                 deleteClick={() => {
+                    dispatch(removeImg(editing))
                     delImg({variables:{
                         img_id: String(editing)
                     }});
@@ -125,5 +152,6 @@ export const PhotoScreen:react.FC = () => {
                 document.getElementById("message")!
             ) : ""
         }
-    </div>
+        </div>
+        
 }

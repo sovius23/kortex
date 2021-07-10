@@ -1,5 +1,6 @@
 import react from "react";
 import { Block } from "../../Block/Block";
+import { Button, ButtonTypes } from "../../Button/Button";
 import { DeleteButton } from "../../DeleteButton/DeleteButton";
 import { Input } from "../../Input/Input";
 import { Text } from "../../Text/Text";
@@ -32,10 +33,10 @@ export const DeleteProjectPopUp:react.FC<IDeletePopUp> = (props) => {
         <div onClick={() => {
             props.onEdit()
         }}>
-            <Block className="create-btn"><Text>Изменить</Text></Block>
+            <Block className="create-btn"><div>Изменить</div></Block>
         </div> 
-        <DeleteButton onClick={() => {
+        <Button type={ButtonTypes.red} onClick={() => {
             props.onDeleteButton()
-        }}>Удалить</DeleteButton>
+        }}>Удалить</Button>
     </BasePopUp>
 }

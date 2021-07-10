@@ -12,6 +12,7 @@ interface IInput{
     className?:string;
     value?:string;
     type?:string;
+    icon?:string;
 }
 
 export const Input:react.FC<IInput> = (props) => {
@@ -19,21 +20,26 @@ export const Input:react.FC<IInput> = (props) => {
     const [val, setVal] = useState(props.value!);
     var type = props.type || "text";
 
-    var input_class = "light-input__container";
-    const {theme} = useContext(ThemeContext);
+    const [flag, setFlag] = useState(false);
 
-    if (theme == Theme.Dark){
-        input_class = "dark-input__container"
+    if (!flag){
+        setFlag(true);
+        setVal(props.value!);
     }
 
-    return <div className="input-global__container">
-        <Text className="input-text">{props.placeholder}</Text>
-        <input type={type} className={"input__container " + input_class + " " + props.className} 
+
+    return <div className={"input-global-global__container " + props.className}>
+        <div className="input-text">{props.placeholder}</div>
+        <div className="input-global__container">
+        <input type={type} className={"input__container " } 
         onChange={(e) => {
             props.onChange(e.target.value);
             setVal(e.target.value);
         }}
         value={val}
         />
-    </div> 
+        <img src={props.icon} alt="" width={26}/>
+    </div>
+
+    </div>  
 }

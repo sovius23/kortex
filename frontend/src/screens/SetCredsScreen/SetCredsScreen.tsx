@@ -9,11 +9,19 @@ import {useGetCredsQuery} from "../../generated/graphql";
 
 import {useSetVisitProfileMutation} from "../../generated/graphql";
 
-import "./style.css";
+import {useDispatch, useSelector, useStore} from "react-redux";
 
-export const SetCredsScreen:react.FC = () => {
+import {setName, setSurname, setMidname, getName} from "../../store/profileReducer";
+
+
+import "./style.css";
+import { Navigation } from "../../uikit/Navigation/Navigation";
+
+export const SetCredsScreen:react.FC = () => { 
+    const store = useStore();
 
     const [setCreds] = useSetVisitProfileMutation();
+    const dispatch = useDispatch();
 
     const {loading, data} = useGetCredsQuery({variables:{token:localStorage.getItem("token")}});
 
@@ -23,29 +31,31 @@ export const SetCredsScreen:react.FC = () => {
 
     return <div className="set-creds__global-container">
         <div className="set-creds__container">
-            <Header>
-                ФИО
-            </Header>
+            <Navigation currentName="ФИО" nextName="Должность" nextLink="/set/position/"></Navigation>
             <div className="set-creds__content">
                 <Input placeholder={"Фамилия"} onChange={(e:string) => {
+                    dispatch(setSurname(e));
                     setCreds({variables:{surname:e, id:data?.getVisitByUser?.id}}) 
                 }} value={
                     data?.getVisitByUser?.surname
                 }></Input>
                 
                 <Input placeholder={"Имя"} onChange={(e:string) => {
-                    setCreds({variables:{name:e, id:data?.getVisitByUser?.id}}) 
+                    dispatch(setName(e));
+                    setCreds({variables:{name:e, id:data?.getVisitByUser?.id}})
+                    console.log(store.getState()) 
                 }} value={
                     data?.getVisitByUser?.name!
                 }></Input>
                 
                 <Input placeholder={"Отчество"} onChange={(e:string) => {
+                    dispatch(setMidname(e));
+                    console.log(store.getState())
                     setCreds({variables:{midname:e, id:data?.getVisitByUser?.id}}) 
                 }} value={
                     data?.getVisitByUser?.midname
                 }></Input>
             </div>
-            <Footer link="/set/position">Должность</Footer>
         </div>
     </div>
 }

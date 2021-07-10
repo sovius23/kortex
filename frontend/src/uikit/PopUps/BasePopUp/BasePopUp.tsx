@@ -15,7 +15,7 @@ export const BasePopUp:react.FC<IBasePopUp> = (props) => {
             <div className="cross" onClick={() => {
                 props.deleteFunc()
             }}>
-                <Text>+</Text></div>
+                <div>+</div></div>
             <div className="create-project__form">
                 {props.children}
             </div>

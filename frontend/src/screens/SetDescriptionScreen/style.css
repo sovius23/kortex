@@ -15,7 +15,6 @@
 @media (max-width: 650px) {
     .setDescr__container{
         width: 100%;
-        padding: 20px;
-        padding-top: 0;
+        padding:0!important;
     }
 }

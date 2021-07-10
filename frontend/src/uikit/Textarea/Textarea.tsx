@@ -26,7 +26,6 @@ export const Textarea:react.FC<ITextarea> = (props) => {
         if (flag == 0) {
             setFlag(1);
             setValue(props.value)
-            console.log(props.value, "asdfasd")
         }
     })
 
@@ -37,7 +36,7 @@ export const Textarea:react.FC<ITextarea> = (props) => {
     }
 
     return <div className="ta-container">
-        <Text className="ta__head">{`Описание (${count}/200)`}</Text>
+        <div className="ta__head">{`Описание (${count}/200)`}</div>
         <textarea className={"ta " + ta_theme} onChange={(e) => {
             props.onChange(e.target.value);
 

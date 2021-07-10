@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 80px;
     padding-top: 43px;
-    width: 725px;
+    width: 725px!important;
 }
 
 .global-photo__container{
@@ -31,4 +31,14 @@
     .photo__content{
         grid-template-columns: 1fr;
     }
+}
+
+.input__name-photo{
+    width: 100%;
+}
+
+.add_photo{
+    width: 100%;
+    padding: 0;
+    height: 68px;
 }

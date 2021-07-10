@@ -2,7 +2,7 @@ import react, {useContext, useState} from "react";
 import { useParams } from "react-router";
 import { isConstTypeReference } from "typescript";
 
-import {useGetVisitByIdQuery} from "../../generated/graphql";
+import {useGetVisitByIdQuery, useGetVisitIdLazyQuery} from "../../generated/graphql";
 import { Block } from "../../uikit/Block/Block";
 import { Icon, IconType } from "../../uikit/Icon/Icon";
 import { Image } from "../../uikit/Image/Image";
@@ -18,6 +18,8 @@ import { Theme, ThemeContext } from "../../App";
 export const ViewCard:react.FC = () => {
 
     const {id} = useParams<{id:string}>();
+
+    const [getData] = useGetVisitIdLazyQuery();
 
     const {data, loading} = useGetVisitByIdQuery({variables:{id:id}});
 
@@ -221,7 +223,8 @@ export const ViewCard:react.FC = () => {
                         defaultState={{ center: [
                             data?.visit?.geopos?.lattitude!,
                             data?.visit?.geopos?.longitude!
-                        ], zoom: 12 }} width=""
+                        ], zoom: 12 } }
+                        width="100%"
                     >
 
                         <Placemark geometry={[

@@ -1,3 +1,4 @@
+{% load static %}
 {% load render_bundle from webpack_loader %}
 
 
@@ -8,7 +9,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>EasyCards</title>
-    {% load static %}
     <link rel="shortcut icon" type="image/x-icon" href='{% static "images/ava3.jpg" %}' />
     <link rel="stylesheet" href='{% static "css/index.css" %}'>
     <link rel="preconnect" href="https://fonts.gstatic.com">
@@ -22,6 +22,12 @@
           height: 100%;
           padding: 0;
           margin: 0;
+        }
+        *{
+          color: #3D3F3E;
+        }
+        *::-webkit-scrollbar{
+          display: none;
         }
         body{
           --back-color: #F0F0F3;

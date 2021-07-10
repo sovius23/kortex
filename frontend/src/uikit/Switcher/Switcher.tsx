@@ -14,41 +14,28 @@ import "./style.css";
 import { useChangeStateMutation } from "../../generated/graphql";
 
 
-export const Switcher:react.FC = () => {
+interface ISwitcher{
+    state:Boolean;
+    onChange?:Function;
+}
+
+export const Switcher:react.FC<ISwitcher> = (props) => {
 
     const {theme, setTheme} = useContext(ThemeContext);
 
     var checked = theme == Theme.Dark;
 
-    const [changeTheme] = useChangeStateMutation();
 
-    const [flag, setFlag] = useState(false);
+    console.log(props);
+    
 
-
-    var switcher_class = "light-switcher__container";
-    var onImg = "/static/images/switch_on.svg";
-    var offImg = "/static/images/switch_of.png";
-
-    if (theme == Theme.Dark) {
-        switcher_class = "dark-switcher__container";
-    }
-
-    if (flag == false) {
-        setFlag(true);
-    }
-
-    return <Block className="switcher__global-container">
-        <Text className="switcher__text">Темная тема</Text>
-        <div className={"switcher__container " + switcher_class} onClick={() => {
-            changeTheme({variables:{
-                token: localStorage.getItem("token"),
-                state: theme == Theme.Dark ? "Light" : "Dark"
-            }})
-            setTheme(theme == Theme.Dark ? Theme.Light : Theme.Dark);
-        }}>
-            <img src={
-                checked ? onImg : offImg
-            } width={"64px"}></img>
+    return <div className="switcher__global-container">
+        <div className="switcher__text">Темная тема</div>
+        <div className="switcher__container" onClick={() => {
+            props.onChange!(props.state);
+            }}>
+            <div className={"switcher__dark " + 
+                (!props.state ? "to-end" : "")}></div>
         </div>
-    </Block>
+    </div>
 }
