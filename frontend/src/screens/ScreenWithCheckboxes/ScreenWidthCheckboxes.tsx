@@ -102,7 +102,7 @@ export const ScreenWithCheckboxes:react.FC = () => {
 
         <div className="show-creds main-screen__block">
             <Input readonly value={
-                window.location.protocol + window.location.host + "/" + card_verb_id
+                window.location.protocol + "//" + window.location.host + "/" + card_verb_id
             } icon={"static/images/copy.svg"} placeholder={"Визитка доступна по"} onChange={() => {}}></Input>
         </div>
 
