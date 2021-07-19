@@ -19,3 +19,9 @@
         padding-top: 0;
     }
 }
+
+.setDescr__content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}

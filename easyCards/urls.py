@@ -24,6 +24,8 @@ from django.http import HttpResponse
 from django.shortcuts import redirect
 
 
+
+
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("graphql/", csrf_exempt(FileUploadGraphQLView.as_view(graphiql=True)), name="gq"),

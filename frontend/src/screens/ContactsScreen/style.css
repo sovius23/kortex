@@ -40,3 +40,9 @@
 .icon__sel{
     align-self: flex-end;
 }
+
+.contacts-content__button{
+    display: flex;
+    flex-direction: column;
+    gap: 36px;
+}

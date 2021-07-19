@@ -20,26 +20,28 @@ import {
     setVk,
     setWhatsapp
 } from "../../store/ContactsReducer"; 
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+import { RootType } from "../../store/store";
 
-function typeOfInpts(data:GetContactsQuery, input:IconType) {
+function typeOfInpts(store:RootType, input:IconType) {
 
     switch (input) {
         case IconType.facebook:
-            return data.getVisitByUser?.contacts?.facebookLink
+            return store.contactsReducer.facebook == "None" ? "" : store.contactsReducer.facebook
         case IconType.inst:
-            return data.getVisitByUser?.contacts?.instLink
+            return store.contactsReducer.inst == "None" ? "" : store.contactsReducer.inst
         case IconType.tel:
-            return data.getVisitByUser?.contacts?.phone
+            return store.contactsReducer.tel == "None" ? "" : store.contactsReducer.tel
         case IconType.tg:
-            return data.getVisitByUser?.contacts?.tgLink
+            return store.contactsReducer.tg == "None" ? "" : store.contactsReducer.tg
         case IconType.twitter:
-            return data.getVisitByUser?.contacts?.twitterLink
+            return store.contactsReducer.twitter == "None" ? "" : store.contactsReducer.twitter
         case IconType.vk:
-            return data.getVisitByUser?.contacts?.vkLink
+            return store.contactsReducer.vk == "None" ? "" : store.contactsReducer.vk
         case IconType.web:
-            return data.getVisitByUser?.contacts?.website
+            return store.contactsReducer.web == "None" ? "" : store.contactsReducer.web
         case IconType.ws:
-            return data.getVisitByUser?.contacts?.whatsappLink
+            return store.contactsReducer.whatsapp == "None" ? "" : store.contactsReducer.whatsapp
     }
 }
 
@@ -50,7 +52,51 @@ export const ContactsScreen:react.FC = () => {
     const store = useStore();
     const {data, loading} = useGetContactsQuery({variables:{token:localStorage.getItem("token")}})
     const [changeContacts] = useChangeContactsMutation();
+    if (loading) {
+        return <div></div>
+    }
+    console.log(data);
+    if (data?.getVisitByUser?.contacts?.facebookLink?.length &&
+        ((store.getState() as RootType).contactsReducer.facebook == "None")) {
+            dispatch(setFacebook(data.getVisitByUser.contacts.facebookLink));
+    }
 
+    if (data?.getVisitByUser?.contacts?.twitterLink?.length &&
+        ((store.getState() as RootType).contactsReducer.twitter == "None")) {
+            dispatch(setTwitter(data.getVisitByUser.contacts.twitterLink));
+    }
+
+    if (data?.getVisitByUser?.contacts?.vkLink?.length &&
+        ((store.getState() as RootType).contactsReducer.vk == "None")) {
+            dispatch(setVk(data.getVisitByUser.contacts.vkLink));
+    }
+
+    if (data?.getVisitByUser?.contacts?.phone?.length &&
+        ((store.getState() as RootType).contactsReducer.tel == "None")) {
+            dispatch(setTel(data.getVisitByUser.contacts.phone));
+    }
+
+    if (data?.getVisitByUser?.contacts?.instLink?.length &&
+        (store.getState() as RootType).contactsReducer.inst == "None") {
+            dispatch(setInst(data.getVisitByUser.contacts.instLink));
+    }
+
+    if (data?.getVisitByUser?.contacts?.tgLink?.length &&
+        (store.getState() as RootType).contactsReducer.tg == "None") {
+            dispatch(setTg(data.getVisitByUser.contacts.tgLink));
+    }
+
+    if (data?.getVisitByUser?.contacts?.website?.length &&
+        (store.getState() as RootType).contactsReducer.web == "None") {
+            dispatch(setWeb(data.getVisitByUser.contacts.website));
+    }
+
+    if (data?.getVisitByUser?.contacts?.whatsappLink?.length &&
+        (store.getState() as RootType).contactsReducer.whatsapp == "None") {
+            dispatch(setWhatsapp(data.getVisitByUser.contacts.whatsappLink));
+    }
+
+    console.log(store.getState())
 
     const contacts_data = [
         {type: IconType.inst, name: "Instagram", reduxF: setInst,
@@ -70,32 +116,32 @@ export const ContactsScreen:react.FC = () => {
         {type: IconType.facebook, name: "Facebook", reduxF: setFacebook,
         onChange: (e:string) => {return {facebookLink:e}}}
     ]
-
-    if (loading) {
-        return <div></div>
-    }
+    window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="contacts__container">
-            <Navigation nextName="Второе описание" nextLink="/set/second-description" currentName="Контакты"></Navigation>
-            <div className="contacts__content">
-                {
-                    contacts_data.map((e) => <div className="contacts-block">
-                        <div className="icon__sel">
-                            <Icon type={e.type}></Icon>
-                        </div>
-                        <Input className="contact__input" placeholder={e.name} value={typeOfInpts(data!,e.type)!} 
-                        onChange={(el:string) => {
-                            changeContacts({variables:{
-                                contacts_id: data?.getVisitByUser?.contacts?.id,
-                                ...e.onChange(el)
-                            }})
-                            dispatch(e.reduxF(el));
-                            console.log(store.getState())
-                        }}></Input> 
-                    </div>)
-                }
-                
+            <Navigation nextName="Проекты" nextLink="/set/projects" currentName="Контакты"></Navigation>
+            
+            <div className="contacts-content__button">
+                <div className="contacts__content">
+                    {
+                        contacts_data.map((e) => <div className="contacts-block">
+                            <div className="icon__sel">
+                                <Icon type={e.type}></Icon>
+                            </div>
+                            <Input className="contact__input" placeholder={e.name} value={typeOfInpts(store.getState(),e.type)!} 
+                            onChange={(el:string) => {
+                                changeContacts({variables:{
+                                    contacts_id: data?.getVisitByUser?.contacts?.id,
+                                    ...e.onChange(el)
+                                }})
+                                dispatch(e.reduxF(el));
+                                console.log(store.getState())
+                            }}></Input> 
+                        </div>)
+                    } 
+                </div>
+                <ShowCardButton></ShowCardButton>
             </div>
-            <Footer link={"/set/second-description"}>Второе описание</Footer>
+            
         </div>
 }

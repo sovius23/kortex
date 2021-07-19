@@ -9,13 +9,6 @@ import AvatarEditor from 'react-avatar-editor';
 
 import "./cropper.css";
 
-function urltoFile(url:string, filename:string, mimeType:string){
-    mimeType = mimeType || (url.match(/^data:([^;]+);/)||'')[1];
-    return (fetch(url)
-        .then(function(res){return res.arrayBuffer();})
-        .then(function(buf){return new File([buf], filename, {type:mimeType});})
-    );
-}
 
 interface ICoords{
     x:number;
@@ -25,15 +18,15 @@ interface ICoords{
 interface IMYCropper{
     src:string;
     coords?:ICoords;
+    zoom:number;
     onChange?:Function;
 }
 
 export const MyCropper:react.FC<IMYCropper> = (props) => {
 
-    var editor:AvatarEditor|null;
 
-
-    const [zoom, setZoom] = react.useState(1.3);
+    const [zoom, setZoom] = react.useState(props.zoom);
+    const [cords, setCords] = react.useState(props.coords);
 
 
     let options = {
@@ -42,31 +35,30 @@ export const MyCropper:react.FC<IMYCropper> = (props) => {
         }
       };
     return <Hammer options={options} onPinchIn={() => {
-        console.log("on pintch")
-        setZoom(Math.max(zoom-0.05, 0.8))
+        setZoom(Math.max(zoom-0.03, 0.8))
+        props.onChange!(cords, Math.max(zoom-0.03, 0.8))
     }} onPinchOut={() => {
-        setZoom(Math.max(zoom+0.05, 0.8))
-        console.log("pinch out")
+        props.onChange!(cords, Math.max(zoom+0.03, 0.8))
+        setZoom(Math.max(zoom+0.03, 0.8))
     }}>
         <div onWheel={(e) => {
-            
+            props.onChange!(cords, Math.max(e.deltaY * -0.002 + zoom, 0.8))
             setZoom(Math.max(e.deltaY * -0.002 + zoom, 0.8))
         }}>
         <AvatarEditor
+            position={cords}
             image={props.src}
             width={200}
             height={200}
             border={50}
-            color={[36, 36, 36, 0.49]} // RGBA
+            color={[36, 36, 36, 0.49]}
             scale={zoom}
             borderRadius={500}
             onPositionChange={(e) => {
-                props.onChange!(e);
+                setCords(e);
+                props.onChange!(e, zoom);
             }}
         />
         </div>
-
-        
-
     </Hammer> 
 }

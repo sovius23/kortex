@@ -1,7 +1,7 @@
 .map-screen__container{
     width: 600px;
     border-radius: 10px;
-    gap: 80px;
+    gap: 43px;
     display: flex;
     flex-direction: column;
     margin-top: 43px;
@@ -18,4 +18,10 @@
     .map-screen-container{
         width: calc(100vw - 80px);
     }
+}
+
+.map-container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }

@@ -3,7 +3,13 @@ from graphene_django import DjangoObjectType
 
 from graphene import relay
 
-from .models import VisitCard, Photo, Contacts, Project, GeoPos
+from .models import VisitCard, Photo, Contacts, Project, GeoPos, Block
+
+
+class BlockType(DjangoObjectType):
+    class Meta:
+        model = Block
+        interfaces = [relay.Node]
 
 
 class VisitCardType(DjangoObjectType):

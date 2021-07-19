@@ -54,7 +54,10 @@ INSTALLED_APPS = [
     'django_filters',
     'visitCards',
     "webpack_loader",
-    'frontend'
+    'frontend',
+    "graphql_auth",
+    "rest_framework"
+
 ]
 GRAPHENE = {
     'SCHEMA': 'easyCards.schema.schema',
@@ -161,8 +164,27 @@ AUTHENTICATION_BACKENDS = [
 
 GRAPHQL_JWT = {
     'JWT_ALLOW_ARGUMENT': True,
+"JWT_ALLOW_ANY_CLASSES": [
+        "graphql_auth.mutations.Register",
+        "graphql_auth.mutations.VerifyAccount",
+        "graphql_auth.mutations.ResendActivationEmail",
+        "graphql_auth.mutations.SendPasswordResetEmail",
+        "graphql_auth.mutations.PasswordReset",
+        "graphql_auth.mutations.ObtainJSONWebToken",
+        "graphql_auth.mutations.VerifyToken",
+        "graphql_auth.mutations.RefreshToken",
+        "graphql_auth.mutations.RevokeToken",
+        "graphql_auth.mutations.VerifySecondaryEmail",
+    ],
 }
 JWT_ARGUMENT_NAME = "token"
+
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+EMAIL_HOST = "smtp.gmail.com"
+EMAIL_USE_TLS = True
+EMAIL_PORT = 587
+EMAIL_HOST_USER = "il.vsl0110@gmail.com"
+EMAIL_HOST_PASSWORD = "ubzbdrchlzrbbyca"
 
 
 # Internationalization

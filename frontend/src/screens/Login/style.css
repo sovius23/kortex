@@ -20,7 +20,7 @@
 }
 
 .block__btn-container{
-    width: calc(100% - 40px);
+    width: calc(100%);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -32,4 +32,11 @@
 
 .link__login-text{
     text-decoration: underline;
+}
+
+
+@media(max-width:500px) {
+    .login__container{
+        width: calc(100% - 10px);
+    }
 }

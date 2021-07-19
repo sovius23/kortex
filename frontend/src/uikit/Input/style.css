@@ -26,3 +26,29 @@
     flex-direction: row;
     justify-content: space-between;
 }
+
+.copied{
+    color: #D04E54;
+    align-self: center;
+    text-align: center;
+}
+
+.input__dark{
+    color:white;
+    background-color: rgba(0,0,0,0);
+}
+
+.input__c-dark{
+    border: none;
+    background: linear-gradient(4.08deg, #23272C -611.53%, #1C1E22 155.69%, #121416 155.69%);
+}
+
+.global-grad__container{
+
+    width:100%;
+    background: linear-gradient(149.66deg, #C54B4F -84.4%, rgba(28, 18, 19, 0) 39.44%, #000000 122.2%);
+    padding: 1px;
+    height: fit-content;
+    border-radius: 10px;
+}
+

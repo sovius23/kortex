@@ -26,6 +26,7 @@ import {useDispatch, useStore} from "react-redux";
 import {setProjectHead} from "../../store/profileReducer";
 
 import {removeProject, addProject, changeProject} from "../../store/ProjectsReducer";
+import { RootType } from "../../store/store";
 
 export const ProjectScreen:react.FC = () => {
 
@@ -42,6 +43,8 @@ export const ProjectScreen:react.FC = () => {
     const [editProject] = useEditProjMutation();
     const [changeProjectDesr] = useChangeProjectDescrMutation();
 
+    
+
 
     var EditObj = {name: "", link: ""};
 
@@ -49,9 +52,14 @@ export const ProjectScreen:react.FC = () => {
         variables:{token:localStorage.getItem("token")},
         onCompleted:(e) => {
             var projList = [];
+            var flag = false;
+            if ((store.getState() as RootType).projectReducer.projects.length){
+                flag = true;
+            }
             for (var i of e.getVisitByUser?.projectSet.edges!) {
                 projList.push({name:i?.node?.name!, link:i?.node?.link!, id:i?.node?.id!});
-                dispatch(addProject({name:i?.node?.name!, link:i?.node?.link!, id:i?.node?.id!}))
+                if (!flag){
+                dispatch(addProject({name:i?.node?.name!, link:i?.node?.link!, id:i?.node?.id!}))}
             }
             setProjectData(projList!);
         }
@@ -61,14 +69,20 @@ export const ProjectScreen:react.FC = () => {
         return <div></div>
     }
 
+
+    if ((store.getState() as RootType).profileReducer.project_head == "None") {
+        dispatch(setProjectHead(data?.getVisitByUser?.projectDescr || ""))
+    }
+
     console.log(data);
     var object = {name: "", url: ""};
+    window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="project__projects">
             <Navigation nextName="Картинки" currentName="Проекты" nextLink="/set/photos"></Navigation>
 
             <Input className="inpt" placeholder={"Описание в визитке"} value={
-                data?.getVisitByUser?.projectDescr 
+                (store.getState() as RootType).profileReducer.project_head
             } onChange={(e:string) => {
                 changeProjectDesr({variables:{
                     card_id: data?.getVisitByUser?.id!,
@@ -79,7 +93,7 @@ export const ProjectScreen:react.FC = () => {
 
             <div className="project__container-edit">
                 {
-                    projectData?.map((e) => 
+                    (store.getState() as RootType).projectReducer.projects?.map((e) => 
                     <div onClick ={() => {
                         setIsEdition(e.id);
                     }}>

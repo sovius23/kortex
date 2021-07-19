@@ -28,11 +28,14 @@ const imagesSlice = createSlice({
         editImg(state, action:PayloadAction<IImage>) {
             state.images = state.images.map(
                 (e) => {return e.id == action.payload.id ? action.payload : e})
+        },
+        setImages(state, action:PayloadAction<IImage[]>) {
+            state.images = action.payload;
         }
     }
 })
 
-export const {removeImg, addImg, editImg} = imagesSlice.actions;
+export const {removeImg, addImg, editImg, setImages} = imagesSlice.actions;
 
 export default imagesSlice.reducer
 

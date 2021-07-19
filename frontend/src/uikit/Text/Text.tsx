@@ -5,17 +5,17 @@ import "./style.css";
 
 interface IText{
     className?:string;
+    dark?:boolean;
 }
 
 export const Text:react.FC<IText> = (props) => {
 
-    const {theme} = useContext(ThemeContext);
     
     var text_class = "text-light";
 
-    if (theme == Theme.Dark) {
+    if (props.dark) {
         text_class = "text-dark";
     } 
 
-    return <div className={text_class + " " + props.className}>{props.children}</div>
+    return <span className={text_class + " " + props.className}>{props.children}</span>
 }

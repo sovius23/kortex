@@ -39,7 +39,7 @@ export enum IconType{
     facebook
 }
 
-export const Icon:react.FC<{type:IconType}> = (props) => {
+export const Icon:react.FC<{type:IconType; dark?:boolean}> = (props) => {
 
     const Icons = new Map([
         [
@@ -92,10 +92,10 @@ export const Icon:react.FC<{type:IconType}> = (props) => {
         ]
     ])
 
-    const {theme} = useContext(ThemeContext);
+    var theme = props.dark ? Theme.Dark : Theme.Light;
 
-    return <Block className="icon-block">
-        <img src={Icons.get(props.type)?.get(theme)} alt="" />
+    return <Block className="icon-block" dark={props.dark}>
+        <img src={Icons.get(props.type)?.get(theme)} alt="" width={52} />
     </Block>
 }
 

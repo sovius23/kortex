@@ -18,3 +18,33 @@
         padding:0!important;
     }
 }
+
+.setDescr__content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.descr__container{
+    margin-top: 43px;
+    width: 100%;
+}
+
+.blocks__container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    padding: 20px 0px;
+}
+
+.full-scr{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 68px;
+    padding: 0px;
+}
+
+.add-btn{
+    margin-bottom: 20px;
+}

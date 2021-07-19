@@ -1,0 +1,9 @@
+.line{
+    background: linear-gradient(149.66deg, #C54B4F -84.4%, rgba(28, 18, 19, 0) 39.44%, #000000 122.2%);
+    width: 100%;
+    height: 1px;
+}
+
+.light{
+    background: #eee;
+}

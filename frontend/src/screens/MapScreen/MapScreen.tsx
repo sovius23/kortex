@@ -7,15 +7,20 @@ import {useGetGeoQuery, useSetGeoMutation, useChangeGeoDescrMutation} from "../.
 import { Input } from "../../uikit/Input/Input";
 import { Navigation } from "../../uikit/Navigation/Navigation";
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useStore} from "react-redux";
 import {changeGeo} from "../../store/GeolocationReducer";
 
 import "./style.css";
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+import { RootType } from "../../store/store";
+import { setMapHead } from "../../store/profileReducer";
 
 export const MapScreen:react.FC = () => {
-
+    const store = useStore();
     const [setGeopos] = useSetGeoMutation();
     const [changeDescr] = useChangeGeoDescrMutation();
+
+    
 
     const dispatch = useDispatch();
 
@@ -35,7 +40,15 @@ export const MapScreen:react.FC = () => {
 
     const search = useRef<any>(null);
 
-    const [text, setText] = useState("");
+
+    if ((store.getState() as RootType).geoReducer.lat == 0) {
+        dispatch(changeGeo({
+            lat: data?.getVisitByUser?.geopos?.lattitude || 0,
+            long: data?.getVisitByUser?.geopos?.longitude || 0
+        }))
+    }
+
+    
 
     const onResultShow = () => {
         if (search.current) {
@@ -60,38 +73,55 @@ export const MapScreen:react.FC = () => {
         return <div></div>;
     }
 
+    if ((store.getState() as RootType).profileReducer.map_head == "None") {
+        dispatch(setMapHead(data?.getVisitByUser?.geoDescr || ""))
+    }
+
+    window.document.body.style.setProperty("--back-color", "#fff");
+
     return <div className="map-screen__container">
             <Navigation nextName="Тема" currentName="Геолокация" nextLink="/set/theme"></Navigation>
-            <YMaps  enterprise query={{
-                ns: "use-load-option",
-                apikey: "08d03d75-b54e-4081-a2a6-9fcaddc0ae72"
-            }}>
-                <Map defaultState={{ center: pos, zoom: 12 }} width="">
-                    <SearchControl onResultShow={() => {
-                        onResultShow()
-                    }} instanceRef={ref => {
-                    if (ref) search.current = ref;
-                }} options={{ float: 'right' }}  />
-
-                    <Placemark
-            geometry={pos}
-            properties={{
-              balloonContentBody: "Мое местоположение"
-            }}
-          />
-                </Map>
-                
-            </YMaps>
+            
+            <div className="map-container">
             <Input
-            value={data?.getVisitByUser?.geoDescr}
-            className="map__input" placeholder={"Описание в визитке"} 
-            onChange={(e:string) => {
-                changeDescr({
-                    variables: {
-                        card_id: data?.getVisitByUser?.id,
-                        geo_descr: e
-                    }
-                })
-            }}></Input>
+                value={(store.getState() as RootType).profileReducer.map_head}
+                className="map__input" placeholder={"Описание в визитке"} 
+                onChange={(e:string) => {
+                    changeDescr({
+                        variables: {
+                            card_id: data?.getVisitByUser?.id,
+                            geo_descr: e
+                        }
+                    });
+                    dispatch(
+                        setMapHead(e)
+                    )
+                }}></Input>
+                <YMaps  enterprise query={{
+                    ns: "use-load-option",
+                    apikey: "08d03d75-b54e-4081-a2a6-9fcaddc0ae72"
+                }}>
+                    <Map defaultState={{ center: pos, zoom: 12 }} width="">
+                        <SearchControl onResultShow={() => {
+                            onResultShow()
+                        }} instanceRef={ref => {
+                        if (ref) search.current = ref;
+                    }} options={{ float: 'right' }}  />
+
+                        <Placemark
+                geometry={[
+                    (store.getState() as RootType).geoReducer.lat,
+                    (store.getState() as RootType).geoReducer.long
+                ]}
+                properties={{
+                balloonContentBody: "Мое местоположение"
+                }}
+            />
+                    </Map>
+                    
+                </YMaps>
+                <ShowCardButton></ShowCardButton>
+            </div>
+            
         </div>
 }

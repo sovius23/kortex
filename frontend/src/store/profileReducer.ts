@@ -3,6 +3,7 @@ import {createStore} from "redux";
 import {createSelector} from "reselect";
 
 import {createSlice, PayloadAction} from "@reduxjs/toolkit";
+import { stat } from "fs";
 
 interface IinitialState{
     name:string;
@@ -12,11 +13,13 @@ interface IinitialState{
     position:string;
     description_first:string;
     description_second:string;
-    is_dark:boolean;
+    is_dark:string;
     cropped_img:string;
     img_head:string;
     project_head:string;
     image_cords: ICoord; 
+    zoom:number;
+    map_head:string;
 }
 
 interface ICoord{
@@ -25,18 +28,20 @@ interface ICoord{
 }
 
 const initialState:IinitialState = {
-    name: "",
-    email: "",
-    surname: "",
-    midname: "",
-    position: "",
-    description_first: "",
-    description_second: "",
-    is_dark: false,
-    cropped_img: "",
-    img_head: "",
-    project_head:"",
-    image_cords : {x:0, y:0}
+    name: "None",
+    email: "None",
+    surname: "None",
+    midname: "None",
+    position: "None",
+    description_first: "None",
+    description_second: "None",
+    is_dark: "None",
+    cropped_img: "None",
+    img_head: "None",
+    project_head:"None",
+    image_cords : {x:-1, y:-1},
+    zoom: -1,
+    map_head:"None"
 }
 
 const profileSlice = createSlice({
@@ -67,8 +72,8 @@ const profileSlice = createSlice({
         setCroppedImg(state, action:PayloadAction<string>) {
             state.cropped_img = action.payload;
         },
-        setTheme(state, action:PayloadAction<boolean>) {
-            state.is_dark = action.payload
+        setTheme(state, action:PayloadAction<string>) {
+            state.is_dark = action.payload;
         },
         setProjectHead(state, action:PayloadAction<string>) {
             state.project_head = action.payload
@@ -78,6 +83,12 @@ const profileSlice = createSlice({
         },
         setCoords(state, action:PayloadAction<ICoord>){
             state.image_cords = action.payload;
+        },
+        setZoom(state, action:PayloadAction<number>) {
+            state.zoom = action.payload;
+        },
+        setMapHead(state, action:PayloadAction<string>){
+            state.map_head = action.payload;
         }
     }
 })
@@ -131,7 +142,7 @@ export const getSecondDescription = createSelector(
     descr => descr
 )
 
-export const {setImgHead, setProjectHead, setTheme, setCroppedImg, setName, setMidname, setSurname, setEmail,
+export const {setMapHead, setZoom, setImgHead, setProjectHead, setTheme, setCroppedImg, setName, setMidname, setSurname, setEmail,
                 setPosition, setDescriptionFirst, setDescriptionSecond, setCoords} = profileSlice.actions
 
 export default profileSlice.reducer

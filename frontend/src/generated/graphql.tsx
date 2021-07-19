@@ -13,6 +13,40 @@ export type Scalars = {
   Int: number;
   Float: number;
   /**
+   * The `DateTime` scalar type represents a DateTime
+   * value as specified by
+   * [iso8601](https://en.wikipedia.org/wiki/ISO_8601).
+   */
+  DateTime: any;
+  /**
+   *
+   *     Errors messages and codes mapped to
+   *     fields or non fields errors.
+   *     Example:
+   *     {
+   *         field_name: [
+   *             {
+   *                 "message": "error message",
+   *                 "code": "error_code"
+   *             }
+   *         ],
+   *         other_field: [
+   *             {
+   *                 "message": "error message",
+   *                 "code": "error_code"
+   *             }
+   *         ],
+   *         nonFieldErrors: [
+   *             {
+   *                 "message": "error message",
+   *                 "code": "error_code"
+   *             }
+   *         ]
+   *     }
+   *
+   */
+  ExpectedErrorType: any;
+  /**
    * The `GenericScalar` scalar type represents a generic
    * GraphQL scalar value that could be:
    * String, Boolean, Int, Float, List or Object.
@@ -25,6 +59,11 @@ export type Scalars = {
   Upload: any;
 };
 
+export type AddBlock = {
+  __typename?: 'AddBlock';
+  block?: Maybe<BlockType>;
+};
+
 export type AddPhoto = {
   __typename?: 'AddPhoto';
   photo?: Maybe<PhotoType>;
@@ -33,6 +72,48 @@ export type AddPhoto = {
 export type AddProject = {
   __typename?: 'AddProject';
   project?: Maybe<ProjectType>;
+};
+
+/**
+ * Archive account and revoke refresh tokens.
+ *
+ * User must be verified and confirm password.
+ */
+export type ArchiveAccount = {
+  __typename?: 'ArchiveAccount';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+export type BlockType = Node & {
+  __typename?: 'BlockType';
+  /** The ID of the object. */
+  id: Scalars['ID'];
+  descr: Scalars['String'];
+  name: Scalars['String'];
+  card?: Maybe<VisitCardType>;
+};
+
+export type BlockTypeConnection = {
+  __typename?: 'BlockTypeConnection';
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** Contains the nodes in this connection. */
+  edges: Array<Maybe<BlockTypeEdge>>;
+};
+
+/** A Relay edge containing a `BlockType` and its cursor. */
+export type BlockTypeEdge = {
+  __typename?: 'BlockTypeEdge';
+  /** The item at the end of the edge */
+  node?: Maybe<BlockType>;
+  /** A cursor for use in pagination */
+  cursor: Scalars['String'];
+};
+
+export type ChangeBlock = {
+  __typename?: 'ChangeBlock';
+  ok?: Maybe<Scalars['Boolean']>;
 };
 
 export type ChangeContacts = {
@@ -52,6 +133,11 @@ export type ChangeLogoCord = {
 
 export type ChangeNames = {
   __typename?: 'ChangeNames';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
+export type ChangePassword = {
+  __typename?: 'ChangePassword';
   ok?: Maybe<Scalars['Boolean']>;
 };
 
@@ -90,10 +176,26 @@ export type CreateUser = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
+
+/**
+ * Delete account permanently or make `user.is_active=False`.
+ *
+ * The behavior is defined on settings.
+ * Anyway user refresh tokens are revoked.
+ *
+ * User must be verified and confirm password.
+ */
+export type DeleteAccount = {
+  __typename?: 'DeleteAccount';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
 export type EditProject = {
   __typename?: 'EditProject';
   ok?: Maybe<Scalars['Boolean']>;
 };
+
 
 
 export type GeoPosType = Node & {
@@ -105,8 +207,169 @@ export type GeoPosType = Node & {
   card: VisitCardType;
 };
 
+export type IfUserAdmin = {
+  __typename?: 'IfUserAdmin';
+  isAdmin?: Maybe<Scalars['Boolean']>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
+  /**
+   * Register user with fields defined in the settings.
+   *
+   * If the email field of the user model is part of the
+   * registration fields (default), check if there is
+   * no user with that email or as a secondary email.
+   *
+   * If it exists, it does not register the user,
+   * even if the email field is not defined as unique
+   * (default of the default django user model).
+   *
+   * When creating the user, it also creates a `UserStatus`
+   * related to that user, making it possible to track
+   * if the user is archived, verified and has a secondary
+   * email.
+   *
+   * Send account verification email.
+   *
+   * If allowed to not verified users login, return token.
+   */
+  register?: Maybe<Register>;
+  /**
+   * Verify user account.
+   *
+   * Receive the token that was sent by email.
+   * If the token is valid, make the user verified
+   * by making the `user.status.verified` field true.
+   */
+  verifyAccount?: Maybe<VerifyAccount>;
+  /**
+   * Sends activation email.
+   *
+   * It is called resend because theoretically
+   * the first activation email was sent when
+   * the user registered.
+   *
+   * If there is no user with the requested email,
+   * a successful response is returned.
+   */
+  resendActivationEmail?: Maybe<ResendActivationEmail>;
+  /**
+   * Send password reset email.
+   *
+   * For non verified users, send an activation
+   * email instead.
+   *
+   * Accepts both primary and secondary email.
+   *
+   * If there is no user with the requested email,
+   * a successful response is returned.
+   */
+  sendPasswordResetEmail?: Maybe<SendPasswordResetEmail>;
+  /**
+   * Change user password without old password.
+   *
+   * Receive the token that was sent by email.
+   *
+   * If token and new passwords are valid, update
+   * user password and in case of using refresh
+   * tokens, revoke all of them.
+   *
+   * Also, if user has not been verified yet, verify it.
+   */
+  passwordReset?: Maybe<PasswordReset>;
+  /**
+   * Set user password - for passwordless registration
+   *
+   * Receive the token that was sent by email.
+   *
+   * If token and new passwords are valid, set
+   * user password and in case of using refresh
+   * tokens, revoke all of them.
+   *
+   * Also, if user has not been verified yet, verify it.
+   */
+  passwordSet?: Maybe<PasswordSet>;
+  /**
+   * Change account password when user knows the old password.
+   *
+   * A new token and refresh token are sent. User must be verified.
+   */
+  passwordChange?: Maybe<PasswordChange>;
+  /**
+   * Update user model fields, defined on settings.
+   *
+   * User must be verified.
+   */
+  updateAccount?: Maybe<UpdateAccount>;
+  /**
+   * Archive account and revoke refresh tokens.
+   *
+   * User must be verified and confirm password.
+   */
+  archiveAccount?: Maybe<ArchiveAccount>;
+  /**
+   * Delete account permanently or make `user.is_active=False`.
+   *
+   * The behavior is defined on settings.
+   * Anyway user refresh tokens are revoked.
+   *
+   * User must be verified and confirm password.
+   */
+  deleteAccount?: Maybe<DeleteAccount>;
+  /**
+   * Send activation to secondary email.
+   *
+   * User must be verified and confirm password.
+   */
+  sendSecondaryEmailActivation?: Maybe<SendSecondaryEmailActivation>;
+  /**
+   * Verify user secondary email.
+   *
+   * Receive the token that was sent by email.
+   * User is already verified when using this mutation.
+   *
+   * If the token is valid, add the secondary email
+   * to `user.status.secondary_email` field.
+   *
+   * Note that until the secondary email is verified,
+   * it has not been saved anywhere beyond the token,
+   * so it can still be used to create a new account.
+   * After being verified, it will no longer be available.
+   */
+  verifySecondaryEmail?: Maybe<VerifySecondaryEmail>;
+  /**
+   * Swap between primary and secondary emails.
+   *
+   * Require password confirmation.
+   */
+  swapEmails?: Maybe<SwapEmails>;
+  /**
+   * Remove user secondary email.
+   *
+   * Require password confirmation.
+   */
+  removeSecondaryEmail?: Maybe<RemoveSecondaryEmail>;
+  /**
+   * Obtain JSON web token for given user.
+   *
+   * Allow to perform login with different fields,
+   * and secondary email if set. The fields are
+   * defined on settings.
+   *
+   * Not verified users can login by default. This
+   * can be changes on settings.
+   *
+   * If user is archived, make it unarchive and
+   * return `unarchiving=True` on output.
+   */
+  tokenAuth?: Maybe<ObtainJsonWebToken>;
+  /** Same as `grapgql_jwt` implementation, with standard output. */
+  verifyToken?: Maybe<VerifyToken>;
+  /** Same as `grapgql_jwt` implementation, with standard output. */
+  refreshToken?: Maybe<RefreshToken>;
+  /** Same as `grapgql_jwt` implementation, with standard output. */
+  revokeToken?: Maybe<RevokeToken>;
   createUser?: Maybe<CreateUser>;
   changeContacts?: Maybe<ChangeContacts>;
   changeVisitCardProfile?: Maybe<ChangeVisitCardProfile>;
@@ -123,8 +386,115 @@ export type Mutation = {
   changeTheme?: Maybe<ChangeTheme>;
   changeFullPhoto?: Maybe<UpdateFullPhoto>;
   changeLogoCords?: Maybe<ChangeLogoCord>;
-  /** Obtain JSON Web Token mutation */
-  tokenAuth?: Maybe<ObtainJsonWebToken>;
+  updateVerbId?: Maybe<UpdateVerbId>;
+  createBlock?: Maybe<AddBlock>;
+  updateBlock?: Maybe<ChangeBlock>;
+  deleteBlock?: Maybe<RemoveBlock>;
+  isUserAdmin?: Maybe<IfUserAdmin>;
+  changePassword?: Maybe<ChangePassword>;
+};
+
+
+export type MutationRegisterArgs = {
+  email: Scalars['String'];
+  username: Scalars['String'];
+  password1: Scalars['String'];
+  password2: Scalars['String'];
+};
+
+
+export type MutationVerifyAccountArgs = {
+  token: Scalars['String'];
+};
+
+
+export type MutationResendActivationEmailArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationSendPasswordResetEmailArgs = {
+  email: Scalars['String'];
+};
+
+
+export type MutationPasswordResetArgs = {
+  token: Scalars['String'];
+  newPassword1: Scalars['String'];
+  newPassword2: Scalars['String'];
+};
+
+
+export type MutationPasswordSetArgs = {
+  token: Scalars['String'];
+  newPassword1: Scalars['String'];
+  newPassword2: Scalars['String'];
+};
+
+
+export type MutationPasswordChangeArgs = {
+  oldPassword: Scalars['String'];
+  newPassword1: Scalars['String'];
+  newPassword2: Scalars['String'];
+};
+
+
+export type MutationUpdateAccountArgs = {
+  firstName?: Maybe<Scalars['String']>;
+  lastName?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationArchiveAccountArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationDeleteAccountArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationSendSecondaryEmailActivationArgs = {
+  email: Scalars['String'];
+  password: Scalars['String'];
+};
+
+
+export type MutationVerifySecondaryEmailArgs = {
+  token: Scalars['String'];
+};
+
+
+export type MutationSwapEmailsArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationRemoveSecondaryEmailArgs = {
+  password: Scalars['String'];
+};
+
+
+export type MutationTokenAuthArgs = {
+  password: Scalars['String'];
+  email?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationVerifyTokenArgs = {
+  token: Scalars['String'];
+};
+
+
+export type MutationRefreshTokenArgs = {
+  token: Scalars['String'];
+};
+
+
+export type MutationRevokeTokenArgs = {
+  refreshToken: Scalars['String'];
 };
 
 
@@ -239,12 +609,44 @@ export type MutationChangeLogoCordsArgs = {
   cardId?: Maybe<Scalars['ID']>;
   xCord?: Maybe<Scalars['Float']>;
   yCord?: Maybe<Scalars['Float']>;
+  zoom?: Maybe<Scalars['Float']>;
 };
 
 
-export type MutationTokenAuthArgs = {
-  username: Scalars['String'];
-  password: Scalars['String'];
+export type MutationUpdateVerbIdArgs = {
+  newId?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationCreateBlockArgs = {
+  cardId?: Maybe<Scalars['ID']>;
+  descr?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationUpdateBlockArgs = {
+  blockId?: Maybe<Scalars['ID']>;
+  descr?: Maybe<Scalars['String']>;
+  name?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationDeleteBlockArgs = {
+  blockId?: Maybe<Scalars['ID']>;
+};
+
+
+export type MutationIsUserAdminArgs = {
+  cardId?: Maybe<Scalars['ID']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationChangePasswordArgs = {
+  newPassword?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
 };
 
 /** An object with an ID */
@@ -253,12 +655,26 @@ export type Node = {
   id: Scalars['ID'];
 };
 
-/** Obtain JSON Web Token mutation */
+/**
+ * Obtain JSON web token for given user.
+ *
+ * Allow to perform login with different fields,
+ * and secondary email if set. The fields are
+ * defined on settings.
+ *
+ * Not verified users can login by default. This
+ * can be changes on settings.
+ *
+ * If user is archived, make it unarchive and
+ * return `unarchiving=True` on output.
+ */
 export type ObtainJsonWebToken = {
   __typename?: 'ObtainJSONWebToken';
-  payload: Scalars['GenericScalar'];
-  refreshExpiresIn: Scalars['Int'];
-  token: Scalars['String'];
+  token?: Maybe<Scalars['String']>;
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+  user?: Maybe<UserNode>;
+  unarchiving?: Maybe<Scalars['Boolean']>;
 };
 
 /** The Relay compliant `PageInfo` type, containing data necessary to paginate this connection. */
@@ -272,6 +688,52 @@ export type PageInfo = {
   startCursor?: Maybe<Scalars['String']>;
   /** When paginating forwards, the cursor to continue. */
   endCursor?: Maybe<Scalars['String']>;
+};
+
+/**
+ * Change account password when user knows the old password.
+ *
+ * A new token and refresh token are sent. User must be verified.
+ */
+export type PasswordChange = {
+  __typename?: 'PasswordChange';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+/**
+ * Change user password without old password.
+ *
+ * Receive the token that was sent by email.
+ *
+ * If token and new passwords are valid, update
+ * user password and in case of using refresh
+ * tokens, revoke all of them.
+ *
+ * Also, if user has not been verified yet, verify it.
+ */
+export type PasswordReset = {
+  __typename?: 'PasswordReset';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Set user password - for passwordless registration
+ *
+ * Receive the token that was sent by email.
+ *
+ * If token and new passwords are valid, set
+ * user password and in case of using refresh
+ * tokens, revoke all of them.
+ *
+ * Also, if user has not been verified yet, verify it.
+ */
+export type PasswordSet = {
+  __typename?: 'PasswordSet';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
 };
 
 export type PhotoEdit = {
@@ -335,18 +797,83 @@ export type ProjectTypeEdge = {
 export type Query = {
   __typename?: 'Query';
   /** The ID of the object */
+  user?: Maybe<UserNode>;
+  users?: Maybe<UserNodeConnection>;
   visit?: Maybe<VisitCardType>;
   getVisitByUser?: Maybe<VisitCardType>;
 };
 
 
-export type QueryVisitArgs = {
+export type QueryUserArgs = {
   id: Scalars['ID'];
+};
+
+
+export type QueryUsersArgs = {
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+  email?: Maybe<Scalars['String']>;
+  username?: Maybe<Scalars['String']>;
+  username_Icontains?: Maybe<Scalars['String']>;
+  username_Istartswith?: Maybe<Scalars['String']>;
+  isActive?: Maybe<Scalars['Boolean']>;
+  status_Archived?: Maybe<Scalars['Boolean']>;
+  status_Verified?: Maybe<Scalars['Boolean']>;
+  status_SecondaryEmail?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryVisitArgs = {
+  id?: Maybe<Scalars['String']>;
 };
 
 
 export type QueryGetVisitByUserArgs = {
   token?: Maybe<Scalars['String']>;
+};
+
+/** Same as `grapgql_jwt` implementation, with standard output. */
+export type RefreshToken = {
+  __typename?: 'RefreshToken';
+  token?: Maybe<Scalars['String']>;
+  payload?: Maybe<Scalars['GenericScalar']>;
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Register user with fields defined in the settings.
+ *
+ * If the email field of the user model is part of the
+ * registration fields (default), check if there is
+ * no user with that email or as a secondary email.
+ *
+ * If it exists, it does not register the user,
+ * even if the email field is not defined as unique
+ * (default of the default django user model).
+ *
+ * When creating the user, it also creates a `UserStatus`
+ * related to that user, making it possible to track
+ * if the user is archived, verified and has a secondary
+ * email.
+ *
+ * Send account verification email.
+ *
+ * If allowed to not verified users login, return token.
+ */
+export type Register = {
+  __typename?: 'Register';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+export type RemoveBlock = {
+  __typename?: 'RemoveBlock';
+  ok?: Maybe<Scalars['Boolean']>;
 };
 
 export type RemovePhoto = {
@@ -359,9 +886,94 @@ export type RemoveProject = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
+/**
+ * Remove user secondary email.
+ *
+ * Require password confirmation.
+ */
+export type RemoveSecondaryEmail = {
+  __typename?: 'RemoveSecondaryEmail';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Sends activation email.
+ *
+ * It is called resend because theoretically
+ * the first activation email was sent when
+ * the user registered.
+ *
+ * If there is no user with the requested email,
+ * a successful response is returned.
+ */
+export type ResendActivationEmail = {
+  __typename?: 'ResendActivationEmail';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/** Same as `grapgql_jwt` implementation, with standard output. */
+export type RevokeToken = {
+  __typename?: 'RevokeToken';
+  revoked?: Maybe<Scalars['Int']>;
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Send password reset email.
+ *
+ * For non verified users, send an activation
+ * email instead.
+ *
+ * Accepts both primary and secondary email.
+ *
+ * If there is no user with the requested email,
+ * a successful response is returned.
+ */
+export type SendPasswordResetEmail = {
+  __typename?: 'SendPasswordResetEmail';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Send activation to secondary email.
+ *
+ * User must be verified and confirm password.
+ */
+export type SendSecondaryEmailActivation = {
+  __typename?: 'SendSecondaryEmailActivation';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
 export type SetGeoPos = {
   __typename?: 'SetGeoPos';
   ok?: Maybe<Scalars['Boolean']>;
+};
+
+/**
+ * Swap between primary and secondary emails.
+ *
+ * Require password confirmation.
+ */
+export type SwapEmails = {
+  __typename?: 'SwapEmails';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Update user model fields, defined on settings.
+ *
+ * User must be verified.
+ */
+export type UpdateAccount = {
+  __typename?: 'UpdateAccount';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
 };
 
 export type UpdateFullPhoto = {
@@ -369,6 +981,91 @@ export type UpdateFullPhoto = {
   newUrl?: Maybe<Scalars['String']>;
 };
 
+export type UpdateVerbId = {
+  __typename?: 'UpdateVerbId';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
+
+export type UserNode = Node & {
+  __typename?: 'UserNode';
+  /** The ID of the object. */
+  id: Scalars['ID'];
+  lastLogin?: Maybe<Scalars['DateTime']>;
+  /** Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only. */
+  username: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  email: Scalars['String'];
+  /** Designates whether the user can log into this admin site. */
+  isStaff: Scalars['Boolean'];
+  /** Designates whether this user should be treated as active. Unselect this instead of deleting accounts. */
+  isActive: Scalars['Boolean'];
+  dateJoined: Scalars['DateTime'];
+  visitcard?: Maybe<VisitCardType>;
+  pk?: Maybe<Scalars['Int']>;
+  archived?: Maybe<Scalars['Boolean']>;
+  verified?: Maybe<Scalars['Boolean']>;
+  secondaryEmail?: Maybe<Scalars['String']>;
+};
+
+export type UserNodeConnection = {
+  __typename?: 'UserNodeConnection';
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** Contains the nodes in this connection. */
+  edges: Array<Maybe<UserNodeEdge>>;
+};
+
+/** A Relay edge containing a `UserNode` and its cursor. */
+export type UserNodeEdge = {
+  __typename?: 'UserNodeEdge';
+  /** The item at the end of the edge */
+  node?: Maybe<UserNode>;
+  /** A cursor for use in pagination */
+  cursor: Scalars['String'];
+};
+
+/**
+ * Verify user account.
+ *
+ * Receive the token that was sent by email.
+ * If the token is valid, make the user verified
+ * by making the `user.status.verified` field true.
+ */
+export type VerifyAccount = {
+  __typename?: 'VerifyAccount';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/**
+ * Verify user secondary email.
+ *
+ * Receive the token that was sent by email.
+ * User is already verified when using this mutation.
+ *
+ * If the token is valid, add the secondary email
+ * to `user.status.secondary_email` field.
+ *
+ * Note that until the secondary email is verified,
+ * it has not been saved anywhere beyond the token,
+ * so it can still be used to create a new account.
+ * After being verified, it will no longer be available.
+ */
+export type VerifySecondaryEmail = {
+  __typename?: 'VerifySecondaryEmail';
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
+
+/** Same as `grapgql_jwt` implementation, with standard output. */
+export type VerifyToken = {
+  __typename?: 'VerifyToken';
+  payload?: Maybe<Scalars['GenericScalar']>;
+  success?: Maybe<Scalars['Boolean']>;
+  errors?: Maybe<Scalars['ExpectedErrorType']>;
+};
 
 export type VisitCardType = Node & {
   __typename?: 'VisitCardType';
@@ -384,14 +1081,17 @@ export type VisitCardType = Node & {
   secondDescr?: Maybe<Scalars['String']>;
   xLogo: Scalars['Float'];
   yLogo: Scalars['Float'];
+  zoomLogo: Scalars['Float'];
   projectDescr: Scalars['String'];
   geoDescr: Scalars['String'];
   photoDescr: Scalars['String'];
   theme: Scalars['String'];
+  verbId?: Maybe<Scalars['String']>;
   contacts?: Maybe<ContactsType>;
   projectSet: ProjectTypeConnection;
   photoSet: PhotoTypeConnection;
   geopos?: Maybe<GeoPosType>;
+  blockSet: BlockTypeConnection;
   imageUrl?: Maybe<Scalars['String']>;
   fullImgUrl?: Maybe<Scalars['String']>;
 };
@@ -407,6 +1107,15 @@ export type VisitCardTypeProjectSetArgs = {
 
 
 export type VisitCardTypePhotoSetArgs = {
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
+};
+
+
+export type VisitCardTypeBlockSetArgs = {
   offset?: Maybe<Scalars['Int']>;
   before?: Maybe<Scalars['String']>;
   after?: Maybe<Scalars['String']>;
@@ -602,7 +1311,7 @@ export type GetVisitQueryHookResult = ReturnType<typeof useGetVisitQuery>;
 export type GetVisitLazyQueryHookResult = ReturnType<typeof useGetVisitLazyQuery>;
 export type GetVisitQueryResult = Apollo.QueryResult<GetVisitQuery, GetVisitQueryVariables>;
 export const GetVisitByIdDocument = gql`
-    query getVisitById($id: ID!) {
+    query getVisitById($id: String!) {
   visit(id: $id) {
     id
     name
@@ -610,7 +1319,10 @@ export const GetVisitByIdDocument = gql`
     surname
     positionInCompany
     description
-    imageUrl
+    fullImgUrl
+    zoomLogo
+    xLogo
+    yLogo
     secondDescr
     geoDescr
     photoDescr
@@ -647,6 +1359,15 @@ export const GetVisitByIdDocument = gql`
     geopos {
       lattitude
       longitude
+    }
+    blockSet {
+      edges {
+        node {
+          id
+          name
+          descr
+        }
+      }
     }
   }
 }
@@ -841,6 +1562,9 @@ export const GetAvaDocument = gql`
     imageUrl
     id
     fullImgUrl
+    xLogo
+    yLogo
+    zoomLogo
   }
 }
     `;
@@ -1645,8 +2369,8 @@ export type GetIdQueryHookResult = ReturnType<typeof useGetIdQuery>;
 export type GetIdLazyQueryHookResult = ReturnType<typeof useGetIdLazyQuery>;
 export type GetIdQueryResult = Apollo.QueryResult<GetIdQuery, GetIdQueryVariables>;
 export const ChangeLogoCordsDocument = gql`
-    mutation changeLogoCords($card_id: ID, $y: Float, $x: Float) {
-  changeLogoCords(xCord: $x, yCord: $y, cardId: $card_id) {
+    mutation changeLogoCords($card_id: ID, $y: Float, $x: Float, $zoom: Float) {
+  changeLogoCords(xCord: $x, yCord: $y, cardId: $card_id, zoom: $zoom) {
     ok
   }
 }
@@ -1669,6 +2393,7 @@ export type ChangeLogoCordsMutationFn = Apollo.MutationFunction<ChangeLogoCordsM
  *      card_id: // value for 'card_id'
  *      y: // value for 'y'
  *      x: // value for 'x'
+ *      zoom: // value for 'zoom'
  *   },
  * });
  */
@@ -1679,6 +2404,405 @@ export function useChangeLogoCordsMutation(baseOptions?: Apollo.MutationHookOpti
 export type ChangeLogoCordsMutationHookResult = ReturnType<typeof useChangeLogoCordsMutation>;
 export type ChangeLogoCordsMutationResult = Apollo.MutationResult<ChangeLogoCordsMutation>;
 export type ChangeLogoCordsMutationOptions = Apollo.BaseMutationOptions<ChangeLogoCordsMutation, ChangeLogoCordsMutationVariables>;
+export const VerifyDocument = gql`
+    mutation verify($token: String!) {
+  verifyAccount(token: $token) {
+    errors
+  }
+}
+    `;
+export type VerifyMutationFn = Apollo.MutationFunction<VerifyMutation, VerifyMutationVariables>;
+
+/**
+ * __useVerifyMutation__
+ *
+ * To run a mutation, you first call `useVerifyMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useVerifyMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [verifyMutation, { data, loading, error }] = useVerifyMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useVerifyMutation(baseOptions?: Apollo.MutationHookOptions<VerifyMutation, VerifyMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<VerifyMutation, VerifyMutationVariables>(VerifyDocument, options);
+      }
+export type VerifyMutationHookResult = ReturnType<typeof useVerifyMutation>;
+export type VerifyMutationResult = Apollo.MutationResult<VerifyMutation>;
+export type VerifyMutationOptions = Apollo.BaseMutationOptions<VerifyMutation, VerifyMutationVariables>;
+export const RegisterDocument = gql`
+    mutation register($email: String!, $password: String!, $password2: String!) {
+  register(
+    email: $email
+    password1: $password
+    username: $email
+    password2: $password2
+  ) {
+    token
+    errors
+  }
+}
+    `;
+export type RegisterMutationFn = Apollo.MutationFunction<RegisterMutation, RegisterMutationVariables>;
+
+/**
+ * __useRegisterMutation__
+ *
+ * To run a mutation, you first call `useRegisterMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useRegisterMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [registerMutation, { data, loading, error }] = useRegisterMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *      password2: // value for 'password2'
+ *   },
+ * });
+ */
+export function useRegisterMutation(baseOptions?: Apollo.MutationHookOptions<RegisterMutation, RegisterMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<RegisterMutation, RegisterMutationVariables>(RegisterDocument, options);
+      }
+export type RegisterMutationHookResult = ReturnType<typeof useRegisterMutation>;
+export type RegisterMutationResult = Apollo.MutationResult<RegisterMutation>;
+export type RegisterMutationOptions = Apollo.BaseMutationOptions<RegisterMutation, RegisterMutationVariables>;
+export const SignDocument = gql`
+    mutation sign($email: String, $password: String!) {
+  tokenAuth(password: $password, username: $email) {
+    token
+    errors
+    user {
+      verified
+    }
+  }
+}
+    `;
+export type SignMutationFn = Apollo.MutationFunction<SignMutation, SignMutationVariables>;
+
+/**
+ * __useSignMutation__
+ *
+ * To run a mutation, you first call `useSignMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useSignMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [signMutation, { data, loading, error }] = useSignMutation({
+ *   variables: {
+ *      email: // value for 'email'
+ *      password: // value for 'password'
+ *   },
+ * });
+ */
+export function useSignMutation(baseOptions?: Apollo.MutationHookOptions<SignMutation, SignMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<SignMutation, SignMutationVariables>(SignDocument, options);
+      }
+export type SignMutationHookResult = ReturnType<typeof useSignMutation>;
+export type SignMutationResult = Apollo.MutationResult<SignMutation>;
+export type SignMutationOptions = Apollo.BaseMutationOptions<SignMutation, SignMutationVariables>;
+export const GetVerbIdDocument = gql`
+    query getVerbId($token: String) {
+  getVisitByUser(token: $token) {
+    id
+    verbId
+  }
+}
+    `;
+
+/**
+ * __useGetVerbIdQuery__
+ *
+ * To run a query within a React component, call `useGetVerbIdQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetVerbIdQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetVerbIdQuery({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useGetVerbIdQuery(baseOptions?: Apollo.QueryHookOptions<GetVerbIdQuery, GetVerbIdQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetVerbIdQuery, GetVerbIdQueryVariables>(GetVerbIdDocument, options);
+      }
+export function useGetVerbIdLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetVerbIdQuery, GetVerbIdQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetVerbIdQuery, GetVerbIdQueryVariables>(GetVerbIdDocument, options);
+        }
+export type GetVerbIdQueryHookResult = ReturnType<typeof useGetVerbIdQuery>;
+export type GetVerbIdLazyQueryHookResult = ReturnType<typeof useGetVerbIdLazyQuery>;
+export type GetVerbIdQueryResult = Apollo.QueryResult<GetVerbIdQuery, GetVerbIdQueryVariables>;
+export const ChangeVerbIdDocument = gql`
+    mutation changeVerbId($id: String, $token: String) {
+  updateVerbId(token: $token, newId: $id) {
+    ok
+  }
+}
+    `;
+export type ChangeVerbIdMutationFn = Apollo.MutationFunction<ChangeVerbIdMutation, ChangeVerbIdMutationVariables>;
+
+/**
+ * __useChangeVerbIdMutation__
+ *
+ * To run a mutation, you first call `useChangeVerbIdMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeVerbIdMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeVerbIdMutation, { data, loading, error }] = useChangeVerbIdMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useChangeVerbIdMutation(baseOptions?: Apollo.MutationHookOptions<ChangeVerbIdMutation, ChangeVerbIdMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeVerbIdMutation, ChangeVerbIdMutationVariables>(ChangeVerbIdDocument, options);
+      }
+export type ChangeVerbIdMutationHookResult = ReturnType<typeof useChangeVerbIdMutation>;
+export type ChangeVerbIdMutationResult = Apollo.MutationResult<ChangeVerbIdMutation>;
+export type ChangeVerbIdMutationOptions = Apollo.BaseMutationOptions<ChangeVerbIdMutation, ChangeVerbIdMutationVariables>;
+export const CreateBlockDocument = gql`
+    mutation createBlock($name: String, $descr: String, $cardId: ID) {
+  createBlock(descr: $descr, cardId: $cardId, name: $name) {
+    block {
+      id
+    }
+  }
+}
+    `;
+export type CreateBlockMutationFn = Apollo.MutationFunction<CreateBlockMutation, CreateBlockMutationVariables>;
+
+/**
+ * __useCreateBlockMutation__
+ *
+ * To run a mutation, you first call `useCreateBlockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateBlockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createBlockMutation, { data, loading, error }] = useCreateBlockMutation({
+ *   variables: {
+ *      name: // value for 'name'
+ *      descr: // value for 'descr'
+ *      cardId: // value for 'cardId'
+ *   },
+ * });
+ */
+export function useCreateBlockMutation(baseOptions?: Apollo.MutationHookOptions<CreateBlockMutation, CreateBlockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<CreateBlockMutation, CreateBlockMutationVariables>(CreateBlockDocument, options);
+      }
+export type CreateBlockMutationHookResult = ReturnType<typeof useCreateBlockMutation>;
+export type CreateBlockMutationResult = Apollo.MutationResult<CreateBlockMutation>;
+export type CreateBlockMutationOptions = Apollo.BaseMutationOptions<CreateBlockMutation, CreateBlockMutationVariables>;
+export const GetBlocksDocument = gql`
+    query getBlocks($token: String) {
+  getVisitByUser(token: $token) {
+    id
+    blockSet {
+      edges {
+        node {
+          name
+          id
+          descr
+        }
+      }
+    }
+  }
+}
+    `;
+
+/**
+ * __useGetBlocksQuery__
+ *
+ * To run a query within a React component, call `useGetBlocksQuery` and pass it any options that fit your needs.
+ * When your component renders, `useGetBlocksQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useGetBlocksQuery({
+ *   variables: {
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useGetBlocksQuery(baseOptions?: Apollo.QueryHookOptions<GetBlocksQuery, GetBlocksQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<GetBlocksQuery, GetBlocksQueryVariables>(GetBlocksDocument, options);
+      }
+export function useGetBlocksLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<GetBlocksQuery, GetBlocksQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<GetBlocksQuery, GetBlocksQueryVariables>(GetBlocksDocument, options);
+        }
+export type GetBlocksQueryHookResult = ReturnType<typeof useGetBlocksQuery>;
+export type GetBlocksLazyQueryHookResult = ReturnType<typeof useGetBlocksLazyQuery>;
+export type GetBlocksQueryResult = Apollo.QueryResult<GetBlocksQuery, GetBlocksQueryVariables>;
+export const DeleteBlockDocument = gql`
+    mutation deleteBlock($blockId: ID) {
+  deleteBlock(blockId: $blockId) {
+    ok
+  }
+}
+    `;
+export type DeleteBlockMutationFn = Apollo.MutationFunction<DeleteBlockMutation, DeleteBlockMutationVariables>;
+
+/**
+ * __useDeleteBlockMutation__
+ *
+ * To run a mutation, you first call `useDeleteBlockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteBlockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteBlockMutation, { data, loading, error }] = useDeleteBlockMutation({
+ *   variables: {
+ *      blockId: // value for 'blockId'
+ *   },
+ * });
+ */
+export function useDeleteBlockMutation(baseOptions?: Apollo.MutationHookOptions<DeleteBlockMutation, DeleteBlockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<DeleteBlockMutation, DeleteBlockMutationVariables>(DeleteBlockDocument, options);
+      }
+export type DeleteBlockMutationHookResult = ReturnType<typeof useDeleteBlockMutation>;
+export type DeleteBlockMutationResult = Apollo.MutationResult<DeleteBlockMutation>;
+export type DeleteBlockMutationOptions = Apollo.BaseMutationOptions<DeleteBlockMutation, DeleteBlockMutationVariables>;
+export const ChangeBlockDocument = gql`
+    mutation changeBlock($blockId: ID, $name: String, $descr: String) {
+  updateBlock(name: $name, descr: $descr, blockId: $blockId) {
+    ok
+  }
+}
+    `;
+export type ChangeBlockMutationFn = Apollo.MutationFunction<ChangeBlockMutation, ChangeBlockMutationVariables>;
+
+/**
+ * __useChangeBlockMutation__
+ *
+ * To run a mutation, you first call `useChangeBlockMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeBlockMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeBlockMutation, { data, loading, error }] = useChangeBlockMutation({
+ *   variables: {
+ *      blockId: // value for 'blockId'
+ *      name: // value for 'name'
+ *      descr: // value for 'descr'
+ *   },
+ * });
+ */
+export function useChangeBlockMutation(baseOptions?: Apollo.MutationHookOptions<ChangeBlockMutation, ChangeBlockMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeBlockMutation, ChangeBlockMutationVariables>(ChangeBlockDocument, options);
+      }
+export type ChangeBlockMutationHookResult = ReturnType<typeof useChangeBlockMutation>;
+export type ChangeBlockMutationResult = Apollo.MutationResult<ChangeBlockMutation>;
+export type ChangeBlockMutationOptions = Apollo.BaseMutationOptions<ChangeBlockMutation, ChangeBlockMutationVariables>;
+export const IsUserAdminDocument = gql`
+    mutation isUserAdmin($token: String, $cardId: ID) {
+  isUserAdmin(cardId: $cardId, token: $token) {
+    isAdmin
+  }
+}
+    `;
+export type IsUserAdminMutationFn = Apollo.MutationFunction<IsUserAdminMutation, IsUserAdminMutationVariables>;
+
+/**
+ * __useIsUserAdminMutation__
+ *
+ * To run a mutation, you first call `useIsUserAdminMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useIsUserAdminMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [isUserAdminMutation, { data, loading, error }] = useIsUserAdminMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *      cardId: // value for 'cardId'
+ *   },
+ * });
+ */
+export function useIsUserAdminMutation(baseOptions?: Apollo.MutationHookOptions<IsUserAdminMutation, IsUserAdminMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<IsUserAdminMutation, IsUserAdminMutationVariables>(IsUserAdminDocument, options);
+      }
+export type IsUserAdminMutationHookResult = ReturnType<typeof useIsUserAdminMutation>;
+export type IsUserAdminMutationResult = Apollo.MutationResult<IsUserAdminMutation>;
+export type IsUserAdminMutationOptions = Apollo.BaseMutationOptions<IsUserAdminMutation, IsUserAdminMutationVariables>;
+export const ChangePasswordDocument = gql`
+    mutation changePassword($newPassword: String!, $token: String!) {
+  changePassword(token: $token, newPassword: $newPassword) {
+    ok
+  }
+}
+    `;
+export type ChangePasswordMutationFn = Apollo.MutationFunction<ChangePasswordMutation, ChangePasswordMutationVariables>;
+
+/**
+ * __useChangePasswordMutation__
+ *
+ * To run a mutation, you first call `useChangePasswordMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangePasswordMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changePasswordMutation, { data, loading, error }] = useChangePasswordMutation({
+ *   variables: {
+ *      newPassword: // value for 'newPassword'
+ *      token: // value for 'token'
+ *   },
+ * });
+ */
+export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptions<ChangePasswordMutation, ChangePasswordMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangePasswordMutation, ChangePasswordMutationVariables>(ChangePasswordDocument, options);
+      }
+export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
+export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
+export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
 export type CreateUserMutationVariables = Exact<{
   username?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
@@ -1693,7 +2817,7 @@ export type GetTokenMutationVariables = Exact<{
 }>;
 
 
-export type GetTokenMutation = { __typename?: 'Mutation', tokenAuth?: Maybe<{ __typename?: 'ObtainJSONWebToken', token: string }> };
+export type GetTokenMutation = { __typename?: 'Mutation', tokenAuth?: Maybe<{ __typename?: 'ObtainJSONWebToken', token?: Maybe<string> }> };
 
 export type SetVisitProfileMutationVariables = Exact<{
   name?: Maybe<Scalars['String']>;
@@ -1716,11 +2840,11 @@ export type GetVisitQueryVariables = Exact<{
 export type GetVisitQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, imageUrl?: Maybe<string>, secondDescr?: Maybe<string>, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }> }> };
 
 export type GetVisitByIdQueryVariables = Exact<{
-  id: Scalars['ID'];
+  id: Scalars['String'];
 }>;
 
 
-export type GetVisitByIdQuery = { __typename?: 'Query', visit?: Maybe<{ __typename?: 'VisitCardType', id: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, imageUrl?: Maybe<string>, secondDescr?: Maybe<string>, geoDescr: string, photoDescr: string, projectDescr: string, theme: string, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string, name?: Maybe<string>, link?: Maybe<string> }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string, url?: Maybe<string> }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }> }> };
+export type GetVisitByIdQuery = { __typename?: 'Query', visit?: Maybe<{ __typename?: 'VisitCardType', id: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, fullImgUrl?: Maybe<string>, zoomLogo: number, xLogo: number, yLogo: number, secondDescr?: Maybe<string>, geoDescr: string, photoDescr: string, projectDescr: string, theme: string, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string, name?: Maybe<string>, link?: Maybe<string> }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string, url?: Maybe<string> }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }>, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', id: string, name: string, descr: string }> }>> } }> };
 
 export type ChangeContactsMutationVariables = Exact<{
   contacts_id?: Maybe<Scalars['String']>;
@@ -1765,7 +2889,7 @@ export type GetAvaQueryVariables = Exact<{
 }>;
 
 
-export type GetAvaQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', imageUrl?: Maybe<string>, id: string, fullImgUrl?: Maybe<string> }> };
+export type GetAvaQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', imageUrl?: Maybe<string>, id: string, fullImgUrl?: Maybe<string>, xLogo: number, yLogo: number, zoomLogo: number }> };
 
 export type SetAvaMutationVariables = Exact<{
   ava: Scalars['Upload'];
@@ -1930,7 +3054,95 @@ export type ChangeLogoCordsMutationVariables = Exact<{
   card_id?: Maybe<Scalars['ID']>;
   y?: Maybe<Scalars['Float']>;
   x?: Maybe<Scalars['Float']>;
+  zoom?: Maybe<Scalars['Float']>;
 }>;
 
 
 export type ChangeLogoCordsMutation = { __typename?: 'Mutation', changeLogoCords?: Maybe<{ __typename?: 'ChangeLogoCord', ok?: Maybe<boolean> }> };
+
+export type VerifyMutationVariables = Exact<{
+  token: Scalars['String'];
+}>;
+
+
+export type VerifyMutation = { __typename?: 'Mutation', verifyAccount?: Maybe<{ __typename?: 'VerifyAccount', errors?: Maybe<any> }> };
+
+export type RegisterMutationVariables = Exact<{
+  email: Scalars['String'];
+  password: Scalars['String'];
+  password2: Scalars['String'];
+}>;
+
+
+export type RegisterMutation = { __typename?: 'Mutation', register?: Maybe<{ __typename?: 'Register', token?: Maybe<string>, errors?: Maybe<any> }> };
+
+export type SignMutationVariables = Exact<{
+  email?: Maybe<Scalars['String']>;
+  password: Scalars['String'];
+}>;
+
+
+export type SignMutation = { __typename?: 'Mutation', tokenAuth?: Maybe<{ __typename?: 'ObtainJSONWebToken', token?: Maybe<string>, errors?: Maybe<any>, user?: Maybe<{ __typename?: 'UserNode', verified?: Maybe<boolean> }> }> };
+
+export type GetVerbIdQueryVariables = Exact<{
+  token?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetVerbIdQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, verbId?: Maybe<string> }> };
+
+export type ChangeVerbIdMutationVariables = Exact<{
+  id?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ChangeVerbIdMutation = { __typename?: 'Mutation', updateVerbId?: Maybe<{ __typename?: 'UpdateVerbId', ok?: Maybe<boolean> }> };
+
+export type CreateBlockMutationVariables = Exact<{
+  name?: Maybe<Scalars['String']>;
+  descr?: Maybe<Scalars['String']>;
+  cardId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type CreateBlockMutation = { __typename?: 'Mutation', createBlock?: Maybe<{ __typename?: 'AddBlock', block?: Maybe<{ __typename?: 'BlockType', id: string }> }> };
+
+export type GetBlocksQueryVariables = Exact<{
+  token?: Maybe<Scalars['String']>;
+}>;
+
+
+export type GetBlocksQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', name: string, id: string, descr: string }> }>> } }> };
+
+export type DeleteBlockMutationVariables = Exact<{
+  blockId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type DeleteBlockMutation = { __typename?: 'Mutation', deleteBlock?: Maybe<{ __typename?: 'RemoveBlock', ok?: Maybe<boolean> }> };
+
+export type ChangeBlockMutationVariables = Exact<{
+  blockId?: Maybe<Scalars['ID']>;
+  name?: Maybe<Scalars['String']>;
+  descr?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ChangeBlockMutation = { __typename?: 'Mutation', updateBlock?: Maybe<{ __typename?: 'ChangeBlock', ok?: Maybe<boolean> }> };
+
+export type IsUserAdminMutationVariables = Exact<{
+  token?: Maybe<Scalars['String']>;
+  cardId?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type IsUserAdminMutation = { __typename?: 'Mutation', isUserAdmin?: Maybe<{ __typename?: 'IfUserAdmin', isAdmin?: Maybe<boolean> }> };
+
+export type ChangePasswordMutationVariables = Exact<{
+  newPassword: Scalars['String'];
+  token: Scalars['String'];
+}>;
+
+
+export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: Maybe<{ __typename?: 'ChangePassword', ok?: Maybe<boolean> }> };

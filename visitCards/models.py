@@ -27,6 +27,9 @@ class VisitCard(models.Model):
 
     theme = models.TextField(default="Dark")
 
+    verb_id = models.TextField(unique=True, max_length=20, null=True)
+
+
 
 class Contacts(models.Model):
     phone = models.TextField(null=True)
@@ -59,10 +62,16 @@ class GeoPos(models.Model):
     card = models.OneToOneField(VisitCard, on_delete=models.CASCADE)
 
 
+class Block(models.Model):
+    descr = models.TextField(max_length=200)
+    name = models.TextField(max_length=50)
+    card = models.ForeignKey(VisitCard, on_delete=models.CASCADE, null=True)
+
+
 @receiver(post_save, sender=User)
 def create_empty_visit_card(**kwargs):
     user_instance = kwargs.get("instance")
-
-    visit_card = VisitCard.objects.create(user=user_instance)
-    Contacts.objects.create(visit_card=visit_card)
-    GeoPos.objects.create(card=visit_card)
+    if user_instance.visitcard == None:
+        visit_card = VisitCard.objects.create(user=user_instance)
+        Contacts.objects.create(visit_card=visit_card)
+        GeoPos.objects.create(card=visit_card)

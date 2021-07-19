@@ -42,3 +42,10 @@
     padding: 0;
     height: 68px;
 }
+
+.photo-content__content{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+}

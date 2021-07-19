@@ -5,14 +5,15 @@ import { Block } from "../../uikit/Block/Block";
 import { Input } from "../../uikit/Input/Input";
 import { Text } from "../../uikit/Text/Text";
 
-import {useGetTokenMutation} from "../../generated/graphql";
+import {useSignMutation} from "../../generated/graphql";
 
 import "./style.css"
+import { Button, ButtonTypes } from "../../uikit/Button/Button";
 
 
 export const Login:react.FC = () => {
 
-    const [login] = useGetTokenMutation();
+    const [login] = useSignMutation();
 
     const {setSwitcherVisibility} = useContext(ThemeContext);
 
@@ -20,7 +21,7 @@ export const Login:react.FC = () => {
     const [password, setPassword] = useState("");
 
     const [flag, setFlag] = useState(false);
-    const [errorMsg, serErrorMsg] = useState("");
+    const [errorMsg, setErrorMsg] = useState("");
     
     const history = useHistory();
 
@@ -33,22 +34,30 @@ export const Login:react.FC = () => {
         history.push("/index");
     }
 
-    return <div className="centered">
-        <div className="login__container">
+    if (errorMsg.length) {
+        setTimeout(() => {
+            setErrorMsg("")
+        }, 3000)
+    }
+
+    window.document.body.style.setProperty("--back-color", "#fff");
+
+
+    return <div className="login__container">
             <div className="login__header">
                 <Text>Вход</Text>
             </div>
             {
                 errorMsg.length ?
                 <Block className="error-msg">
-                <Text>
-                    
-                </Text>
+                <div style={{color: "#D04E54"}}>
+                    {errorMsg}
+                </div>
             </Block> : ""
             }
             
             <div className="login__form">
-                <Input placeholder="E-mail" onChange={(e:string) => {
+                <Input type="email" placeholder="E-mail" onChange={(e:string) => {
                     setEmail(e);
                 }}></Input>
                 <Input type="password" placeholder="Пароль" onChange={(e:string) => {
@@ -58,22 +67,45 @@ export const Login:react.FC = () => {
                     <Text className="link__login-text">Еще нет аккаунта</Text>
                 </Link>
                 <div className="log__btn" onClick={() => {
+                    if (!email.length) {
+                        setErrorMsg("Введите E-mail")
+                        return;
+                    }
+                    if (!password.length) {
+                        setErrorMsg("Введите пароль")
+                        return;
+                    }
+                    if (!email.length) {
+                        
+                    }
                     login({variables: {
-                        username: email,
+                        email: email,
                         password: password
                     }}).then((e) => {
-                        if (e.data?.tokenAuth?.token.length) {
+                        console.log(e)
+                        if (e.data?.tokenAuth?.user?.verified == false) {
+                            setErrorMsg("Пользователь не подтвержден, проверьте почту")
+                            return;
+                        }
+                        
+                        try{
+                            if (e.data?.tokenAuth?.errors.nonFieldErrors[0].code == "invalid_credentials"){
+                            setErrorMsg("Пользователя с такими данными нет")
+                            return
+                        }} catch{}
+                        if (e.data?.tokenAuth?.token?.length) {
                             localStorage.setItem("token", e.data.tokenAuth.token);
-                            history.push("/index")
+                            history.push("/index");
+                            window.location.reload()
                         }
-                        else {
-                            serErrorMsg("Ошибка")
-                        }
+                        
                     })
+                    setTimeout(() => {
+                        //setErrorMsg("Такого пользователя нет")
+                    }, 1000)
                 }}>
-                    <Block className="block__btn-container">Войти</Block>
+                    <Button type={ButtonTypes.red} className="block__btn-container">Войти</Button>
                 </div>
             </div>
         </div>
-    </div>
 }

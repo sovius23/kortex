@@ -16,6 +16,8 @@ import {setName, setSurname, setMidname, getName} from "../../store/profileReduc
 
 import "./style.css";
 import { Navigation } from "../../uikit/Navigation/Navigation";
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+import { RootType } from "../../store/store";
 
 export const SetCredsScreen:react.FC = () => { 
     const store = useStore();
@@ -29,6 +31,21 @@ export const SetCredsScreen:react.FC = () => {
         return <div></div>
     }
 
+    if ((store.getState() as RootType).profileReducer.name == "None"){
+        dispatch(setName(data?.getVisitByUser?.name || ""))
+    }
+
+    if ((store.getState() as RootType).profileReducer.surname == "None") {
+        dispatch(setSurname(data?.getVisitByUser?.surname || ""))
+    }
+
+    if ((store.getState() as RootType).profileReducer.midname == "None") {
+        dispatch(setMidname(data?.getVisitByUser?.midname!))
+    }
+
+    window.document.body.style.setProperty("--back-color", "#fff");
+
+
     return <div className="set-creds__global-container">
         <div className="set-creds__container">
             <Navigation currentName="ФИО" nextName="Должность" nextLink="/set/position/"></Navigation>
@@ -37,7 +54,7 @@ export const SetCredsScreen:react.FC = () => {
                     dispatch(setSurname(e));
                     setCreds({variables:{surname:e, id:data?.getVisitByUser?.id}}) 
                 }} value={
-                    data?.getVisitByUser?.surname
+                    (store.getState() as RootType).profileReducer.surname
                 }></Input>
                 
                 <Input placeholder={"Имя"} onChange={(e:string) => {
@@ -45,16 +62,17 @@ export const SetCredsScreen:react.FC = () => {
                     setCreds({variables:{name:e, id:data?.getVisitByUser?.id}})
                     console.log(store.getState()) 
                 }} value={
-                    data?.getVisitByUser?.name!
+                    (store.getState() as RootType).profileReducer.name
                 }></Input>
                 
                 <Input placeholder={"Отчество"} onChange={(e:string) => {
                     dispatch(setMidname(e));
                     console.log(store.getState())
                     setCreds({variables:{midname:e, id:data?.getVisitByUser?.id}}) 
-                }} value={
-                    data?.getVisitByUser?.midname
+                }} value={                    
+                    (store.getState() as RootType).profileReducer.midname
                 }></Input>
+                <ShowCardButton></ShowCardButton>
             </div>
         </div>
     </div>

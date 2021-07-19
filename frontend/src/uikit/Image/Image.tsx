@@ -9,7 +9,7 @@ interface IImage{
 }
 
 export const Image:react.FC<IImage> = (props) => {
-    return <Block className={"image__container-block " + props.className}>
+    return <div className={"image__container-block " + props.className}>
         <img src={props.src}></img>
-    </Block>
+    </div>
 }

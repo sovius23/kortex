@@ -6,10 +6,14 @@ import contactsReducer from "./ContactsReducer";
 import projectReducer from "./ProjectsReducer";
 import photoReducer from "./PhotoReducer";
 import geoReducer from "./GeolocationReducer";
+import blockReducer from "./BlockReducer";
+import newIdReducer from "./newIdReducer";
 
 const RootReducer = combineReducers(
-    {profileReducer, contactsReducer, projectReducer, photoReducer, geoReducer}
+    {profileReducer, contactsReducer, projectReducer, photoReducer, geoReducer, blockReducer, newIdReducer}
 )
+
+export type RootType = ReturnType<typeof RootReducer>
 
 const store = createStore(RootReducer);
 

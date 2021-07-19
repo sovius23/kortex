@@ -23,7 +23,6 @@
 }
 
 .block__reg{
-    width: calc(100% - 40px);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -39,7 +38,7 @@
 
 @media (max-width: 650px) {
     .reg__form{
-        width: calc(100vw - 40px);
+        width: calc(100vw - 10px);
     }
 }
 
@@ -49,4 +48,8 @@
     width: calc(100% - 40px); 
     justify-content: center;
     align-items: center;
+}
+
+.reg__input{
+    width:100%;
 }

@@ -65,11 +65,14 @@ query getVisit($token:String){
   }
 }
 
-query getVisitById($id:ID!){
+query getVisitById($id:String!){
   visit(id:$id){
     id
     name, midname, surname, positionInCompany, description,
-    imageUrl,
+    fullImgUrl,
+    zoomLogo,
+    xLogo,
+    yLogo,
     secondDescr,
     geoDescr,
     photoDescr,
@@ -103,6 +106,13 @@ query getVisitById($id:ID!){
     geopos{
       lattitude,
       longitude
+    },
+    blockSet{
+			edges{
+        node{
+          id, name, descr
+        }
+      }
     }
   }
 }
@@ -148,7 +158,7 @@ query getVisitId($token:String){
 
 query getAva($token:String){
 	getVisitByUser(token:$token){
-  	imageUrl, id, fullImgUrl
+  	imageUrl, id, fullImgUrl, xLogo, yLogo, zoomLogo
 	}
 }
 
@@ -314,8 +324,87 @@ query getId($token:String){
   }
 }
 
-mutation changeLogoCords($card_id:ID, $y:Float, $x:Float){
-  changeLogoCords(xCord:$x, yCord:$y, cardId:$card_id){
+mutation changeLogoCords($card_id:ID, $y:Float, $x:Float, $zoom:Float){
+  changeLogoCords(xCord:$x, yCord:$y, cardId:$card_id, zoom:$zoom){
+    ok
+  }
+}
+
+mutation verify($token:String!) {
+	verifyAccount(token:$token) {
+		errors
+  }
+}
+
+mutation register($email:String!, $password:String!, $password2:String!){
+  register(email:$email, password1:$password, username:$email, password2:$password2){
+    token, errors
+  }
+  
+}
+
+mutation sign($email:String, $password:String!) {
+	tokenAuth(password:$password, username:$email) {
+    token, errors
+    user{
+      verified
+    }
+  }
+}
+
+query getVerbId($token:String) {
+  getVisitByUser(token:$token){
+		id, verbId
+  }
+}
+
+mutation changeVerbId($id:String, $token:String) {
+  updateVerbId(token:$token, newId:$id) {
+    ok
+  }
+}
+
+mutation createBlock($name:String, $descr:String, $cardId:ID){
+  createBlock(descr:$descr, cardId:$cardId, name:$name){
+    block{
+      id
+    }
+  }
+}
+
+query getBlocks($token:String){
+  getVisitByUser(token:$token){
+    id
+    blockSet{
+      edges{
+        node{
+          name, id, descr
+        }
+      }
+    }
+  }
+}
+
+mutation deleteBlock($blockId:ID) {
+	deleteBlock(blockId:$blockId) {
+		ok
+  }
+}
+
+mutation changeBlock($blockId:ID, $name:String, $descr:String) {
+  updateBlock(name:$name, descr:$descr, blockId:$blockId){
+		ok
+  }
+}
+
+mutation isUserAdmin($token:String, $cardId:ID) {
+	isUserAdmin(cardId:$cardId, token:$token) {
+    isAdmin
+  }
+}
+
+mutation changePassword($newPassword:String!, $token:String!) {
+  changePassword(token:$token, newPassword:$newPassword) {
     ok
   }
 }

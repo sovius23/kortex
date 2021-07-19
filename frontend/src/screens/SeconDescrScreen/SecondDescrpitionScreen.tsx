@@ -8,14 +8,16 @@ import {useGetSecDescrQuery, useSetVisitProfileMutation} from "../../generated/g
 import "./style.css";
 import { Navigation } from "../../uikit/Navigation/Navigation";
 
-import {useDispatch} from "react-redux";
+import {useDispatch, useStore} from "react-redux";
 
 import {setDescriptionSecond} from "../../store/profileReducer";
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+import { RootType } from "../../store/store";
 
 export const SecondDescriptionScreen:react.FC = () => {
 
     const dispatch = useDispatch();
-
+    const store = useStore();
     const [descr, setDescr] = useState("");
     const [setDescrMutation] = useSetVisitProfileMutation();
 
@@ -31,7 +33,12 @@ export const SecondDescriptionScreen:react.FC = () => {
         return <div></div>
     }
 
+    if ((store.getState() as RootType).profileReducer.description_second == "None"){
+        dispatch(setDescriptionSecond(data?.getVisitByUser?.secondDescr || ""))
+    }
+
     console.log(descr);
+    window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="setDescr__container">
             <Navigation nextName="Проекты" nextLink="/set/projects" currentName="Описание 2"></Navigation>
@@ -42,7 +49,8 @@ export const SecondDescriptionScreen:react.FC = () => {
                         secondDescr:e
                     }});
                     dispatch(setDescriptionSecond(e));
-                }} value={data?.getVisitByUser?.secondDescr!}></Textarea>
+                }} value={(store.getState() as RootType).profileReducer.description_second}></Textarea>
+                <ShowCardButton></ShowCardButton>
             </div>
         </div>
 }

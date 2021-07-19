@@ -15,7 +15,7 @@ import { useChangeStateMutation } from "../../generated/graphql";
 
 
 interface ISwitcher{
-    state:Boolean;
+    state:boolean;
     onChange?:Function;
 }
 

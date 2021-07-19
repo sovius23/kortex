@@ -11,6 +11,8 @@ import { Navigation } from "../../uikit/Navigation/Navigation";
 import {useDispatch, useStore} from "react-redux";
 
 import {setPosition} from "../../store/profileReducer";
+import { ShowCardButton } from "../../uikit/ShowCardButton/ShowCardButton";
+import { RootType } from "../../store/store";
 
 export const SetPositionScreen:react.FC = () => {
 
@@ -23,9 +25,14 @@ export const SetPositionScreen:react.FC = () => {
         return <div></div>
     }
 
+    if ((store.getState() as RootType).profileReducer.position == "None") {
+        dispatch(setPosition(data?.getVisitByUser?.positionInCompany!))
+    }
+
+    window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="set-position__container">
-            <Navigation currentName="Должность" nextName="Описание" nextLink="/set/description"></Navigation>
+            <Navigation currentName="Должность" nextName="Блоки" nextLink="/set/blocks"></Navigation>
             <div className="set-position__content">
                 <Input placeholder="Должность" onChange={(e:string) => {
                     changePosInComapny({variables:{
@@ -34,7 +41,8 @@ export const SetPositionScreen:react.FC = () => {
                     }})
                     dispatch(setPosition(e))
                     console.log(store.getState())
-                }} value={data?.getVisitByUser?.positionInCompany!}></Input>
+                }} value={(store.getState() as RootType).profileReducer.position}></Input>
+                <ShowCardButton></ShowCardButton>
             </div>
         </div>
 }

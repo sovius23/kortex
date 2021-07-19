@@ -9,17 +9,20 @@ import {
     Redirect
 } from "react-router-dom";
 import { ScreenWithCheckboxes } from "./screens/ScreenWithCheckboxes/ScreenWidthCheckboxes";
-import { ViewCard } from "./screens/ViewCard/ViewCard";
 import {useGetStateQuery} from "./generated/graphql";
 import { Registration } from "./screens/Registration/Registration";
 import { Login } from "./screens/Login/Login";
 import { GlobalHeader } from "./uikit/GlobalHeader/GlobalHeader";
 
+import {ViewCard} from "./screens/ViewCard/ViewCard";
 import {ViewCardEdit} from "./screens/ViewCard/ViewCardEdit";
 
 import store from "./store/store";
 
 import "./App.css";
+import { setSurname } from "./store/profileReducer";
+import { ActivateEmail } from "./screens/ActivateEmail/ActivateEmail";
+import { InfoActivate } from "./screens/InfoToActivate/InfoActivate";
 
 export enum Theme{
     Light,
@@ -29,7 +32,9 @@ export enum Theme{
 export const ThemeContext = react.createContext({
     theme: Theme.Dark,
     setTheme: (a:any) => {},
-    setSwitcherVisibility: (visible:boolean) => {}
+    setSwitcherVisibility: (visible:boolean) => {},
+    isSignIn: false,
+    setIsSignIn: (state:boolean) => {}
 })
 
 export const App:react.FC = () => {
@@ -46,6 +51,8 @@ export const App:react.FC = () => {
     const [theme, setTheme] = react.useState(Theme.Light);
 
     const [visibility, setVisibility] = useState(true);
+
+    const [signIn, setSignIn] = useState(false);
 
     if (theme == Theme.Dark) {
         let root = document.body;
@@ -64,7 +71,9 @@ export const App:react.FC = () => {
     return <Provider store={store}>
             <ThemeContext.Provider value={{
         theme:theme, setTheme:setTheme,
-        setSwitcherVisibility: setVisibility
+        setSwitcherVisibility: setVisibility,
+        isSignIn: signIn,
+        setIsSignIn: setSignIn
         }}>
             
         <Router>
@@ -83,6 +92,12 @@ export const App:react.FC = () => {
                     </Route>
                     <Route path="/set">
                         <ScreenWithCheckboxes></ScreenWithCheckboxes>
+                    </Route>
+                    <Route path="/activate-info">
+                        <InfoActivate></InfoActivate>
+                    </Route>
+                    <Route path="/activate/:id">
+                        <ActivateEmail></ActivateEmail>
                     </Route>
                     <Route path="/:id/view">
                         <ViewCardEdit></ViewCardEdit>

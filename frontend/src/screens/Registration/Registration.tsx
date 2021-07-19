@@ -5,15 +5,17 @@ import { Block } from "../../uikit/Block/Block";
 import { Input } from "../../uikit/Input/Input";
 import { Text } from "../../uikit/Text/Text";
 
-import {useCreateUserMutation} from "../../generated/graphql";
+import {useRegisterMutation} from "../../generated/graphql";
 
 import "./style.css";
+import { Button, ButtonTypes } from "../../uikit/Button/Button";
+import { editImg } from "../../store/PhotoReducer";
 
 export const Registration:react.FC = () => {
 
     const history = useHistory();
 
-    const [createUser] = useCreateUserMutation();
+    const [createUser] = useRegisterMutation();
 
     const [password, setPassword] = useState("");
     const [passwordAgain, setPasswordAgain] = useState("");
@@ -30,43 +32,81 @@ export const Registration:react.FC = () => {
         history.push("/index");
     }
 
-    return <div className="centered">
-        <div className="reg__container">
+    window.document.body.style.setProperty("--back-color", "#fff");
+
+
+    return <div className="reg__container">
         <div className="reg__header">
             <Text>Регистрация</Text>
         </div>
         {
             errorMsg.length ? <Block className="error-msg">
-            <Text>{errorMsg}</Text>
+            <div style={{color: "#D04E54"}}>{errorMsg}</div>
         </Block> : ""
         }
         
         <div className="reg__form">
-            <Input placeholder={"E-mail"} onChange={(e:string) => {
+            <Input className="reg__input" placeholder={"E-mail"} onChange={(e:string) => {
                 setEmail(e);
             }}></Input>
-            <Input type="password" placeholder={"Пароль"} onChange={(e:string) => {
+            <Input className="reg__input" type="password" placeholder={"Пароль"} onChange={(e:string) => {
                 setPassword(e);
             }}></Input>
-            <Input type="password" placeholder={"Пароль еще раз"} onChange={(e:string) => {
+            <Input type="password" className="reg__input" placeholder={"Пароль еще раз"} onChange={(e:string) => {
                 setPasswordAgain(e);
             }}></Input>
             <Link to="/login" ><Text className="have__acc-text">Уже есть аккаунт</Text></Link>
             <div className="reg__btn" onClick={() => {
+                if (!email.length) {
+                    setErrorMsg("Введите Email")
+                    return;
+                }
+                if (!password.length) {
+                    setErrorMsg("Введите валидный пароль")
+                }
                 if (password != passwordAgain) {
                     setErrorMsg("Пароли не совпадают");
                     return;
                 }
                 try{
                     createUser({variables:{
-                        username: email,
-                        password: password
+                        email: email,
+                        password: password,
+                        password2: passwordAgain
                     }}).then((e) => {
-                        if (!e.data?.createUser?.ok) {
-                            setErrorMsg("Кто-то уже зарегистрировал этот E-mail")
-                        }
-                        else {
-                            history.push("login")
+                        var valid = true;
+                        console.log(e.data);
+                        try{e.data?.register?.errors?.email.map((e:{code:string}) => {
+                            if (e.code == "invalid"){
+                                setErrorMsg("Введите валидный E-mail")
+                                valid = false;
+                            }
+                        })} catch{}
+                        try{e.data?.register?.errors.password2.map((e:{code:string}) => {
+                            if (e.code == "password_too_short"){
+                                setErrorMsg("Пароль слишком короткий")
+                                valid = false;
+                            }
+                            else if (e.code == "password_too_common") {
+                                setErrorMsg("Пароль слишком простой")
+                                valid = false;
+                            }
+                            else if (e.code == "password_entirely_numeric") {
+                                valid = false;
+                                setErrorMsg("Пароль должен содержать хотябы одну букву")
+                            }
+                        })} catch{}
+
+                        try{e.data?.register?.errors.username.map((e:{code:string}) => {
+                            if (e.code == "unique") {
+                                setErrorMsg("Такой E-mail уже зарегистрирован")
+                                valid = false;
+                            }
+                        })}catch{}
+
+                        
+                        if (valid) {
+                            history.push("activate-info")
                         }
                     })
                 } catch{
@@ -74,10 +114,9 @@ export const Registration:react.FC = () => {
                 }
                 
             }}>
-                <Block className="block__reg">Зарегистрироваться</Block>
+                <Button type={ButtonTypes.red} className="block__reg">Зарегистрироваться</Button>
             </div>
         </div>
     </div>
 
-    </div> 
 }

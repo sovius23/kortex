@@ -29,7 +29,6 @@ export const Textarea:react.FC<ITextarea> = (props) => {
         }
     })
 
-    console.log(props.value, value);
 
     if (theme == Theme.Dark) {
         ta_theme = "dark-ta";

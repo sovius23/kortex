@@ -2,10 +2,123 @@ import graphene
 
 from django.contrib.auth.models import User
 from graphene.relay.node import from_global_id
-from .models import VisitCard, Project, Photo, Contacts, GeoPos
+from .models import VisitCard, Project, Photo, Contacts, GeoPos, Block
 from graphene_file_upload.scalars import Upload
-from .gqlTypes import ProjectType, PhotoType
+from .gqlTypes import ProjectType, PhotoType, BlockType
 from django.core.files import File
+
+from time import sleep
+from django_model_mutations import mutations
+from .serializers import BlockSerializer
+
+
+class AddBlock(graphene.Mutation):
+    class Arguments:
+        card_id = graphene.ID()
+        name = graphene.String()
+        descr = graphene.String()
+
+    block = graphene.Field(BlockType)
+
+    @classmethod
+    def mutate(cls, root, info, card_id, name, descr):
+        card = VisitCard.objects.get(
+            id=from_global_id(card_id)[1]
+        )
+        block = Block.objects.create(card=card, name=name, descr=descr)
+        block.save()
+        return AddBlock(block=block)
+
+
+class RemoveBlock(graphene.Mutation):
+    class Arguments:
+        block_id = graphene.ID()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, block_id):
+        Block.objects.get(id=from_global_id(block_id)[1]).delete()
+        return RemoveBlock(ok=True)
+
+
+class ChangeBlock(graphene.Mutation):
+    class Arguments:
+        block_id = graphene.ID()
+        name = graphene.String()
+        descr = graphene.String()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, block_id, name, descr):
+        block = Block.objects.get(id=from_global_id(block_id)[1])
+        block.name = name
+        block.descr = descr
+        block.save()
+        return ChangeBlock(ok=True)
+
+
+class IfUserAdmin(graphene.Mutation):
+    class Arguments:
+        token = graphene.String()
+        card_id = graphene.ID()
+
+    isAdmin = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, token, card_id):
+        card = None
+        try:
+            card = VisitCard.objects.get(
+                id=from_global_id(card_id)[1]
+            )
+        except: pass
+
+        try:
+            card = VisitCard.objects.get(
+                verb_id=card_id
+            )
+        except:pass
+        ok =False
+        if str(info.context.user.visitcard.id) == str(card.id):
+            ok = True
+        return IfUserAdmin(isAdmin=ok)
+
+
+class ChangePassword(graphene.Mutation):
+    class Arguments:
+        new_password = graphene.String()
+        token = graphene.String()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, new_password, token):
+        info.context.user.set_password(new_password)
+        info.context.user.save()
+        return ChangePassword(ok=True)
+
+
+class UpdateVerbId(graphene.Mutation):
+    class Arguments:
+        token = graphene.String()
+        new_id = graphene.String()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, token, new_id):
+
+        ok = True
+
+        card = info.context.user.visitcard
+        card.verb_id = new_id
+        try:
+            card.save()
+        except:
+            ok = False
+        return UpdateVerbId(ok=ok)
 
 
 class UpdateFullPhoto(graphene.Mutation):
@@ -20,7 +133,7 @@ class UpdateFullPhoto(graphene.Mutation):
         card = VisitCard.objects.get(
             id=from_global_id(id)[1]
         )
-
+        url = ""
         if photo.name == "unnamed.u":
             card.full_profile_photo = None
         else:
@@ -29,25 +142,32 @@ class UpdateFullPhoto(graphene.Mutation):
         print(photo, card.full_profile_photo)
 
         card.save()
+        sleep(1)
+        if photo.name != "unnamed.u":
+            url = VisitCard.objects.get(
+            id=from_global_id(id)[1]
+        ).full_profile_photo.url
 
-        return UpdateFullPhoto(new_url=card.full_profile_photo.url)
+        return UpdateFullPhoto(new_url=url)
 
 
 class ChangeLogoCord(graphene.Mutation):
     class Arguments:
         x_cord = graphene.Float()
         y_cord = graphene.Float()
+        zoom = graphene.Float()
         card_id = graphene.ID()
 
     ok = graphene.Boolean()
 
     @classmethod
-    def mutate(cls, root, info, x_cord, y_cord, card_id):
+    def mutate(cls, root, info, x_cord, y_cord, zoom, card_id):
         card = VisitCard.objects.get(
             id=from_global_id(card_id)[1]
         )
         card.x_logo = x_cord
         card.y_logo = y_cord
+        card.zoom_logo = zoom
         card.save()
 
 
@@ -367,3 +487,10 @@ class Mutation(graphene.ObjectType):
     change_theme = ChangeTheme.Field()
     change_full_photo = UpdateFullPhoto.Field()
     change_logo_cords = ChangeLogoCord.Field()
+    update_verb_id = UpdateVerbId.Field()
+    create_block = AddBlock.Field()
+    update_block = ChangeBlock.Field()
+    delete_block = RemoveBlock.Field()
+
+    is_user_admin = IfUserAdmin.Field()
+    change_password = ChangePassword.Field()
