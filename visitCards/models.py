@@ -71,7 +71,9 @@ class Block(models.Model):
 @receiver(post_save, sender=User)
 def create_empty_visit_card(**kwargs):
     user_instance = kwargs.get("instance")
-    if user_instance.visitcard == None:
+    try:
+        user_instance.visitcard
+    except:
         visit_card = VisitCard.objects.create(user=user_instance)
         Contacts.objects.create(visit_card=visit_card)
         GeoPos.objects.create(card=visit_card)
