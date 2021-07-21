@@ -97,114 +97,116 @@ export const ViewCardEdit:react.FC = () => {
             history.push(`/${id}`)
         }
     })
+    try{
+        if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
+            if (storedData.contactsReducer.facebook == "facebook.com/") {
+                dispatch(setFacebook(data?.visit?.contacts?.facebookLink!))
+            }
+            if ((store.getState() as RootType).contactsReducer.facebook.length != 0){
+                icons.push({type: IconType.facebook,  
+                    link:(store.getState() as RootType).contactsReducer.facebook,
+                    onClick: () => {
+                        window.location.href = urlize((store.getState() as RootType).contactsReducer.facebook)
+                    }
+                });
+            }
+        }
     
-    if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
-        if (storedData.contactsReducer.facebook == "facebook.com/") {
-            dispatch(setFacebook(data?.visit?.contacts?.facebookLink!))
+        if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
+            if (storedData.contactsReducer.twitter == "twitter.com/") {
+                dispatch(setTwitter(data?.visit?.contacts?.twitterLink!))
+            }
+            if ((store.getState() as RootType).contactsReducer.twitter.length){
+                icons.push({type: IconType.twitter,  
+                    link:(store.getState() as RootType).contactsReducer.twitter,
+                    onClick: () => {
+                        window.location.href = urlize((store.getState() as RootType).contactsReducer.twitter)
+                    }
+                });
+            }
         }
-        if ((store.getState() as RootType).contactsReducer.facebook.length != 0){
-            icons.push({type: IconType.facebook,  
-                link:(store.getState() as RootType).contactsReducer.facebook,
+        
+        if (data?.visit?.contacts?.website){
+            if (storedData.contactsReducer.web == "None") {
+                console.log(data, storedData.contactsReducer.vk)
+                dispatch(setWeb(data?.visit?.contacts?.website!))
+            }
+            if ((store.getState() as RootType).contactsReducer.web.length){
+            icons.push({type: IconType.web,  
+                link:(store.getState() as RootType).contactsReducer.web,
                 onClick: () => {
-                    window.location.href = urlize((store.getState() as RootType).contactsReducer.facebook)
+                    window.location.href = urlize((store.getState() as RootType).contactsReducer.web)
                 }
-            });
+            });}
         }
-    }
-
-    if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
-        if (storedData.contactsReducer.twitter == "twitter.com/") {
-            dispatch(setTwitter(data?.visit?.contacts?.twitterLink!))
-        }
-        if ((store.getState() as RootType).contactsReducer.twitter.length){
-            icons.push({type: IconType.twitter,  
-                link:(store.getState() as RootType).contactsReducer.twitter,
-                onClick: () => {
-                    window.location.href = urlize((store.getState() as RootType).contactsReducer.twitter)
-                }
-            });
-        }
-    }
     
-    if (data?.visit?.contacts?.website){
-        if (storedData.contactsReducer.web == "None") {
-            console.log(data, storedData.contactsReducer.vk)
-            dispatch(setWeb(data?.visit?.contacts?.website!))
-        }
-        if ((store.getState() as RootType).contactsReducer.web.length){
-        icons.push({type: IconType.web,  
-            link:(store.getState() as RootType).contactsReducer.web,
-            onClick: () => {
-                window.location.href = urlize((store.getState() as RootType).contactsReducer.web)
+        if (data?.visit?.contacts?.whatsappLink){
+            if (storedData.contactsReducer.whatsapp == "None") {
+                dispatch(setWhatsapp(data?.visit?.contacts?.whatsappLink!))
             }
-        });}
-    }
-
-    if (data?.visit?.contacts?.whatsappLink){
-        if (storedData.contactsReducer.whatsapp == "None") {
-            dispatch(setWhatsapp(data?.visit?.contacts?.whatsappLink!))
+            if ((store.getState() as RootType).contactsReducer.whatsapp.length){
+            icons.push({type: IconType.ws,  
+                link:(store.getState() as RootType).contactsReducer.whatsapp,
+                onClick: () => {
+                    window.location.href = "https://api.whatsapp.com/send?phone=" + (store.getState() as RootType).contactsReducer.whatsapp.replaceAll("+", "").replaceAll(" ", "")
+                }
+            });}
         }
-        if ((store.getState() as RootType).contactsReducer.whatsapp.length){
-        icons.push({type: IconType.ws,  
-            link:(store.getState() as RootType).contactsReducer.whatsapp,
-            onClick: () => {
-                window.location.href = "https://api.whatsapp.com/send?phone=" + (store.getState() as RootType).contactsReducer.whatsapp.replaceAll("+", "").replaceAll(" ", "")
+    
+        if (data?.visit?.contacts?.vkLink != "vk.com/"){
+            if (storedData.contactsReducer.vk == "vk.com/") {
+                dispatch(setVk(data?.visit?.contacts?.vkLink!))
             }
-        });}
-    }
-
-    if (data?.visit?.contacts?.vkLink != "vk.com/"){
-        if (storedData.contactsReducer.vk == "vk.com/") {
-            dispatch(setVk(data?.visit?.contacts?.vkLink!))
+            if ((store.getState() as RootType).contactsReducer.vk.length){
+            icons.push({type: IconType.vk,  
+                link:(store.getState() as RootType).contactsReducer.vk,
+                onClick: () => {
+                    window.location.href = urlize((store.getState() as RootType).contactsReducer.vk)
+                }
+            });}
         }
-        if ((store.getState() as RootType).contactsReducer.vk.length){
-        icons.push({type: IconType.vk,  
-            link:(store.getState() as RootType).contactsReducer.vk,
-            onClick: () => {
-                window.location.href = urlize((store.getState() as RootType).contactsReducer.vk)
+    
+        if (data?.visit?.contacts?.tgLink != "t.me/"){
+            if (storedData.contactsReducer.tg == "t.me/") {
+                dispatch(setTg(data?.visit?.contacts?.tgLink!))
             }
-        });}
-    }
-
-    if (data?.visit?.contacts?.tgLink != "t.me/"){
-        if (storedData.contactsReducer.tg == "t.me/") {
-            dispatch(setTg(data?.visit?.contacts?.tgLink!))
+            if ((store.getState() as RootType).contactsReducer.tg.length){
+            icons.push({type: IconType.tg,  
+                link:(store.getState() as RootType).contactsReducer.tg,
+                onClick: () => {
+                    window.location.href = urlize((store.getState() as RootType).contactsReducer.tg)
+                }
+            });}
         }
-        if ((store.getState() as RootType).contactsReducer.tg.length){
-        icons.push({type: IconType.tg,  
-            link:(store.getState() as RootType).contactsReducer.tg,
-            onClick: () => {
-                window.location.href = urlize((store.getState() as RootType).contactsReducer.tg)
+    
+        if (data?.visit?.contacts?.instLink != "instagram.com/"){
+            if (storedData.contactsReducer.inst == "instagram.com/") {
+                dispatch(setInst(data?.visit?.contacts?.instLink!))
             }
-        });}
-    }
-
-    if (data?.visit?.contacts?.instLink != "instagram.com/"){
-        if (storedData.contactsReducer.inst == "instagram.com/") {
-            dispatch(setInst(data?.visit?.contacts?.instLink!))
+            if ((store.getState() as RootType).contactsReducer.inst.length){
+            icons.push({type: IconType.inst,  
+                link:(store.getState() as RootType).contactsReducer.inst,
+                onClick: () => {
+                    window.location.href = urlize((store.getState() as RootType).contactsReducer.inst)
+                }
+            });}
         }
-        if ((store.getState() as RootType).contactsReducer.inst.length){
-        icons.push({type: IconType.inst,  
-            link:(store.getState() as RootType).contactsReducer.inst,
-            onClick: () => {
-                window.location.href = urlize((store.getState() as RootType).contactsReducer.inst)
+    
+        if (data?.visit?.contacts?.phone){
+            if (storedData.contactsReducer.tel == "None") {
+                dispatch(setFacebook(data?.visit?.contacts?.phone!))
             }
-        });}
-    }
-
-    if (data?.visit?.contacts?.phone){
-        if (storedData.contactsReducer.tel == "None") {
-            dispatch(setFacebook(data?.visit?.contacts?.phone!))
+            if ((store.getState() as RootType).contactsReducer.tel.length){
+            icons.push({type: IconType.tel,  
+                link:(store.getState() as RootType).contactsReducer.tel,
+                onClick: () => {
+                    setTel((store.getState() as RootType).contactsReducer.tel)
+                }
+            });}
         }
-        if ((store.getState() as RootType).contactsReducer.tel.length){
-        icons.push({type: IconType.tel,  
-            link:(store.getState() as RootType).contactsReducer.tel,
-            onClick: () => {
-                setTel((store.getState() as RootType).contactsReducer.tel)
-            }
-        });}
+    
     }
-
+    catch{}
     if (storedData.profileReducer.name == "None"){
         dispatch(setName(data?.visit?.name || ""))
     }
@@ -302,7 +304,7 @@ export const ViewCardEdit:react.FC = () => {
     if (theme) {
         window.document.body.style.setProperty("--back-color", "rgba(28, 33, 37, 1)");
     }
-
+    
     if (!blocks.length) {
         data?.visit?.blockSet.edges.map(e => {
             dispatch(addBlock({
@@ -315,26 +317,24 @@ export const ViewCardEdit:react.FC = () => {
             return e;
         })
     }
-
-    console.log(theme)
-
-    var photos = [];
+    var photos:string[][] = [];
     var photo_buffer = [""];
     photo_buffer = [];
+    
     for (var i = 0; i < (store.getState() as RootType).photoReducer.images.length; i++) {
         if ((i) % 3 == 0) {
             photos.push(photo_buffer)
             photo_buffer = [];
         }
-        console.log((store.getState() as RootType).photoReducer.images[i].url)
+        
         photo_buffer.push((store.getState() as RootType).photoReducer.images[i].url)
     }
     photo_buffer.length ?
     photos.push(photo_buffer) : ""
-
+    if (photos.length){
     for (var i = 0; i < 4 - photo_buffer.length; ++i) {
         photos[photos.length-1].push("")
-    }
+    }}
 
 
 
