@@ -83,6 +83,8 @@ export const ViewCardEdit:react.FC = () => {
     if (loading) {
         return <div></div>
     }
+
+    console.log(data);
     var icons = [];
     if (localStorage.getItem("token") == null) {
         history.push(`/${id}`)
@@ -95,7 +97,7 @@ export const ViewCardEdit:react.FC = () => {
             history.push(`/${id}`)
         }
     })
-
+    
     if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
         if (storedData.contactsReducer.facebook == "facebook.com/") {
             dispatch(setFacebook(data?.visit?.contacts?.facebookLink!))

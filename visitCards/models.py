@@ -39,7 +39,7 @@ class Contacts(models.Model):
     whatsapp_link = models.TextField(null=True)
     inst_link = models.TextField(null=True, default="instagram.com/")
     vk_link = models.TextField(null=True, default="vk.com/")
-    facebook_link = models.TextField(null=True)
+    facebook_link = models.TextField(null=True, default="facebook.com/")
     twitter_link = models.TextField(null=True, default="twitter.com/")
 
     visit_card = models.OneToOneField(VisitCard, on_delete=models.CASCADE)
