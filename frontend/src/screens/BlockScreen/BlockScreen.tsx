@@ -48,7 +48,8 @@ export const SetBlockScreen:react.FC = () => {
                 open: false,
                 name: e?.node?.name!,
                 id: e?.node?.id!,
-                descr: e?.node?.descr!
+                descr: e?.node?.descr!,
+                main_title: e?.node?.mainPart!
             })) 
             return e;
         })
@@ -89,18 +90,20 @@ export const SetBlockScreen:react.FC = () => {
             <ShowCardButton></ShowCardButton>
             {
                 createBlock ?
-                createPortal(<CreateBlockPopUp onCreate={(descr, name) => {
+                createPortal(<CreateBlockPopUp onCreate={(descr, name, subHead) => {
                     createBlockServer({variables:{
-                        descr: descr,
+                        descr: subHead,
                         name: name,
+                        main_part: descr,
                         cardId: data?.getVisitByUser?.id!
                     }}).then((e) => {
                         console.log(e)
                         dispatch(addBlock({
-                            descr: descr,
+                            descr: subHead,
                             name: name,
                             id: e.data?.createBlock?.block?.id!,
-                            open: false
+                            open: false,
+                            main_title: descr
                         }))
                         setCreateBlock(false)
                     })
@@ -119,22 +122,25 @@ export const SetBlockScreen:react.FC = () => {
                     dispatch(removeBlock(editBlock))
                     setEditBlock("")
                 }}
-                onEditFunc={(name, descr) => {
+                onEditFunc={(name, descr, subHead) => {
                     changeBlockServer({variables:{
                         name: name,
-                        descr: descr,
-                        blockId: editBlock
+                        descr: subHead,
+                        blockId: editBlock,
+                        main_part: descr
                     }})
                     dispatch(editBlockAction({
                         id: editBlock,
                         name: name,
-                        descr:descr,
-                        open:false
+                        descr:subHead,
+                        open:false,
+                        main_title: descr
                     }))
                     setEditBlock("")
                 }}
                 name={blocks.filter(e => editBlock == e.id)[0]!.name}
-                descr={blocks.filter(e => editBlock == e.id)[0]!.descr}
+                descr={blocks.filter(e => editBlock == e.id)[0]!.main_title}
+                subHead={blocks.filter(e => editBlock == e.id)[0]!.descr}
                 ></ChangeBlockPopUp>, window.document.getElementById("message")!) : ""
             }
         </div>

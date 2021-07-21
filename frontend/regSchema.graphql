@@ -110,7 +110,7 @@ query getVisitById($id:String!){
     blockSet{
 			edges{
         node{
-          id, name, descr
+          id, name, descr, mainPart
         }
       }
     }
@@ -364,8 +364,8 @@ mutation changeVerbId($id:String, $token:String) {
   }
 }
 
-mutation createBlock($name:String, $descr:String, $cardId:ID){
-  createBlock(descr:$descr, cardId:$cardId, name:$name){
+mutation createBlock($name:String, $descr:String, $cardId:ID, $main_part:String){
+  createBlock(descr:$descr, cardId:$cardId, name:$name, mainPart:$main_part){
     block{
       id
     }
@@ -378,7 +378,7 @@ query getBlocks($token:String){
     blockSet{
       edges{
         node{
-          name, id, descr
+          name, id, descr, mainPart
         }
       }
     }
@@ -391,8 +391,8 @@ mutation deleteBlock($blockId:ID) {
   }
 }
 
-mutation changeBlock($blockId:ID, $name:String, $descr:String) {
-  updateBlock(name:$name, descr:$descr, blockId:$blockId){
+mutation changeBlock($blockId:ID, $name:String, $descr:String, $main_part:String) {
+  updateBlock(name:$name, descr:$descr, blockId:$blockId, mainPart:$main_part){
 		ok
   }
 }

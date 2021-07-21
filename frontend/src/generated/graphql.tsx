@@ -92,6 +92,7 @@ export type BlockType = Node & {
   descr: Scalars['String'];
   name: Scalars['String'];
   card?: Maybe<VisitCardType>;
+  mainPart: Scalars['String'];
 };
 
 export type BlockTypeConnection = {
@@ -628,6 +629,7 @@ export type MutationUpdateVerbIdArgs = {
 export type MutationCreateBlockArgs = {
   cardId?: Maybe<Scalars['ID']>;
   descr?: Maybe<Scalars['String']>;
+  mainPart?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -635,6 +637,7 @@ export type MutationCreateBlockArgs = {
 export type MutationUpdateBlockArgs = {
   blockId?: Maybe<Scalars['ID']>;
   descr?: Maybe<Scalars['String']>;
+  mainPart?: Maybe<Scalars['String']>;
   name?: Maybe<Scalars['String']>;
 };
 
@@ -1380,6 +1383,7 @@ export const GetVisitByIdDocument = gql`
           id
           name
           descr
+          mainPart
         }
       }
     }
@@ -2601,8 +2605,8 @@ export type ChangeVerbIdMutationHookResult = ReturnType<typeof useChangeVerbIdMu
 export type ChangeVerbIdMutationResult = Apollo.MutationResult<ChangeVerbIdMutation>;
 export type ChangeVerbIdMutationOptions = Apollo.BaseMutationOptions<ChangeVerbIdMutation, ChangeVerbIdMutationVariables>;
 export const CreateBlockDocument = gql`
-    mutation createBlock($name: String, $descr: String, $cardId: ID) {
-  createBlock(descr: $descr, cardId: $cardId, name: $name) {
+    mutation createBlock($name: String, $descr: String, $cardId: ID, $main_part: String) {
+  createBlock(descr: $descr, cardId: $cardId, name: $name, mainPart: $main_part) {
     block {
       id
     }
@@ -2627,6 +2631,7 @@ export type CreateBlockMutationFn = Apollo.MutationFunction<CreateBlockMutation,
  *      name: // value for 'name'
  *      descr: // value for 'descr'
  *      cardId: // value for 'cardId'
+ *      main_part: // value for 'main_part'
  *   },
  * });
  */
@@ -2648,6 +2653,7 @@ export const GetBlocksDocument = gql`
           name
           id
           descr
+          mainPart
         }
       }
     }
@@ -2716,8 +2722,8 @@ export type DeleteBlockMutationHookResult = ReturnType<typeof useDeleteBlockMuta
 export type DeleteBlockMutationResult = Apollo.MutationResult<DeleteBlockMutation>;
 export type DeleteBlockMutationOptions = Apollo.BaseMutationOptions<DeleteBlockMutation, DeleteBlockMutationVariables>;
 export const ChangeBlockDocument = gql`
-    mutation changeBlock($blockId: ID, $name: String, $descr: String) {
-  updateBlock(name: $name, descr: $descr, blockId: $blockId) {
+    mutation changeBlock($blockId: ID, $name: String, $descr: String, $main_part: String) {
+  updateBlock(name: $name, descr: $descr, blockId: $blockId, mainPart: $main_part) {
     ok
   }
 }
@@ -2740,6 +2746,7 @@ export type ChangeBlockMutationFn = Apollo.MutationFunction<ChangeBlockMutation,
  *      blockId: // value for 'blockId'
  *      name: // value for 'name'
  *      descr: // value for 'descr'
+ *      main_part: // value for 'main_part'
  *   },
  * });
  */
@@ -2893,7 +2900,7 @@ export type GetVisitByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetVisitByIdQuery = { __typename?: 'Query', visit?: Maybe<{ __typename?: 'VisitCardType', id: string, blockDescr: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, fullImgUrl?: Maybe<string>, zoomLogo: number, xLogo: number, yLogo: number, secondDescr?: Maybe<string>, geoDescr: string, photoDescr: string, projectDescr: string, theme: string, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string, name?: Maybe<string>, link?: Maybe<string> }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string, url?: Maybe<string> }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }>, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', id: string, name: string, descr: string }> }>> } }> };
+export type GetVisitByIdQuery = { __typename?: 'Query', visit?: Maybe<{ __typename?: 'VisitCardType', id: string, blockDescr: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, fullImgUrl?: Maybe<string>, zoomLogo: number, xLogo: number, yLogo: number, secondDescr?: Maybe<string>, geoDescr: string, photoDescr: string, projectDescr: string, theme: string, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string, name?: Maybe<string>, link?: Maybe<string> }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string, url?: Maybe<string> }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }>, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', id: string, name: string, descr: string, mainPart: string }> }>> } }> };
 
 export type ChangeContactsMutationVariables = Exact<{
   contacts_id?: Maybe<Scalars['String']>;
@@ -3152,6 +3159,7 @@ export type CreateBlockMutationVariables = Exact<{
   name?: Maybe<Scalars['String']>;
   descr?: Maybe<Scalars['String']>;
   cardId?: Maybe<Scalars['ID']>;
+  main_part?: Maybe<Scalars['String']>;
 }>;
 
 
@@ -3162,7 +3170,7 @@ export type GetBlocksQueryVariables = Exact<{
 }>;
 
 
-export type GetBlocksQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, blockDescr: string, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', name: string, id: string, descr: string }> }>> } }> };
+export type GetBlocksQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, blockDescr: string, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', name: string, id: string, descr: string, mainPart: string }> }>> } }> };
 
 export type DeleteBlockMutationVariables = Exact<{
   blockId?: Maybe<Scalars['ID']>;
@@ -3175,6 +3183,7 @@ export type ChangeBlockMutationVariables = Exact<{
   blockId?: Maybe<Scalars['ID']>;
   name?: Maybe<Scalars['String']>;
   descr?: Maybe<Scalars['String']>;
+  main_part?: Maybe<Scalars['String']>;
 }>;
 
 

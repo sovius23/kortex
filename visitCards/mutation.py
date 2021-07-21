@@ -17,15 +17,16 @@ class AddBlock(graphene.Mutation):
         card_id = graphene.ID()
         name = graphene.String()
         descr = graphene.String()
+        main_part = graphene.String()
 
     block = graphene.Field(BlockType)
 
     @classmethod
-    def mutate(cls, root, info, card_id, name, descr):
+    def mutate(cls, root, info, card_id, name, descr, main_part):
         card = VisitCard.objects.get(
             id=from_global_id(card_id)[1]
         )
-        block = Block.objects.create(card=card, name=name, descr=descr)
+        block = Block.objects.create(card=card, name=name, descr=descr, main_part=main_part)
         block.save()
         return AddBlock(block=block)
 
@@ -47,14 +48,16 @@ class ChangeBlock(graphene.Mutation):
         block_id = graphene.ID()
         name = graphene.String()
         descr = graphene.String()
+        main_part = graphene.String()
 
     ok = graphene.Boolean()
 
     @classmethod
-    def mutate(cls, root, info, block_id, name, descr):
+    def mutate(cls, root, info, block_id, name, descr, main_part):
         block = Block.objects.get(id=from_global_id(block_id)[1])
         block.name = name
         block.descr = descr
+        block.main_part = main_part
         block.save()
         return ChangeBlock(ok=True)
 

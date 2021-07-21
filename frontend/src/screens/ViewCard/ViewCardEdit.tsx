@@ -28,7 +28,7 @@ import { Pencil } from "../../uikit/Pencil/Pencil";
 import { Line } from "../../uikit/Line/Line";
 import { addBlock, editBlockAction, getBlocks } from "../../store/BlockReducer";
 
-function urlize(url:string) {
+export function urlize(url:string) {
     if (url.startsWith("https://") || url.startsWith("http://")) {
         return url;
     }
@@ -49,20 +49,6 @@ export const ViewCardEdit:react.FC = () => {
             (elements[i] as any).style.height = `${window.document.getElementsByClassName("images__container")![0].clientWidth}px`;
         }
         
-        var imgElements = window.document.getElementsByClassName("images__container-image")
-        setInterval(() => {
-            for (let i = 0; i < imgElements.length; ++i) {
-                console.log(imgElements[i], (imgElements[i] as any).naturalWidth, (imgElements[i] as any).naturalHeight)
-                
-                if ((imgElements[i] as any).naturalWidth > (imgElements[i] as any).naturalHeight) {
-                    (imgElements[i] as any).style.height = "100%";
-                    (imgElements[i] as any).style.width = "auto";
-                } else {
-                    (imgElements[i] as any).style.width= "100%";
-                    (imgElements[i] as any).style.height = "auto";
-                }
-            }
-        }, 1000)
         
         
     })
@@ -321,7 +307,8 @@ export const ViewCardEdit:react.FC = () => {
                 name: e?.node?.name!,
                 id: e?.node?.id!,
                 descr: e?.node?.descr!,
-                open: false
+                open: false,
+                main_title: e?.node?.mainPart!
             }))
             return e;
         })
@@ -347,7 +334,6 @@ export const ViewCardEdit:react.FC = () => {
         photos[photos.length-1].push("")
     }
 
-    console.log(photos)
 
 
     var imgCnt = 0;
@@ -419,19 +405,6 @@ export const ViewCardEdit:react.FC = () => {
                 <div className="my-projects__container">
                     {
                         (store.getState() as RootType).projectReducer.projects.map((e) =>
-                        
-                        theme ? 
-                        
-                        <a href={e.link} className="project-link">
-                            
-                            
-                            <Block className="proj-container__dark" posClassName="proj-container__pos" dark>
-                            <Text dark={theme}>
-                                {e.name}
-
-                            </Text>
-                        </Block>
-                        </a> :
                         <a href={e.link} className="project-link">
                             <Block className="proj-container">
                                     {e.name}
@@ -443,20 +416,20 @@ export const ViewCardEdit:react.FC = () => {
                 </div>
             </div> : ""
             }
-            <div className="blocks__container">
+            <div className="blocks__container" style={{gap: 0}}>
                 <div className="blocks__header">
-                    <span>
+                    <Text dark={theme}>
                         {
                             (store.getState() as RootType).profileReducer.block_descr
                         }
-                    </span>
+                    </Text>
                     <Pencil dark={!theme} width={18} height={18} link="/set/blocks" className="block__pencil"></Pencil>
                 </div>
             <div className="blocks">
                 {
                     blocks.map((e) => {
-                        return <Block dark={theme} posClassName="block__container" className={"block__container-class" +
-                        (theme ? "" : " block__container block-container__light")}>
+                        return <Block posClassName="block__container" className={"block__container-class" +
+                        (" block__container block-container__light")}>
                         <Text className="heading block__end" dark={theme}>
                             {e.name}
                         </Text>
@@ -465,6 +438,12 @@ export const ViewCardEdit:react.FC = () => {
                                 e.descr.length > 50 && !e.open ? "..." : ""
                             )}
                         </Text>
+                        {
+                            e.open ? 
+                            <Text dark={theme} className="block__main-part">
+                                {e.main_title}
+                            </Text> : ""
+                        }
                         <div className="block__image">
                             <img src={
                                theme ? "/static/images/arrowDownDark.svg" : "/static/images/arrowDown.svg"
@@ -473,7 +452,8 @@ export const ViewCardEdit:react.FC = () => {
                                     id: e.id,
                                     name: e.name,
                                     descr: e.descr,
-                                    open: !e.open
+                                    open: !e.open,
+                                    main_title: e.main_title
                                 }))
                             }}/>
                         </div>
@@ -504,7 +484,21 @@ export const ViewCardEdit:react.FC = () => {
                                     e.map((ee) => {
                                         console.log(imgRef.current)
                                         return <div className="images__container">
-                                            <img src={ee} alt="" ref={imgRef} className="images__container-image" />
+                                            <img src={ee} alt="" ref={imgRef} className="images__container-image" 
+                                            onLoad={() => {
+                                                var imgElements = window.document.getElementsByClassName("images__container-image")
+                                                for (let i = 0; i < imgElements.length; ++i) {
+                                                    console.log(imgElements[i], (imgElements[i] as any).naturalWidth, (imgElements[i] as any).naturalHeight)
+                                                    
+                                                    if ((imgElements[i] as any).naturalWidth > (imgElements[i] as any).naturalHeight) {
+                                                        (imgElements[i] as any).style.height = "100%";
+                                                        (imgElements[i] as any).style.width = "auto";
+                                                    } else {
+                                                        (imgElements[i] as any).style.width= "100%";
+                                                        (imgElements[i] as any).style.height = "auto";
+                                                    }
+                                                }
+                                            }} />
                                         </div> 
                                     })
                                 }

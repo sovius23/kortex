@@ -5,6 +5,7 @@ interface IBlock{
     name:string;
     descr:string;
     open:boolean;
+    main_title:string;
     id:string;
 }
 

@@ -21,6 +21,8 @@ import {createPortal} from "react-dom";
 import { TelPopUp } from "../../uikit/PopUps/ShowTelPopUp/ShowTelPopUp";
 import { Line } from "../../uikit/Line/Line";
 
+import {urlize} from "./ViewCardEdit";
+
 export const ViewCard:react.FC = () => {
 
     const {id} = useParams<{id:string}>();
@@ -66,7 +68,7 @@ export const ViewCard:react.FC = () => {
         
     })
 
-    var [blocks, setBlock] = useState<{name:string, descr:string, id:string, open:boolean}[]>([]);
+    var [blocks, setBlock] = useState<{name:string, descr:string, id:string, open:boolean;main_title:string;}[]>([]);
     
 
     if (loading) {
@@ -99,28 +101,29 @@ export const ViewCard:react.FC = () => {
                         name: e?.node?.name!,
                         descr: e?.node?.descr!,
                         open: false,
-                        id: e?.node?.id!
+                        id: e?.node?.id!,
+                        main_title: e?.node?.mainPart!
                     }
                 })!)}
     }
 
     var icons = [];
 
-    if (data?.visit?.contacts?.facebookLink){
+    if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
         icons.push({type: IconType.facebook,  
-            link:data.visit.contacts.facebookLink,
+            link:data?.visit?.contacts?.facebookLink,
             onClick: () => {
-                window.location.href = data.visit?.contacts?.facebookLink!
+                window.location.href =urlize(data?.visit?.contacts?.facebookLink!)
             }
         });
     }
 
     
-    if (data?.visit?.contacts?.instLink){
+    if (data?.visit?.contacts?.instLink != "instagram.com/"){
         icons.push({type: IconType.inst,
-            link: data.visit.contacts.instLink,
+            link: data?.visit?.contacts?.instLink,
             onClick: () => {
-                window.location.href = data.visit?.contacts?.instLink!;
+                window.location.href = urlize(data?.visit?.contacts?.instLink!);
             }
         });
     }
@@ -134,29 +137,29 @@ export const ViewCard:react.FC = () => {
         });
     }
     
-    if (data?.visit?.contacts?.tgLink){
+    if (data?.visit?.contacts?.tgLink != "t.me/"){
         icons.push({type: IconType.tg,
-            link: data.visit.contacts.tgLink,
+            link: data!.visit!.contacts!.tgLink,
             onClick: () => {
-                window.location.href = data.visit?.contacts?.tgLink!;
+                window.location.href = urlize(data!.visit?.contacts?.tgLink!);
             }
         });
     }
     
-    if (data?.visit?.contacts?.twitterLink){
+    if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
         icons.push({type: IconType.twitter,
-            link: data.visit.contacts.twitterLink,
+            link: data?.visit?.contacts?.twitterLink,
             onClick: () => {
-                window.location.href = data.visit?.contacts?.twitterLink!;
+                window.location.href = urlize(data?.visit?.contacts?.twitterLink!);
             }
         });
     }
     
-    if (data?.visit?.contacts?.vkLink){
+    if (data?.visit?.contacts?.vkLink != "vk.com/"){
         icons.push({type: IconType.vk,
-            link: data.visit.contacts.vkLink,
+            link: data?.visit?.contacts?.vkLink,
             onClick: () => {
-                window.location.href = data.visit?.contacts?.vkLink!;
+                window.location.href = urlize(data?.visit?.contacts?.vkLink!);
             }
         });
     }
@@ -165,7 +168,7 @@ export const ViewCard:react.FC = () => {
         icons.push({type: IconType.web,
         link: data.visit.contacts.website,
         onClick: () => {
-            window.location.href = data.visit?.contacts?.website!;
+            window.location.href = urlize(data.visit?.contacts?.website!);
         }
         });
     }
@@ -174,7 +177,7 @@ export const ViewCard:react.FC = () => {
         icons.push({type:IconType.ws,
             link: data.visit.contacts.whatsappLink,
             onClick: () => {
-                window.location.href = data.visit?.contacts?.whatsappLink!;
+                window.location.href = "https://api.whatsapp.com/send?phone=" + data.visit?.contacts?.whatsappLink!.replaceAll("+", "").replaceAll(" ", "");
             }
         });
     }
@@ -252,21 +255,36 @@ export const ViewCard:react.FC = () => {
                     }
                 </div>
             </div>
-
-            <div className="blocks">
+            <div className="blocks__container" style={{gap: 0}}>
+                <div className="blocks__header">
+                    <Text dark={data?.visit?.theme == "Dark"}>
+                        {
+                            data?.visit?.blockDescr
+                        }
+                    </Text>
+                    
+                </div>
+                <div className="blocks">
                 {
                     blocks.map((e) => {
-                        return <Block dark={data?.visit?.theme == "Dark"} posClassName="block__container" className={"block__container-class" +
-                        (data?.visit?.theme == "Dark" ? "" : " block__container")}>
-                        <Text className="heading" dark={data?.visit?.theme == "Dark"}>
+                        return <Block  className={"block__container-class" +
+                        (" block__container block-container__light")}>
+                        <Text className="heading block__end" dark={data?.visit?.theme == "Dark"}>
                             {e?.name}
                         </Text>
-                        <Line dark={data?.visit?.theme == "Dark"}></Line>
                         <Text className="block__content" dark={data?.visit?.theme == "Dark"}>
                             {e?.descr.slice(0, e.open ? e.descr.length : Math.min(e.descr.length, 47)) + (
                                 e.descr.length > 50 && !e.open ? "..." : ""
                             )}
                         </Text>
+                        {
+                            e.open ? 
+                            <Text dark={data?.visit?.theme == "Dark"} className="block__main-part">
+                                {
+                                    e.main_title
+                                }
+                            </Text> : ""
+                        }
                         <div className="block__image">
                             <img src={
                                data?.visit?.theme == "Dark" ? "/static/images/arrowDownDark.svg" : "/static/images/arrowDown.svg"
@@ -277,7 +295,8 @@ export const ViewCard:react.FC = () => {
                                         name :ee.name,
                                         descr: ee.descr,
                                         id: ee.id,
-                                        open: !ee.open
+                                        open: !ee.open,
+                                        main_title: ee.main_title
                                     } : ee
                                 }))
                             }}/>
@@ -286,6 +305,8 @@ export const ViewCard:react.FC = () => {
                     </Block>
                     })
                 }
+            </div>
+            
             </div>
             
             {
@@ -297,24 +318,11 @@ export const ViewCard:react.FC = () => {
                 <div className="my-projects__container">
                     {
                         data?.visit?.projectSet.edges.map((e) =>
-                        
-                        data.visit?.theme == "Dark" ? 
-                        
                         <a href={e?.node?.link!} className="project-link">
-                            
-                            
-                            <Block className="proj-container__dark" posClassName="proj-container__pos" dark>
-                            <Text dark={data?.visit?.theme == "Dark"}>
-                                {e?.node?.name}
-
-                            </Text>
-                        </Block>
-                        </a> :
-                        <a href={e?.node?.link!} className="project-link">
-                            <Block className="proj-container">
-                                <Text dark={data?.visit?.theme == "Dark"}>
+                            <Block className="proj-container ">
+                                <div style={{color: "white"}}>
                                     {e?.node?.name}
-                                </Text>
+                                </div>
                             </Block>
                         </a>
                         
@@ -340,7 +348,21 @@ export const ViewCard:react.FC = () => {
                                 {
                                     e.map((ee) => {
                                         return <div className="images__container">
-                                            <img src={ee} alt="" className="images__container-image" />
+                                            <img src={ee} alt="" className="images__container-image" 
+                                            onLoad={() => {
+                                                var imgElements = window.document.getElementsByClassName("images__container-image")
+                                                for (let i = 0; i < imgElements.length; ++i) {
+                                                    console.log(imgElements[i], (imgElements[i] as any).naturalWidth, (imgElements[i] as any).naturalHeight)
+                                                    
+                                                    if ((imgElements[i] as any).naturalWidth > (imgElements[i] as any).naturalHeight) {
+                                                        (imgElements[i] as any).style.height = "100%";
+                                                        (imgElements[i] as any).style.width = "auto";
+                                                    } else {
+                                                        (imgElements[i] as any).style.width= "100%";
+                                                        (imgElements[i] as any).style.height = "auto";
+                                                    }
+                                                }
+                                            }}/>
                                         </div> 
                                     })
                                 }
