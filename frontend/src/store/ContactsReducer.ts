@@ -13,14 +13,14 @@ interface IinitialState{
 }
 
 const initialState:IinitialState = {
-    tg: "None",
-    inst: "None",
-    twitter: "None",
-    vk: "None",
+    tg: "t.me/",
+    inst: "instagram.com/",
+    twitter: "twitter.com/",
+    vk: "vk.com/",
     whatsapp: "None",
     tel: "None",
     web: "None",
-    facebook: "None"
+    facebook: "facebook.com/"
 }
 
 const contactsSlice = createSlice({

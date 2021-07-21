@@ -67,7 +67,7 @@ query getVisit($token:String){
 
 query getVisitById($id:String!){
   visit(id:$id){
-    id
+    id, blockDescr
     name, midname, surname, positionInCompany, description,
     fullImgUrl,
     zoomLogo,
@@ -374,7 +374,7 @@ mutation createBlock($name:String, $descr:String, $cardId:ID){
 
 query getBlocks($token:String){
   getVisitByUser(token:$token){
-    id
+    id, blockDescr
     blockSet{
       edges{
         node{
@@ -406,5 +406,11 @@ mutation isUserAdmin($token:String, $cardId:ID) {
 mutation changePassword($newPassword:String!, $token:String!) {
   changePassword(token:$token, newPassword:$newPassword) {
     ok
+  }
+}
+
+mutation changeBlockDescr($card_id:ID, $new_descr:String) {
+  changeBlockDescr(cardId:$card_id, newDesc:$new_descr) {
+		ok
   }
 }

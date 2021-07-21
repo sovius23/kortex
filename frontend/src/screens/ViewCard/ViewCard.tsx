@@ -1,4 +1,4 @@
-import react, {useContext, useState} from "react";
+import react, {useContext, useState, useEffect} from "react";
 import { useHistory, useParams } from "react-router";
 import { isConstTypeReference } from "typescript";
 
@@ -39,6 +39,32 @@ export const ViewCard:react.FC = () => {
     const [tel, setTel] = useState("");
 
     const history = useHistory();
+
+    useEffect(() => {
+        console.log(window.document.getElementsByClassName("images__container"))
+        //var w = window.document.getElementsByClassName("images__container")![0].clientWidth;
+        var elements = window.document.getElementsByClassName("images__row")
+        for (let i = 1; i < elements.length; ++i) {
+            
+            (elements[i] as any).style.height = `${window.document.getElementsByClassName("images__container")![0].clientWidth}px`;
+        }
+        
+        var imgElements = window.document.getElementsByClassName("images__container-image")
+        console.log(imgElements[0])
+        setTimeout(() => {
+            for (let i = 0; i < imgElements.length; ++i) {
+                console.log(imgElements[i], (imgElements[i] as any).naturalWidth, (imgElements[i] as any).naturalHeight)
+                
+                if ((imgElements[i] as any).naturalWidth > (imgElements[i] as any).naturalHeight) {
+                    (imgElements[i] as any).style.height = "100%"
+                } else {
+                    (imgElements[i] as any).style.width= "100%"
+                }
+            }
+        }, 1000)
+        
+        
+    })
 
     var [blocks, setBlock] = useState<{name:string, descr:string, id:string, open:boolean}[]>([]);
     
@@ -159,7 +185,22 @@ export const ViewCard:react.FC = () => {
     }
 
     
+    var photos = [];
+    var photo_buffer = [""];
+    photo_buffer = [];
+    for (var i = 0; i < data?.visit?.photoSet.edges.length!; i++) {
+        if ((i) % 3 == 0) {
+            photos.push(photo_buffer)
+            photo_buffer = [];
+        }
+        photo_buffer.push(data?.visit?.photoSet.edges[i]?.node?.url!)
+    }
+    photo_buffer.length ?
+    photos.push(photo_buffer) : ""
 
+    for (var i = 0; i < 4 - photo_buffer.length; ++i) {
+        photos[photos.length-1].push("")
+    }
 
     return <div className="view-card__global-container">
         <div className="view-card__container">
@@ -247,19 +288,6 @@ export const ViewCard:react.FC = () => {
                 }
             </div>
             
-            
-            
-            <div className="descr__container">
-                <div className="descr">
-                    <Text className="w100" dark={data?.visit?.theme == "Dark"}>
-                        {
-                            data?.visit?.description
-                        }
-                    </Text>
-                </div>
-            </div>
-            
-            
             {
                 data?.visit?.projectSet.edges.length ?
                 <div className="my-project__global-container">
@@ -297,20 +325,27 @@ export const ViewCard:react.FC = () => {
             }
             
             {
-                data?.visit?.photoSet?.edges.length ?
+                data?.visit?.photoSet.edges.length ?
                 <div className="my-image__container">
                 <div className="edit__heading">
-                    <Text className="my-image__header tal" dark={data.visit.theme =="Dark"}>
-                        {data.visit.photoDescr!}
+                    <Text className="my-image__header tal" dark={data.visit.theme == "Dark"}>
+                        {data.visit.photoDescr}
                     </Text>
                 </div>
                 
                 <div className="my-images__content">
                     {
-                        data.visit.photoSet.edges.map((e) => 
-                            <div className="image-pos__container">
-                                <img src={e?.node?.url!} className="image-view__container"></img>
-                            </div>)
+                        photos.map((e) => {
+                            return <div className="images__row">
+                                {
+                                    e.map((ee) => {
+                                        return <div className="images__container">
+                                            <img src={ee} alt="" className="images__container-image" />
+                                        </div> 
+                                    })
+                                }
+                            </div>
+                        })
                     }
                 </div>
             </div> : ""

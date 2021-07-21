@@ -56,19 +56,19 @@ export const ContactsScreen:react.FC = () => {
         return <div></div>
     }
     console.log(data);
-    if (data?.getVisitByUser?.contacts?.facebookLink?.length &&
-        ((store.getState() as RootType).contactsReducer.facebook == "None")) {
-            dispatch(setFacebook(data.getVisitByUser.contacts.facebookLink));
+    if (data?.getVisitByUser?.contacts?.facebookLink != "facebook.com/" &&
+        ((store.getState() as RootType).contactsReducer.facebook == "facebook.com/")) {
+            dispatch(setFacebook(data?.getVisitByUser?.contacts?.facebookLink!));
     }
 
-    if (data?.getVisitByUser?.contacts?.twitterLink?.length &&
-        ((store.getState() as RootType).contactsReducer.twitter == "None")) {
-            dispatch(setTwitter(data.getVisitByUser.contacts.twitterLink));
+    if (data?.getVisitByUser?.contacts?.twitterLink != "twitter.com/" &&
+        ((store.getState() as RootType).contactsReducer.twitter == "twitter.com/")) {
+            dispatch(setTwitter(data?.getVisitByUser?.contacts?.twitterLink!));
     }
 
-    if (data?.getVisitByUser?.contacts?.vkLink?.length &&
-        ((store.getState() as RootType).contactsReducer.vk == "None")) {
-            dispatch(setVk(data.getVisitByUser.contacts.vkLink));
+    if (data?.getVisitByUser?.contacts?.vkLink != "vk.com/" &&
+        ((store.getState() as RootType).contactsReducer.vk == "vk.com/")) {
+            dispatch(setVk(data?.getVisitByUser?.contacts?.vkLink!));
     }
 
     if (data?.getVisitByUser?.contacts?.phone?.length &&
@@ -76,14 +76,14 @@ export const ContactsScreen:react.FC = () => {
             dispatch(setTel(data.getVisitByUser.contacts.phone));
     }
 
-    if (data?.getVisitByUser?.contacts?.instLink?.length &&
-        (store.getState() as RootType).contactsReducer.inst == "None") {
-            dispatch(setInst(data.getVisitByUser.contacts.instLink));
+    if (data?.getVisitByUser?.contacts?.instLink != "instagram.com/" &&
+        (store.getState() as RootType).contactsReducer.inst == "instagram.com/") {
+            dispatch(setInst(data?.getVisitByUser?.contacts?.instLink!));
     }
 
-    if (data?.getVisitByUser?.contacts?.tgLink?.length &&
-        (store.getState() as RootType).contactsReducer.tg == "None") {
-            dispatch(setTg(data.getVisitByUser.contacts.tgLink));
+    if (data?.getVisitByUser?.contacts?.tgLink != "t.me/" &&
+        (store.getState() as RootType).contactsReducer.tg == "t.me/") {
+            dispatch(setTg(data?.getVisitByUser?.contacts?.tgLink!));
     }
 
     if (data?.getVisitByUser?.contacts?.website?.length &&

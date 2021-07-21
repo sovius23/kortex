@@ -1,4 +1,4 @@
-import react, {useContext, useState} from "react";
+import react, {useContext, useEffect, useRef, useState} from "react";
 import { useHistory, useParams } from "react-router";
 import { isConstTypeReference } from "typescript";
 
@@ -20,7 +20,7 @@ import {createPortal} from "react-dom";
 import { TelPopUp } from "../../uikit/PopUps/ShowTelPopUp/ShowTelPopUp";
 import { RootType } from "../../store/store";
 import { setFacebook, setInst, setTg, setTwitter, setVk, setWeb, setWhatsapp } from "../../store/ContactsReducer";
-import { setTheme, setCoords, setCroppedImg, setDescriptionFirst, setDescriptionSecond, setImgHead, setMapHead, setMidname, setName, setPosition, setProjectHead, setSurname, setZoom } from "../../store/profileReducer";
+import { setTheme, setCoords, setCroppedImg, setDescriptionFirst, setDescriptionSecond, setImgHead, setMapHead, setMidname, setName, setPosition, setProjectHead, setSurname, setZoom, setBlockDescr } from "../../store/profileReducer";
 import { addProject } from "../../store/ProjectsReducer";
 import { addImg } from "../../store/PhotoReducer";
 import { changeGeo } from "../../store/GeolocationReducer";
@@ -28,7 +28,45 @@ import { Pencil } from "../../uikit/Pencil/Pencil";
 import { Line } from "../../uikit/Line/Line";
 import { addBlock, editBlockAction, getBlocks } from "../../store/BlockReducer";
 
+function urlize(url:string) {
+    if (url.startsWith("https://") || url.startsWith("http://")) {
+        return url;
+    }
+    else {
+        return "https://" + url;
+    }
+}
+
 export const ViewCardEdit:react.FC = () => {
+    const imgRef = useRef(null);
+    const [width, setWidth] = useState(false);
+    useEffect(() => {
+        console.log(window.document.getElementsByClassName("images__container"))
+        //var w = window.document.getElementsByClassName("images__container")![0].clientWidth;
+        var elements = window.document.getElementsByClassName("images__row")
+        for (let i = 1; i < elements.length; ++i) {
+            
+            (elements[i] as any).style.height = `${window.document.getElementsByClassName("images__container")![0].clientWidth}px`;
+        }
+        
+        var imgElements = window.document.getElementsByClassName("images__container-image")
+        setInterval(() => {
+            for (let i = 0; i < imgElements.length; ++i) {
+                console.log(imgElements[i], (imgElements[i] as any).naturalWidth, (imgElements[i] as any).naturalHeight)
+                
+                if ((imgElements[i] as any).naturalWidth > (imgElements[i] as any).naturalHeight) {
+                    (imgElements[i] as any).style.height = "100%";
+                    (imgElements[i] as any).style.width = "auto";
+                } else {
+                    (imgElements[i] as any).style.width= "100%";
+                    (imgElements[i] as any).style.height = "auto";
+                }
+            }
+        }, 1000)
+        
+        
+    })
+
 
     const [isUserAdmin] = useIsUserAdminMutation()
 
@@ -72,29 +110,29 @@ export const ViewCardEdit:react.FC = () => {
         }
     })
 
-    if (data?.visit?.contacts?.facebookLink){
-        if (storedData.contactsReducer.facebook == "None") {
+    if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
+        if (storedData.contactsReducer.facebook == "facebook.com/") {
             dispatch(setFacebook(data?.visit?.contacts?.facebookLink!))
         }
         if ((store.getState() as RootType).contactsReducer.facebook.length != 0){
             icons.push({type: IconType.facebook,  
                 link:(store.getState() as RootType).contactsReducer.facebook,
                 onClick: () => {
-                    window.location.href = (store.getState() as RootType).contactsReducer.facebook
+                    window.location.href = urlize((store.getState() as RootType).contactsReducer.facebook)
                 }
             });
         }
     }
 
-    if (data?.visit?.contacts?.twitterLink){
-        if (storedData.contactsReducer.twitter == "None") {
+    if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
+        if (storedData.contactsReducer.twitter == "twitter.com/") {
             dispatch(setTwitter(data?.visit?.contacts?.twitterLink!))
         }
         if ((store.getState() as RootType).contactsReducer.twitter.length){
             icons.push({type: IconType.twitter,  
                 link:(store.getState() as RootType).contactsReducer.twitter,
                 onClick: () => {
-                    window.location.href = (store.getState() as RootType).contactsReducer.twitter
+                    window.location.href = urlize((store.getState() as RootType).contactsReducer.twitter)
                 }
             });
         }
@@ -109,7 +147,7 @@ export const ViewCardEdit:react.FC = () => {
         icons.push({type: IconType.web,  
             link:(store.getState() as RootType).contactsReducer.web,
             onClick: () => {
-                window.location.href = (store.getState() as RootType).contactsReducer.web
+                window.location.href = urlize((store.getState() as RootType).contactsReducer.web)
             }
         });}
     }
@@ -122,46 +160,46 @@ export const ViewCardEdit:react.FC = () => {
         icons.push({type: IconType.ws,  
             link:(store.getState() as RootType).contactsReducer.whatsapp,
             onClick: () => {
-                window.location.href = (store.getState() as RootType).contactsReducer.whatsapp
+                window.location.href = "https://api.whatsapp.com/send?phone=" + (store.getState() as RootType).contactsReducer.whatsapp.replaceAll("+", "").replaceAll(" ", "")
             }
         });}
     }
 
-    if (data?.visit?.contacts?.vkLink){
-        if (storedData.contactsReducer.vk == "None") {
+    if (data?.visit?.contacts?.vkLink != "vk.com/"){
+        if (storedData.contactsReducer.vk == "vk.com/") {
             dispatch(setVk(data?.visit?.contacts?.vkLink!))
         }
         if ((store.getState() as RootType).contactsReducer.vk.length){
         icons.push({type: IconType.vk,  
             link:(store.getState() as RootType).contactsReducer.vk,
             onClick: () => {
-                window.location.href = (store.getState() as RootType).contactsReducer.vk
+                window.location.href = urlize((store.getState() as RootType).contactsReducer.vk)
             }
         });}
     }
 
-    if (data?.visit?.contacts?.tgLink){
-        if (storedData.contactsReducer.tg == "None") {
+    if (data?.visit?.contacts?.tgLink != "t.me/"){
+        if (storedData.contactsReducer.tg == "t.me/") {
             dispatch(setTg(data?.visit?.contacts?.tgLink!))
         }
         if ((store.getState() as RootType).contactsReducer.tg.length){
         icons.push({type: IconType.tg,  
             link:(store.getState() as RootType).contactsReducer.tg,
             onClick: () => {
-                window.location.href = (store.getState() as RootType).contactsReducer.tg
+                window.location.href = urlize((store.getState() as RootType).contactsReducer.tg)
             }
         });}
     }
 
-    if (data?.visit?.contacts?.instLink){
-        if (storedData.contactsReducer.inst == "None") {
+    if (data?.visit?.contacts?.instLink != "instagram.com/"){
+        if (storedData.contactsReducer.inst == "instagram.com/") {
             dispatch(setInst(data?.visit?.contacts?.instLink!))
         }
         if ((store.getState() as RootType).contactsReducer.inst.length){
         icons.push({type: IconType.inst,  
             link:(store.getState() as RootType).contactsReducer.inst,
             onClick: () => {
-                window.location.href = (store.getState() as RootType).contactsReducer.inst
+                window.location.href = urlize((store.getState() as RootType).contactsReducer.inst)
             }
         });}
     }
@@ -260,6 +298,11 @@ export const ViewCardEdit:react.FC = () => {
     if ((store.getState() as RootType).profileReducer.map_head == "None") {
         dispatch(setMapHead(data?.visit?.geoDescr || ""))
     }
+
+    if ((store.getState() as RootType).profileReducer.block_descr == "None") {
+        dispatch(setBlockDescr(data?.visit?.blockDescr!))
+    }
+
     var a = (store.getState() as RootType).profileReducer.is_dark
     
     console.log(a, store.getState())
@@ -285,6 +328,29 @@ export const ViewCardEdit:react.FC = () => {
     }
 
     console.log(theme)
+
+    var photos = [];
+    var photo_buffer = [""];
+    photo_buffer = [];
+    for (var i = 0; i < (store.getState() as RootType).photoReducer.images.length; i++) {
+        if ((i) % 3 == 0) {
+            photos.push(photo_buffer)
+            photo_buffer = [];
+        }
+        console.log((store.getState() as RootType).photoReducer.images[i].url)
+        photo_buffer.push((store.getState() as RootType).photoReducer.images[i].url)
+    }
+    photo_buffer.length ?
+    photos.push(photo_buffer) : ""
+
+    for (var i = 0; i < 4 - photo_buffer.length; ++i) {
+        photos[photos.length-1].push("")
+    }
+
+    console.log(photos)
+
+
+    var imgCnt = 0;
     return <div className="view-card__global-container">
         
         <div className="view-card__container">
@@ -340,53 +406,7 @@ export const ViewCardEdit:react.FC = () => {
                     }
                 </div>
             </div>
-            <div className="blocks__container">
-                <Pencil dark={!theme} width={18} height={18} link="/set/blocks" className="block__pencil"></Pencil>
-            <div className="blocks">
-                {
-                    blocks.map((e) => {
-                        return <Block dark={theme} posClassName="block__container" className={"block__container-class" +
-                        (theme ? "" : " block__container")}>
-                        <Text className="heading" dark={theme}>
-                            {e.name}
-                        </Text>
-                        <Line dark={theme}></Line>
-                        <Text className="block__content" dark={theme}>
-                            {e.descr.slice(0, e.open ? e.descr.length : Math.min(e.descr.length, 47)) + (
-                                e.descr.length > 50 && !e.open ? "..." : ""
-                            )}
-                        </Text>
-                        <div className="block__image">
-                            <img src={
-                               theme ? "/static/images/arrowDownDark.svg" : "/static/images/arrowDown.svg"
-                            } className={e.open ? "reversed" : ""} style={{transform: (!e.open ? "rotate(180deg);" : "")}} alt=""  onClick={() => {
-                                dispatch(editBlockAction({
-                                    id: e.id,
-                                    name: e.name,
-                                    descr: e.descr,
-                                    open: !e.open
-                                }))
-                            }}/>
-                        </div>
-                        
-                    </Block>
-                    })
-                }
-            </div> 
-            </div>
-            
-            
-            <div className="descr__container">
-                <div className="descr">
-                    <Text className="w100" dark={theme}>
-                        {
-                            (store.getState() as RootType).profileReducer.description_second
-                        }
-                    </Text>
-                    <Pencil link="/set/second-description" width={16} height={16} dark={!theme} ></Pencil>
 
-                </div>
-            </div>
             {
                 data?.visit?.projectSet.edges.length ?
                 <div className="my-project__global-container">
@@ -414,9 +434,7 @@ export const ViewCardEdit:react.FC = () => {
                         </a> :
                         <a href={e.link} className="project-link">
                             <Block className="proj-container">
-                                <Text dark={theme}>
                                     {e.name}
-                                </Text>
                             </Block>
                         </a>
                         
@@ -425,6 +443,48 @@ export const ViewCardEdit:react.FC = () => {
                 </div>
             </div> : ""
             }
+            <div className="blocks__container">
+                <div className="blocks__header">
+                    <span>
+                        {
+                            (store.getState() as RootType).profileReducer.block_descr
+                        }
+                    </span>
+                    <Pencil dark={!theme} width={18} height={18} link="/set/blocks" className="block__pencil"></Pencil>
+                </div>
+            <div className="blocks">
+                {
+                    blocks.map((e) => {
+                        return <Block dark={theme} posClassName="block__container" className={"block__container-class" +
+                        (theme ? "" : " block__container block-container__light")}>
+                        <Text className="heading block__end" dark={theme}>
+                            {e.name}
+                        </Text>
+                        <Text className="block__content" dark={theme}>
+                            {e.descr.slice(0, e.open ? e.descr.length : Math.min(e.descr.length, 47)) + (
+                                e.descr.length > 50 && !e.open ? "..." : ""
+                            )}
+                        </Text>
+                        <div className="block__image">
+                            <img src={
+                               theme ? "/static/images/arrowDownDark.svg" : "/static/images/arrowDown.svg"
+                            } className={e.open ? "reversed" : ""} style={{transform: (!e.open ? "rotate(180deg);" : "")}} alt=""  onClick={() => {
+                                dispatch(editBlockAction({
+                                    id: e.id,
+                                    name: e.name,
+                                    descr: e.descr,
+                                    open: !e.open
+                                }))
+                            }}/>
+                        </div>
+                        
+                    </Block>
+                    })
+                }
+            </div> 
+            </div>
+            
+            
             
             {
                 (store.getState() as RootType).photoReducer.images.length ?
@@ -438,10 +498,18 @@ export const ViewCardEdit:react.FC = () => {
                 
                 <div className="my-images__content">
                     {
-                        (store.getState() as RootType).photoReducer.images.map((e) => 
-                            <div className="image-pos__container">
-                                <img src={e?.url!} className="image-view__container"></img>
-                            </div>)
+                        photos.map((e) => {
+                            return <div className="images__row">
+                                {
+                                    e.map((ee) => {
+                                        console.log(imgRef.current)
+                                        return <div className="images__container">
+                                            <img src={ee} alt="" ref={imgRef} className="images__container-image" />
+                                        </div> 
+                                    })
+                                }
+                            </div>
+                        })
                     }
                 </div>
             </div> : ""

@@ -28,18 +28,19 @@ class VisitCard(models.Model):
     theme = models.TextField(default="Dark")
 
     verb_id = models.TextField(unique=True, max_length=20, null=True)
+    block_descr = models.TextField(default="CV")
 
 
 
 class Contacts(models.Model):
     phone = models.TextField(null=True)
     website = models.URLField(null=True)
-    tg_link = models.TextField(null=True)
+    tg_link = models.TextField(null=True, default="t.me/")
     whatsapp_link = models.TextField(null=True)
-    inst_link = models.TextField(null=True)
-    vk_link = models.TextField(null=True)
+    inst_link = models.TextField(null=True, default="instagram.com/")
+    vk_link = models.TextField(null=True, default="vk.com/")
     facebook_link = models.TextField(null=True)
-    twitter_link = models.TextField(null=True)
+    twitter_link = models.TextField(null=True, default="twitter.com/")
 
     visit_card = models.OneToOneField(VisitCard, on_delete=models.CASCADE)
 

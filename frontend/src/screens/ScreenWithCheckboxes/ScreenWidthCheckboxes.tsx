@@ -12,7 +12,7 @@ import { PhotoScreen } from "../PhotoScreen/PhotoScreen";
 import { ProjectScreen } from "../ProjectsScreen/ProjectsScreen";
 import { SecondDescriptionScreen } from "../SeconDescrScreen/SecondDescrpitionScreen";
 import { SetCredsScreen } from "../SetCredsScreen/SetCredsScreen";
-import { SetBlockScreen } from "../SetDescriptionScreen/SetDescrpitionScreen";
+import { SetBlockScreen } from "../BlockScreen/BlockScreen";
 import { SetLogoScreen } from "../SetLogoScreen/SetLogoScreen";
 import { SetPositionScreen } from "../SetPositionScreen/SetPositionScreen";
 import { ThemeScreen } from "../ThemeScreen/ThemeScreen";

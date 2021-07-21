@@ -20,6 +20,7 @@ interface IinitialState{
     image_cords: ICoord; 
     zoom:number;
     map_head:string;
+    block_descr:string;
 }
 
 interface ICoord{
@@ -41,7 +42,8 @@ const initialState:IinitialState = {
     project_head:"None",
     image_cords : {x:-1, y:-1},
     zoom: -1,
-    map_head:"None"
+    map_head:"None",
+    block_descr: "None"
 }
 
 const profileSlice = createSlice({
@@ -89,6 +91,9 @@ const profileSlice = createSlice({
         },
         setMapHead(state, action:PayloadAction<string>){
             state.map_head = action.payload;
+        },
+        setBlockDescr(state, action:PayloadAction<string>) {
+            state.block_descr = action.payload;
         }
     }
 })
@@ -142,7 +147,7 @@ export const getSecondDescription = createSelector(
     descr => descr
 )
 
-export const {setMapHead, setZoom, setImgHead, setProjectHead, setTheme, setCroppedImg, setName, setMidname, setSurname, setEmail,
+export const {setBlockDescr, setMapHead, setZoom, setImgHead, setProjectHead, setTheme, setCroppedImg, setName, setMidname, setSurname, setEmail,
                 setPosition, setDescriptionFirst, setDescriptionSecond, setCoords} = profileSlice.actions
 
 export default profileSlice.reducer

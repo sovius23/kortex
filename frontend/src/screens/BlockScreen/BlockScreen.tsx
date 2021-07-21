@@ -13,19 +13,23 @@ import { Block } from "../../uikit/Block/Block";
 import { CreateBlockPopUp } from "../../uikit/PopUps/CreateBlockPopUp/CreateBlockPopUp";
 import {createPortal} from "react-dom";
 
-import {useCreateBlockMutation, useGetBlocksQuery, useChangeBlockMutation, useDeleteBlockMutation} from "../../generated/graphql";
+import {useCreateBlockMutation, useGetBlocksQuery, useChangeBlockMutation, useDeleteBlockMutation, useChangeBlockDescrMutation} from "../../generated/graphql";
 import { ChangeBlockPopUp } from "../../uikit/PopUps/ChangeBlockPopUp/ChangeBlockPopUp";
+import { Input } from "../../uikit/Input/Input";
+import { setBlockDescr } from "../../store/profileReducer";
 
 
 export const SetBlockScreen:react.FC = () => {
 
     const dispatch = useDispatch();
+    const store = useStore();
 
     const blocks = useSelector(getBlocks);
 
     const [createBlockServer] = useCreateBlockMutation();
     const [changeBlockServer] = useChangeBlockMutation();
     const [deleteBlockServer] = useDeleteBlockMutation();
+    const [changeDescr] = useChangeBlockDescrMutation();
 
     const {data, loading} = useGetBlocksQuery({variables:{token:localStorage.getItem("token")}})
     
@@ -50,9 +54,22 @@ export const SetBlockScreen:react.FC = () => {
         })
     }
 
+    if ((store.getState() as RootType).profileReducer.block_descr == "None") {
+        console.log(data, "data")
+        dispatch(setBlockDescr(data?.getVisitByUser?.blockDescr!))
+
+    }
+
     return <>
         <div className="descr__container">
             <Navigation nextLink="/set/contacts" nextName="Контакты" currentName="Блоки"></Navigation>
+            <Input value={(store.getState() as RootType).profileReducer.block_descr} placeholder="Название в визитке" className="block__descr-input" onChange={(e:string) => {
+                dispatch(setBlockDescr(e));
+                changeDescr({variables:{
+                    card_id: data?.getVisitByUser?.id!,
+                    new_descr: e
+                }})
+            }}></Input>
             <div className="blocks__container">
                 {
                     blocks.map(e => {

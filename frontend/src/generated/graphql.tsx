@@ -116,6 +116,11 @@ export type ChangeBlock = {
   ok?: Maybe<Scalars['Boolean']>;
 };
 
+export type ChangeBlockDescr = {
+  __typename?: 'ChangeBlockDescr';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
 export type ChangeContacts = {
   __typename?: 'ChangeContacts';
   ok?: Maybe<Scalars['Boolean']>;
@@ -390,6 +395,7 @@ export type Mutation = {
   createBlock?: Maybe<AddBlock>;
   updateBlock?: Maybe<ChangeBlock>;
   deleteBlock?: Maybe<RemoveBlock>;
+  changeBlockDescr?: Maybe<ChangeBlockDescr>;
   isUserAdmin?: Maybe<IfUserAdmin>;
   changePassword?: Maybe<ChangePassword>;
 };
@@ -635,6 +641,12 @@ export type MutationUpdateBlockArgs = {
 
 export type MutationDeleteBlockArgs = {
   blockId?: Maybe<Scalars['ID']>;
+};
+
+
+export type MutationChangeBlockDescrArgs = {
+  cardId?: Maybe<Scalars['ID']>;
+  newDesc?: Maybe<Scalars['String']>;
 };
 
 
@@ -1087,6 +1099,7 @@ export type VisitCardType = Node & {
   photoDescr: Scalars['String'];
   theme: Scalars['String'];
   verbId?: Maybe<Scalars['String']>;
+  blockDescr: Scalars['String'];
   contacts?: Maybe<ContactsType>;
   projectSet: ProjectTypeConnection;
   photoSet: PhotoTypeConnection;
@@ -1314,6 +1327,7 @@ export const GetVisitByIdDocument = gql`
     query getVisitById($id: String!) {
   visit(id: $id) {
     id
+    blockDescr
     name
     midname
     surname
@@ -2627,6 +2641,7 @@ export const GetBlocksDocument = gql`
     query getBlocks($token: String) {
   getVisitByUser(token: $token) {
     id
+    blockDescr
     blockSet {
       edges {
         node {
@@ -2803,6 +2818,40 @@ export function useChangePasswordMutation(baseOptions?: Apollo.MutationHookOptio
 export type ChangePasswordMutationHookResult = ReturnType<typeof useChangePasswordMutation>;
 export type ChangePasswordMutationResult = Apollo.MutationResult<ChangePasswordMutation>;
 export type ChangePasswordMutationOptions = Apollo.BaseMutationOptions<ChangePasswordMutation, ChangePasswordMutationVariables>;
+export const ChangeBlockDescrDocument = gql`
+    mutation changeBlockDescr($card_id: ID, $new_descr: String) {
+  changeBlockDescr(cardId: $card_id, newDesc: $new_descr) {
+    ok
+  }
+}
+    `;
+export type ChangeBlockDescrMutationFn = Apollo.MutationFunction<ChangeBlockDescrMutation, ChangeBlockDescrMutationVariables>;
+
+/**
+ * __useChangeBlockDescrMutation__
+ *
+ * To run a mutation, you first call `useChangeBlockDescrMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useChangeBlockDescrMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [changeBlockDescrMutation, { data, loading, error }] = useChangeBlockDescrMutation({
+ *   variables: {
+ *      card_id: // value for 'card_id'
+ *      new_descr: // value for 'new_descr'
+ *   },
+ * });
+ */
+export function useChangeBlockDescrMutation(baseOptions?: Apollo.MutationHookOptions<ChangeBlockDescrMutation, ChangeBlockDescrMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<ChangeBlockDescrMutation, ChangeBlockDescrMutationVariables>(ChangeBlockDescrDocument, options);
+      }
+export type ChangeBlockDescrMutationHookResult = ReturnType<typeof useChangeBlockDescrMutation>;
+export type ChangeBlockDescrMutationResult = Apollo.MutationResult<ChangeBlockDescrMutation>;
+export type ChangeBlockDescrMutationOptions = Apollo.BaseMutationOptions<ChangeBlockDescrMutation, ChangeBlockDescrMutationVariables>;
 export type CreateUserMutationVariables = Exact<{
   username?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
@@ -2844,7 +2893,7 @@ export type GetVisitByIdQueryVariables = Exact<{
 }>;
 
 
-export type GetVisitByIdQuery = { __typename?: 'Query', visit?: Maybe<{ __typename?: 'VisitCardType', id: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, fullImgUrl?: Maybe<string>, zoomLogo: number, xLogo: number, yLogo: number, secondDescr?: Maybe<string>, geoDescr: string, photoDescr: string, projectDescr: string, theme: string, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string, name?: Maybe<string>, link?: Maybe<string> }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string, url?: Maybe<string> }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }>, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', id: string, name: string, descr: string }> }>> } }> };
+export type GetVisitByIdQuery = { __typename?: 'Query', visit?: Maybe<{ __typename?: 'VisitCardType', id: string, blockDescr: string, name?: Maybe<string>, midname: string, surname: string, positionInCompany?: Maybe<string>, description?: Maybe<string>, fullImgUrl?: Maybe<string>, zoomLogo: number, xLogo: number, yLogo: number, secondDescr?: Maybe<string>, geoDescr: string, photoDescr: string, projectDescr: string, theme: string, contacts?: Maybe<{ __typename?: 'ContactsType', phone?: Maybe<string>, id: string, website?: Maybe<string>, tgLink?: Maybe<string>, whatsappLink?: Maybe<string>, instLink?: Maybe<string>, vkLink?: Maybe<string>, facebookLink?: Maybe<string>, twitterLink?: Maybe<string> }>, projectSet: { __typename?: 'ProjectTypeConnection', edges: Array<Maybe<{ __typename?: 'ProjectTypeEdge', node?: Maybe<{ __typename?: 'ProjectType', id: string, name?: Maybe<string>, link?: Maybe<string> }> }>> }, photoSet: { __typename?: 'PhotoTypeConnection', edges: Array<Maybe<{ __typename?: 'PhotoTypeEdge', node?: Maybe<{ __typename?: 'PhotoType', id: string, url?: Maybe<string> }> }>> }, geopos?: Maybe<{ __typename?: 'GeoPosType', lattitude?: Maybe<number>, longitude?: Maybe<number> }>, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', id: string, name: string, descr: string }> }>> } }> };
 
 export type ChangeContactsMutationVariables = Exact<{
   contacts_id?: Maybe<Scalars['String']>;
@@ -3113,7 +3162,7 @@ export type GetBlocksQueryVariables = Exact<{
 }>;
 
 
-export type GetBlocksQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', name: string, id: string, descr: string }> }>> } }> };
+export type GetBlocksQuery = { __typename?: 'Query', getVisitByUser?: Maybe<{ __typename?: 'VisitCardType', id: string, blockDescr: string, blockSet: { __typename?: 'BlockTypeConnection', edges: Array<Maybe<{ __typename?: 'BlockTypeEdge', node?: Maybe<{ __typename?: 'BlockType', name: string, id: string, descr: string }> }>> } }> };
 
 export type DeleteBlockMutationVariables = Exact<{
   blockId?: Maybe<Scalars['ID']>;
@@ -3146,3 +3195,11 @@ export type ChangePasswordMutationVariables = Exact<{
 
 
 export type ChangePasswordMutation = { __typename?: 'Mutation', changePassword?: Maybe<{ __typename?: 'ChangePassword', ok?: Maybe<boolean> }> };
+
+export type ChangeBlockDescrMutationVariables = Exact<{
+  card_id?: Maybe<Scalars['ID']>;
+  new_descr?: Maybe<Scalars['String']>;
+}>;
+
+
+export type ChangeBlockDescrMutation = { __typename?: 'Mutation', changeBlockDescr?: Maybe<{ __typename?: 'ChangeBlockDescr', ok?: Maybe<boolean> }> };

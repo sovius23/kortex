@@ -59,6 +59,22 @@ class ChangeBlock(graphene.Mutation):
         return ChangeBlock(ok=True)
 
 
+class ChangeBlockDescr(graphene.Mutation):
+    class Arguments:
+        new_desc = graphene.String()
+        card_id = graphene.ID()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, new_desc, card_id):
+        card = VisitCard.objects.get(
+            id=from_global_id(card_id)[1]
+        )
+        card.block_descr = new_desc
+        card.save()
+        return ChangeBlockDescr(ok=True)
+
 class IfUserAdmin(graphene.Mutation):
     class Arguments:
         token = graphene.String()
@@ -491,6 +507,7 @@ class Mutation(graphene.ObjectType):
     create_block = AddBlock.Field()
     update_block = ChangeBlock.Field()
     delete_block = RemoveBlock.Field()
+    change_block_descr = ChangeBlockDescr.Field()
 
     is_user_admin = IfUserAdmin.Field()
     change_password = ChangePassword.Field()

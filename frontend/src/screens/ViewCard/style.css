@@ -70,6 +70,11 @@
     font-size: 16px;
 }
 
+.proj-container{
+    background-color: #D04E54;
+    color: white;
+}
+
 .project__container{
     width: calc(100% - 10px);
     height: 70px;
@@ -124,10 +129,7 @@
 
 
 .my-images__content{
-    display: grid;
-    grid-template-columns: 1fr 1fr 1fr 1fr;
-    gap: 10px;
-    width: calc(100% - 10px);
+    
 }
 
 .w100{
@@ -135,12 +137,11 @@
 }
 
 .map-container{
-    width: calc(100% - 10px);
+    width: 100%;
 }
 
 .map-container{
     margin-top: 10px;
-    border-radius: 10px;
 
     overflow: hidden;
     padding: 0px;
@@ -151,14 +152,14 @@
 }
 
 .map-container{
-    width: calc(100% - 10px);
 }
 
 @media (max-width: 700px) {
     .my-images__content{
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: 10px;
+        display: flex;
+    flex-direction: column;
+    gap: 3px;
+    grid-gap: 0!important;
     }
     
     .icons{
@@ -176,7 +177,6 @@
 
 .button-home{
     padding: 0px;
-    width: calc(100% - 10px);
     align-self: flex-start;
     cursor: pointer;
 }
@@ -263,6 +263,7 @@
     padding-top: 10px;
     padding-bottom: 5px;
     font-size: 18px;
+    font-weight: bold;
 }
 
 
@@ -275,7 +276,7 @@
 .block__content{
     padding-top: 10px;
     padding-right: 10px;
-    padding-left: 10px;
+    padding-left: 20px;
     font-size: 14px;
     text-align: left;
 }
@@ -284,7 +285,6 @@
     align-self: flex-end;
     padding-right: 10px;
     padding-bottom: 10px;
-    padding-top: 20px;
 }
 
 .reversed{
@@ -303,11 +303,9 @@
 
 .my-images__content{
     display: flex;
-    grid-template-columns: 230px 230px 230px;
-    grid-gap: 20px;
-    flex-wrap: wrap;
-    justify-items: stretch;
-    justify-content: space-between;
+    flex-direction: column;
+    gap: 3px;
+    grid-gap: 0!important;
     
 }
 
@@ -336,4 +334,47 @@
 .blocks__containers{
     display: flex;
     flex-direction: column;
+}
+
+.images__row{
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    gap: 3px;
+    margin-bottom: 3px;
+
+}
+
+.images__container{
+    width: 100%;
+    overflow:hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.images__container>img{
+}
+
+@media (min-width:700px){
+    .obert{
+        width: 100%;
+        display: flex;
+        justify-content: center;
+    }
+}
+
+.blocks__header{
+    display: flex;
+    justify-content: space-between;
+    font-size: 18px;
+}
+
+.block-container__light{
+    border: 1px solid #D04E54;
+}
+
+.block__end{
+    padding-right: 30px;
+    align-self: flex-end;
 }
