@@ -4,7 +4,7 @@ import { Theme, ThemeContext } from "../../App";
 import "./style.css";
 
 
-export const Block:react.FC<{className?:string; dark?:boolean; posClassName?:string}> = (props) => {
+export const Block:react.FC<{onClick?:Function;className?:string; dark?:boolean; posClassName?:string}> = (props) => {
 
 
     var block_container_class = "block__light-container";
@@ -16,11 +16,15 @@ export const Block:react.FC<{className?:string; dark?:boolean; posClassName?:str
 
     return props.dark ? 
     
-    <div className={ props.dark ? "grad-border " + props.posClassName : "w100"}>
+    <div onClick={() => {
+        props.onClick!()
+        }} className={ props.dark ? "grad-border " + props.posClassName : "w100"}>
             <div className={block_container_class + " " + props.className}>
         {props.children}
     </div>
-    </div>  : <div className={block_container_class + " " + props.className}>
+    </div>  : <div onClick={() => {
+        props.onClick!()
+    }} className={block_container_class + " " + props.className}>
         {props.children}
     </div>
 }

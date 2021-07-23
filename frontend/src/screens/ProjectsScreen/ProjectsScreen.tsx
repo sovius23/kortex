@@ -79,7 +79,7 @@ export const ProjectScreen:react.FC = () => {
     window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="project__projects">
-            <Navigation prevLink="/set/contacts" nextName="Картинки" currentName="Проекты" nextLink="/set/photos"></Navigation>
+            <Navigation prevLink="/set/contacts" nextName="Картинки" currentName="Контакты" nextLink="/set/photos"></Navigation>
 
             <Input className="inpt" placeholder={"Описание в визитке"} value={
                 (store.getState() as RootType).profileReducer.project_head

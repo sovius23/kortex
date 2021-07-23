@@ -109,11 +109,12 @@ export const ViewCard:react.FC = () => {
 
     var icons = [];
     try{
-        if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
+        if (data?.visit?.contacts?.facebookLink != "facebook.com/" &&
+        data?.visit?.contacts?.facebookLink?.length){
             icons.push({type: IconType.facebook,  
                 link:data?.visit?.contacts?.facebookLink,
                 onClick: () => {
-                    window.location.href =urlize(data?.visit?.contacts?.facebookLink!)
+                    window.location.href = urlize(data?.visit?.contacts?.facebookLink!)
                 }
             });
         }
@@ -121,7 +122,9 @@ export const ViewCard:react.FC = () => {
     
 
     try{
-        if (data?.visit?.contacts?.instLink != "instagram.com/"){
+        if (data?.visit?.contacts?.instLink != "instagram.com/" &&
+        data?.visit?.contacts?.instLink?.length    
+        ){
             icons.push({type: IconType.inst,
                 link: data?.visit?.contacts?.instLink,
                 onClick: () => {
@@ -143,7 +146,9 @@ export const ViewCard:react.FC = () => {
     }catch{}
     
     try{
-        if (data?.visit?.contacts?.tgLink != "t.me/"){
+        if (data?.visit?.contacts?.tgLink != "t.me/" && 
+        data?.visit?.contacts?.tgLink?.length
+        ){
             icons.push({type: IconType.tg,
                 link: data!.visit!.contacts!.tgLink,
                 onClick: () => {
@@ -154,7 +159,9 @@ export const ViewCard:react.FC = () => {
     } catch{}
     
     try{
-        if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
+        if (data?.visit?.contacts?.twitterLink != "twitter.com/"
+            && data?.visit?.contacts?.twitterLink?.length    
+        ){
             icons.push({type: IconType.twitter,
                 link: data?.visit?.contacts?.twitterLink,
                 onClick: () => {
@@ -165,7 +172,8 @@ export const ViewCard:react.FC = () => {
     } catch{}
     
     try{
-        if (data?.visit?.contacts?.vkLink != "vk.com/"){
+        if (data?.visit?.contacts?.vkLink != "vk.com/" &&
+        data?.visit?.contacts?.tgLink?.length){
             icons.push({type: IconType.vk,
                 link: data?.visit?.contacts?.vkLink,
                 onClick: () => {
@@ -285,7 +293,18 @@ export const ViewCard:react.FC = () => {
                 <div className="blocks">
                 {
                     blocks.map((e) => {
-                        return <Block  className={"block__container-class" +
+                        return <Block  onClick={() => {
+                            setBlock(blocks.map((ee) => {
+                                return ee.id == e.id ?
+                                {
+                                    name :ee.name,
+                                    descr: ee.descr,
+                                    id: ee.id,
+                                    open: !ee.open,
+                                    main_title: ee.main_title
+                                } : ee
+                            }))
+                        }} className={"block__container-class" +
                         (" block__container block-container__light")}>
                         <Text className="heading block__end" dark={data?.visit?.theme == "Dark"}>
                             {e?.name}
@@ -306,18 +325,8 @@ export const ViewCard:react.FC = () => {
                         <div className="block__image">
                             <img src={
                                data?.visit?.theme == "Dark" ? "/static/images/arrowDownDark.svg" : "/static/images/arrowDown.svg"
-                            } className={e.open ? "reversed" : ""} style={{transform: (!e.open ? "rotate(180deg);" : "")}} alt=""  onClick={() => {
-                                setBlock(blocks.map((ee) => {
-                                    return ee.id == e.id ?
-                                    {
-                                        name :ee.name,
-                                        descr: ee.descr,
-                                        id: ee.id,
-                                        open: !ee.open,
-                                        main_title: ee.main_title
-                                    } : ee
-                                }))
-                            }}/>
+                            } className={e.open ? "reversed" : ""} style={{transform: (!e.open ? "rotate(180deg);" : "")}} alt=""  
+                            />
                         </div>
                         
                     </Block>

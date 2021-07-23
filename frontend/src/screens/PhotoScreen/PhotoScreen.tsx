@@ -74,7 +74,7 @@ export const PhotoScreen:react.FC = () => {
 
  
     return <div className="photo__container">
-            <Navigation prevLink="/set/projects" currentName="Картинки" nextLink="/set/map" nextName="Геолокация"></Navigation>
+            <Navigation prevLink="/set/projects" currentName="Проекты" nextLink="/set/map" nextName="Геолокация"></Navigation>
             <div className="photo-content__content">
                 <Input className="input__name-photo" 
                 placeholder={"Описание в визитке"} 

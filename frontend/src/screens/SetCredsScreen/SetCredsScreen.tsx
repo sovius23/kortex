@@ -48,7 +48,7 @@ export const SetCredsScreen:react.FC = () => {
 
     return <div className="set-creds__global-container">
         <div className="set-creds__container">
-            <Navigation prevLink="/set/ava" currentName="ФИО" nextName="Должность" nextLink="/set/position/"></Navigation>
+            <Navigation prevLink="/set/ava" currentName="Аватарка" nextName="Должность" nextLink="/set/position/"></Navigation>
             <div className="set-creds__content">
                 <Input placeholder={"Фамилия"} onChange={(e:string) => {
                     dispatch(setSurname(e));

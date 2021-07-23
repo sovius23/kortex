@@ -355,7 +355,7 @@ export const ViewCardEdit:react.FC = () => {
     return <div className="view-card__global-container">
         {
             ReactDOM.createPortal(
-                <PencilEditMode onChange={() => {
+                <PencilEditMode dark={theme} onChange={() => {
                     setWithPencil(!withPencil);
                 }}></PencilEditMode>,
                 window.document.getElementById("pencil")!
@@ -469,7 +469,15 @@ export const ViewCardEdit:react.FC = () => {
             <div className="blocks">
                 {
                     blocks.map((e) => {
-                        return <Block posClassName="block__container" className={"block__container-class" +
+                        return <Block onClick={() => {
+                            dispatch(editBlockAction({
+                                id: e.id,
+                                name: e.name,
+                                descr: e.descr,
+                                open: !e.open,
+                                main_title: e.main_title
+                            }))
+                        }} posClassName="block__container" className={"block__container-class" +
                         (" block__container block-container__light")}>
                         <Text className="heading block__end" dark={theme}>
                             {e.name}
@@ -488,15 +496,7 @@ export const ViewCardEdit:react.FC = () => {
                         <div className="block__image">
                             <img src={
                                theme ? "/static/images/arrowDownDark.svg" : "/static/images/arrowDown.svg"
-                            } className={e.open ? "reversed" : ""} style={{transform: (!e.open ? "rotate(180deg);" : "")}} alt=""  onClick={() => {
-                                dispatch(editBlockAction({
-                                    id: e.id,
-                                    name: e.name,
-                                    descr: e.descr,
-                                    open: !e.open,
-                                    main_title: e.main_title
-                                }))
-                            }}/>
+                            } className={e.open ? "reversed" : ""} style={{transform: (!e.open ? "rotate(180deg);" : "")}} alt=""  />
                         </div>
                         
                     </Block>

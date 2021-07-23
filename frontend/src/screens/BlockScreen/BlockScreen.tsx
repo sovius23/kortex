@@ -63,7 +63,7 @@ export const SetBlockScreen:react.FC = () => {
 
     return <>
         <div className="descr__container">
-            <Navigation prevLink="/set/position" nextLink="/set/contacts" nextName="Контакты" currentName="Блоки"></Navigation>
+            <Navigation prevLink="/set/position" nextLink="/set/contacts" nextName="Контакты" currentName="ФИО"></Navigation>
             <Input value={(store.getState() as RootType).profileReducer.block_descr} placeholder="Название в визитке" className="block__descr-input" onChange={(e:string) => {
                 dispatch(setBlockDescr(e));
                 changeDescr({variables:{

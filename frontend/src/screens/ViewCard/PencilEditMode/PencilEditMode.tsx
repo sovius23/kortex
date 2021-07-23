@@ -5,12 +5,13 @@ import "./style.css";
 
 interface IPencilEditMode{
     onChange:Function;
+    dark:boolean;
 }
 
 export const PencilEditMode:react.FC<IPencilEditMode> = (props) => {
 
     const [active, setActive] = useState(true);
-    console.log(active);
+    console.log(!props.dark && active);
     return <div className={"pencil__container" + 
                 (
                     active ? " pencil__container-active" : ""
@@ -18,6 +19,12 @@ export const PencilEditMode:react.FC<IPencilEditMode> = (props) => {
         props.onChange();
         setActive(!active);
     }}>
-        <Pencil noLink link="" height={24} width={24}></Pencil>
+        {
+            active ?
+            <Pencil noLink link="" height={24} width={24}></Pencil>
+            : 
+            <Pencil noLink link="" height={24} width={24} dark={!props.dark}></Pencil>
+
+        }
     </div>
 }
