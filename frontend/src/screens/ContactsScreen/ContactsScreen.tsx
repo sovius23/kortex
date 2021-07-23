@@ -119,7 +119,7 @@ export const ContactsScreen:react.FC = () => {
     window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="contacts__container">
-            <Navigation nextName="Проекты" nextLink="/set/projects" currentName="Контакты"></Navigation>
+            <Navigation prevLink="/set/blocks" nextName="Проекты" nextLink="/set/projects" currentName="Контакты"></Navigation>
             
             <div className="contacts-content__button">
                 <div className="contacts__content">

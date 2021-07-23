@@ -1,5 +1,5 @@
 import react from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 
 
 interface IPencil{
@@ -8,13 +8,21 @@ interface IPencil{
     link:string;
     dark?:boolean;
     className?:string;
+    noLink?:boolean;
 }
 
 export const Pencil:react.FC<IPencil> = (props) => {
-    return <Link className={props.className} to={props.link}>
+    const history = useHistory();
+    
+    return <div className={props.className} style={{cursor: "pointer"}} onClick={() => {
+        if (props.noLink) {
+            return
+        }
+        history.push(props.link)
+    }}>
         <img src={
             props.dark ? "/static/images/pencil_light.svg" :
             "/static/images/pencil_dark.svg"
         } alt=""  width={props.width || 14} height={props.height || 14}/>
-    </Link> 
+    </div> 
 }

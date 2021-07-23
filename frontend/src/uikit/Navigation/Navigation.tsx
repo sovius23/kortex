@@ -8,6 +8,7 @@ import "./style.css";
 interface INavigation{
     nextLink:string;
     currentName:string;
+    prevLink:string;
     nextName:string;
 }
 
@@ -17,7 +18,7 @@ export const Navigation:react.FC<INavigation> = (props) => {
 
     return <div className="navigation__global-container">
         <div className="navigation-container__block" style={{cursor: "pointer"}} onClick={() => {
-            history.goBack();
+            history.push(props.prevLink);
         }}>
             <Arrow reversed></Arrow>
             <span>{props.currentName}</span>

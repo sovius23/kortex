@@ -39,7 +39,7 @@ export const ThemeScreen:react.FC = () => {
 
     return <div className="theme__container">
         <div className="prev__nav">
-        <Navigation nextName="Посмотреть визитку" currentName="Тема" 
+        <Navigation prevLink="/set/map" nextName="Посмотреть визитку" currentName="Тема" 
         nextLink={`/${data?.getVisitByUser!.id!}/view`}></Navigation>
         </div>
         <div className="switcher">

@@ -249,6 +249,10 @@
     margin:10px;
 }
 
+.centrize{
+    justify-content: center;
+}
+
 .obert{
     overflow: scroll;
     width: 100vw;

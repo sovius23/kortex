@@ -80,7 +80,7 @@ export const MapScreen:react.FC = () => {
     window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="map-screen__container">
-            <Navigation nextName="Тема" currentName="Геолокация" nextLink="/set/theme"></Navigation>
+            <Navigation prevLink="/set/photos" nextName="Тема" currentName="Геолокация" nextLink="/set/theme"></Navigation>
             
             <div className="map-container">
             <Input

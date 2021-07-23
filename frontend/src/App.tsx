@@ -77,7 +77,7 @@ export const App:react.FC = () => {
         }}>
             
         <Router>
-            <GlobalHeader></GlobalHeader>   
+            <div className="foot__container">
             <div className="centered">
                 <div className="global-container">
                     <Switch>
@@ -110,6 +110,8 @@ export const App:react.FC = () => {
                     </Route>
                 </Switch>
                 </div>
+            </div>
+            <GlobalHeader></GlobalHeader>
             </div>
             
         </Router>

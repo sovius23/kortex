@@ -20,22 +20,37 @@ interface ISwitcher{
 }
 
 export const Switcher:react.FC<ISwitcher> = (props) => {
-
-    const {theme, setTheme} = useContext(ThemeContext);
-
-    var checked = theme == Theme.Dark;
-
-
+    
+    const [opened, setOpened] = useState(false);
+    
     console.log(props);
     
 
     return <div className="switcher__global-container">
-        <div className="switcher__text">Темная тема</div>
-        <div className="switcher__container" onClick={() => {
-            props.onChange!(props.state);
-            }}>
-            <div className={"switcher__dark " + 
-                (!props.state ? "to-end" : "")}></div>
+        <div onClick={() => {
+                setOpened(!opened)
+            }} className={"switcher__main" + (opened ? " higlight" : "")}>
+            <span>
+            {
+                props.state ? "Темная тема" : "Светлая тема"
+            }
+            </span>
+            <img src="/static/images/arrow.svg" alt="" style={{
+                transform: opened ? "rotate(-90deg)" : "rotate(90deg)"
+            }} />
         </div>
+        {
+            opened ? 
+        <div className="switcher__add" onClick={() => {
+            props.onChange!(props.state);
+            setOpened(false);
+        }}>
+            <span>
+                {
+                    props.state ? "Светлая тема" : "Темная тема"
+                }
+            </span>
+        </div> : ""
+        }
     </div>
 }

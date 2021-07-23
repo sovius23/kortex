@@ -16,7 +16,7 @@ import { Button, ButtonTypes } from "../../uikit/Button/Button";
 
 import {useDispatch, useStore, useSelector} from "react-redux";
 
-import {createPortal} from "react-dom";
+import ReactDOM, {createPortal} from "react-dom";
 import { TelPopUp } from "../../uikit/PopUps/ShowTelPopUp/ShowTelPopUp";
 import { RootType } from "../../store/store";
 import { setFacebook, setInst, setTg, setTwitter, setVk, setWeb, setWhatsapp } from "../../store/ContactsReducer";
@@ -27,6 +27,7 @@ import { changeGeo } from "../../store/GeolocationReducer";
 import { Pencil } from "../../uikit/Pencil/Pencil";
 import { Line } from "../../uikit/Line/Line";
 import { addBlock, editBlockAction, getBlocks } from "../../store/BlockReducer";
+import { PencilEditMode } from "./PencilEditMode/PencilEditMode";
 
 export function urlize(url:string) {
     if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -75,10 +76,12 @@ export const ViewCardEdit:react.FC = () => {
     const [flag, setFlag] = useState(false);
 
     const [tel, setTel] = useState("");
-
+    const [withPencil, setWithPencil] = useState(true);
 
     const history = useHistory();
 
+
+    const editMode = useState(true);
 
     if (loading) {
         return <div></div>
@@ -106,12 +109,14 @@ export const ViewCardEdit:react.FC = () => {
                 icons.push({type: IconType.facebook,  
                     link:(store.getState() as RootType).contactsReducer.facebook,
                     onClick: () => {
-                        window.location.href = urlize((store.getState() as RootType).contactsReducer.facebook)
+                        window.open(urlize((store.getState() as RootType).contactsReducer.facebook))
                     }
                 });
             }
         }
-    
+    } catch{}
+        
+    try{
         if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
             if (storedData.contactsReducer.twitter == "twitter.com/") {
                 dispatch(setTwitter(data?.visit?.contacts?.twitterLink!))
@@ -120,39 +125,41 @@ export const ViewCardEdit:react.FC = () => {
                 icons.push({type: IconType.twitter,  
                     link:(store.getState() as RootType).contactsReducer.twitter,
                     onClick: () => {
-                        window.location.href = urlize((store.getState() as RootType).contactsReducer.twitter)
+                        window.open(urlize((store.getState() as RootType).contactsReducer.twitter))
                     }
                 });
             }
         }
+    } catch{}
         
-        if (data?.visit?.contacts?.website){
-            if (storedData.contactsReducer.web == "None") {
-                console.log(data, storedData.contactsReducer.vk)
-                dispatch(setWeb(data?.visit?.contacts?.website!))
-            }
-            if ((store.getState() as RootType).contactsReducer.web.length){
-            icons.push({type: IconType.web,  
-                link:(store.getState() as RootType).contactsReducer.web,
-                onClick: () => {
-                    window.location.href = urlize((store.getState() as RootType).contactsReducer.web)
-                }
-            });}
-        }
     
-        if (data?.visit?.contacts?.whatsappLink){
-            if (storedData.contactsReducer.whatsapp == "None") {
-                dispatch(setWhatsapp(data?.visit?.contacts?.whatsappLink!))
-            }
-            if ((store.getState() as RootType).contactsReducer.whatsapp.length){
-            icons.push({type: IconType.ws,  
-                link:(store.getState() as RootType).contactsReducer.whatsapp,
-                onClick: () => {
-                    window.location.href = "https://api.whatsapp.com/send?phone=" + (store.getState() as RootType).contactsReducer.whatsapp.replaceAll("+", "").replaceAll(" ", "")
-                }
-            });}
+    if (data?.visit?.contacts?.website){
+        if (storedData.contactsReducer.web == "None") {
+            console.log(data, storedData.contactsReducer.vk)
+            dispatch(setWeb(data?.visit?.contacts?.website!))
         }
+        if ((store.getState() as RootType).contactsReducer.web.length){
+        icons.push({type: IconType.web,  
+            link:(store.getState() as RootType).contactsReducer.web,
+            onClick: () => {
+                window.open(urlize((store.getState() as RootType).contactsReducer.web))
+            }
+        });}
+    }
     
+    if (data?.visit?.contacts?.whatsappLink){
+        if (storedData.contactsReducer.whatsapp == "None") {
+            dispatch(setWhatsapp(data?.visit?.contacts?.whatsappLink!))
+        }
+        if ((store.getState() as RootType).contactsReducer.whatsapp.length){
+        icons.push({type: IconType.ws,  
+            link:(store.getState() as RootType).contactsReducer.whatsapp,
+            onClick: () => {
+                window.open("https://api.whatsapp.com/send?phone=" + (store.getState() as RootType).contactsReducer.whatsapp.replaceAll("+", "").replaceAll(" ", ""))
+            }
+        });}
+    }
+    try{
         if (data?.visit?.contacts?.vkLink != "vk.com/"){
             if (storedData.contactsReducer.vk == "vk.com/") {
                 dispatch(setVk(data?.visit?.contacts?.vkLink!))
@@ -161,11 +168,13 @@ export const ViewCardEdit:react.FC = () => {
             icons.push({type: IconType.vk,  
                 link:(store.getState() as RootType).contactsReducer.vk,
                 onClick: () => {
-                    window.location.href = urlize((store.getState() as RootType).contactsReducer.vk)
+                    window.open(urlize((store.getState() as RootType).contactsReducer.vk))
                 }
             });}
         }
-    
+    } catch{}
+        
+    try{
         if (data?.visit?.contacts?.tgLink != "t.me/"){
             if (storedData.contactsReducer.tg == "t.me/") {
                 dispatch(setTg(data?.visit?.contacts?.tgLink!))
@@ -174,11 +183,13 @@ export const ViewCardEdit:react.FC = () => {
             icons.push({type: IconType.tg,  
                 link:(store.getState() as RootType).contactsReducer.tg,
                 onClick: () => {
-                    window.location.href = urlize((store.getState() as RootType).contactsReducer.tg)
+                    window.open(urlize((store.getState() as RootType).contactsReducer.tg))
                 }
             });}
         }
-    
+    } catch{}
+        
+    try{
         if (data?.visit?.contacts?.instLink != "instagram.com/"){
             if (storedData.contactsReducer.inst == "instagram.com/") {
                 dispatch(setInst(data?.visit?.contacts?.instLink!))
@@ -187,26 +198,26 @@ export const ViewCardEdit:react.FC = () => {
             icons.push({type: IconType.inst,  
                 link:(store.getState() as RootType).contactsReducer.inst,
                 onClick: () => {
-                    window.location.href = urlize((store.getState() as RootType).contactsReducer.inst)
+                    window.open(urlize((store.getState() as RootType).contactsReducer.inst))
                 }
             });}
         }
+    } catch{}
+        
     
-        if (data?.visit?.contacts?.phone){
-            if (storedData.contactsReducer.tel == "None") {
-                dispatch(setFacebook(data?.visit?.contacts?.phone!))
+    if (data?.visit?.contacts?.phone){
+        if (storedData.contactsReducer.tel == "None") {
+            dispatch(setFacebook(data?.visit?.contacts?.phone!))
+        }
+        if ((store.getState() as RootType).contactsReducer.tel.length){
+        icons.push({type: IconType.tel,  
+            link:(store.getState() as RootType).contactsReducer.tel,
+            onClick: () => {
+                setTel((store.getState() as RootType).contactsReducer.tel)
             }
-            if ((store.getState() as RootType).contactsReducer.tel.length){
-            icons.push({type: IconType.tel,  
-                link:(store.getState() as RootType).contactsReducer.tel,
-                onClick: () => {
-                    setTel((store.getState() as RootType).contactsReducer.tel)
-                }
-            });}
-        }
-    
+        });}
     }
-    catch{}
+    
     if (storedData.profileReducer.name == "None"){
         dispatch(setName(data?.visit?.name || ""))
     }
@@ -331,16 +342,25 @@ export const ViewCardEdit:react.FC = () => {
     }
     photo_buffer.length ?
     photos.push(photo_buffer) : ""
+    if ((store.getState() as RootType).photoReducer.images.length % 3){
+    
     if (photos.length){
     for (var i = 0; i < 4 - photo_buffer.length; ++i) {
         photos[photos.length-1].push("")
-    }}
+    }}}
 
 
 
     var imgCnt = 0;
     return <div className="view-card__global-container">
-        
+        {
+            ReactDOM.createPortal(
+                <PencilEditMode onChange={() => {
+                    setWithPencil(!withPencil);
+                }}></PencilEditMode>,
+                window.document.getElementById("pencil")!
+            )
+        }
         <div className="view-card__container">
             {
                 (store.getState() as RootType).profileReducer.cropped_img.length ?
@@ -352,7 +372,9 @@ export const ViewCardEdit:react.FC = () => {
                         x={(store.getState() as RootType).profileReducer.image_cords.x}
                         y={(store.getState() as RootType).profileReducer.image_cords.y}
                     ></CropperView>
-                    <Pencil className="edit-link" link={"/set/ava"} dark={!theme} width={24} height={24}></Pencil>
+                    {
+                        withPencil ? <Pencil className="edit-link" link={"/set/ava"} dark={!theme} width={24} height={24}></Pencil> : ""
+                    }
                 </div> : ""
             }
 
@@ -367,7 +389,10 @@ export const ViewCardEdit:react.FC = () => {
                             (store.getState() as RootType).profileReducer.position
                         }
                     </Text>
-                    <Pencil width={16} height={16} link={"/set/position"} className="edit-link" dark={!theme}></Pencil>
+                    {
+                        withPencil ? <Pencil width={16} height={16} link={"/set/position"} className="edit-link" dark={!theme}></Pencil> : ""
+                    }
+                    
                 </div> : ""}
                 {
                     data?.visit?.name != null && data.visit.surname != null && data.visit.midname != null ?
@@ -377,12 +402,16 @@ export const ViewCardEdit:react.FC = () => {
                         `${(store.getState() as RootType).profileReducer.name} ${(store.getState() as RootType).profileReducer.surname} ${(store.getState() as RootType).profileReducer.midname}`
                     }
                     </Text>
-                    <Pencil width={18} height={18} link={"/set/creds"} dark={!theme}></Pencil>
+                    {
+                        withPencil ? <Pencil width={18} height={18} link={"/set/creds"} dark={!theme}></Pencil> : ""
+                    }
+                    
                 </div> : ""
                 }
             </div>
             <div className="obert">
-                <div className="new__contacts-container">
+                <div className={"new__contacts-container" + 
+                    (icons.length <= 4 ? " centrize" : "")}>
                     {
                         icons.map((e) => {
                             return <div onClick={() => {
@@ -402,7 +431,11 @@ export const ViewCardEdit:react.FC = () => {
                 <Text className="my-project__heading tal" dark={theme}>
                     {(store.getState() as RootType).profileReducer.project_head}
                 </Text>
-                <Pencil width={18} height={18} link="/set/projects" dark={!theme}></Pencil>
+                {
+                    withPencil ? 
+                    <Pencil width={18} height={18} link="/set/projects" dark={!theme}></Pencil>
+                    : ""
+                }  
                 </div>
                 <div className="my-projects__container">
                     {
@@ -418,14 +451,20 @@ export const ViewCardEdit:react.FC = () => {
                 </div>
             </div> : ""
             }
-            <div className="blocks__container" style={{gap: 0}}>
+            {
+                blocks.length ?
+                <div className="blocks__container" style={{gap: 0}}>
                 <div className="blocks__header">
                     <Text dark={theme}>
                         {
                             (store.getState() as RootType).profileReducer.block_descr
                         }
                     </Text>
-                    <Pencil dark={!theme} width={18} height={18} link="/set/blocks" className="block__pencil"></Pencil>
+                    {
+                        withPencil ?
+                        <Pencil dark={!theme} width={18} height={18} link="/set/blocks" className="block__pencil"></Pencil>
+                        : ""
+                    }
                 </div>
             <div className="blocks">
                 {
@@ -464,7 +503,9 @@ export const ViewCardEdit:react.FC = () => {
                     })
                 }
             </div> 
-            </div>
+            </div> : ""
+            }
+            
             
             
             
@@ -475,7 +516,11 @@ export const ViewCardEdit:react.FC = () => {
                     <Text className="my-image__header tal" dark={theme}>
                         {(store.getState() as RootType).profileReducer.img_head}
                     </Text>
-                    <Pencil width={18} height={18} link="/set/photos" dark={!theme}></Pencil>
+                    {
+                        withPencil ?
+                        <Pencil width={18} height={18} link="/set/photos" dark={!theme}></Pencil>
+                        : ""
+                    }
                 </div>
                 
                 <div className="my-images__content">
@@ -520,7 +565,11 @@ export const ViewCardEdit:react.FC = () => {
                         <Text dark={theme}>{
                             (store.getState() as RootType).profileReducer.map_head
                         }</Text>
-                        <Pencil width={18} height={18} link={"/set/map"} dark={!theme}></Pencil>
+                        {
+                            withPencil ? 
+                            <Pencil width={18} height={18} link={"/set/map"} dark={!theme}></Pencil>
+                            : ""
+                        }
                     </div>
                     <div className="map-container">
                 <YMaps>

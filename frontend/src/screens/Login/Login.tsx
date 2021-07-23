@@ -84,8 +84,8 @@ export const Login:react.FC = () => {
                     }}).then((e) => {
                         console.log(e)
                         if (e.data?.tokenAuth?.user?.verified == false) {
-                            setErrorMsg("Пользователь не подтвержден, проверьте почту")
-                            return;
+                            //setErrorMsg("Пользователь не подтвержден, проверьте почту")
+                            //return;
                         }
                         
                         try{

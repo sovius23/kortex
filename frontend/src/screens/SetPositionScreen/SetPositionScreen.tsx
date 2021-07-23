@@ -32,7 +32,7 @@ export const SetPositionScreen:react.FC = () => {
     window.document.body.style.setProperty("--back-color", "#fff");
 
     return <div className="set-position__container">
-            <Navigation currentName="Должность" nextName="Блоки" nextLink="/set/blocks"></Navigation>
+            <Navigation prevLink="/set/creds" currentName="Должность" nextName="Блоки" nextLink="/set/blocks"></Navigation>
             <div className="set-position__content">
                 <Input placeholder="Должность" onChange={(e:string) => {
                     changePosInComapny({variables:{

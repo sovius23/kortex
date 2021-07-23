@@ -108,61 +108,73 @@ export const ViewCard:react.FC = () => {
     }
 
     var icons = [];
+    try{
+        if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
+            icons.push({type: IconType.facebook,  
+                link:data?.visit?.contacts?.facebookLink,
+                onClick: () => {
+                    window.location.href =urlize(data?.visit?.contacts?.facebookLink!)
+                }
+            });
+        }
+    }catch{}
+    
 
-    if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
-        icons.push({type: IconType.facebook,  
-            link:data?.visit?.contacts?.facebookLink,
-            onClick: () => {
-                window.location.href =urlize(data?.visit?.contacts?.facebookLink!)
-            }
-        });
-    }
-
+    try{
+        if (data?.visit?.contacts?.instLink != "instagram.com/"){
+            icons.push({type: IconType.inst,
+                link: data?.visit?.contacts?.instLink,
+                onClick: () => {
+                    window.location.href = urlize(data?.visit?.contacts?.instLink!);
+                }
+            });
+        }
+    } catch{}
     
-    if (data?.visit?.contacts?.instLink != "instagram.com/"){
-        icons.push({type: IconType.inst,
-            link: data?.visit?.contacts?.instLink,
-            onClick: () => {
-                window.location.href = urlize(data?.visit?.contacts?.instLink!);
-            }
-        });
-    }
+    try{
+        if (data?.visit?.contacts?.phone){
+            icons.push({type: IconType.tel,
+            link: data.visit.contacts.phone,
+                onClick: () => {
+                    setTel(data.visit?.contacts?.phone!)
+                }
+            });
+        }
+    }catch{}
     
-    if (data?.visit?.contacts?.phone){
-        icons.push({type: IconType.tel,
-        link: data.visit.contacts.phone,
-            onClick: () => {
-                setTel(data.visit?.contacts?.phone!)
-            }
-        });
-    }
+    try{
+        if (data?.visit?.contacts?.tgLink != "t.me/"){
+            icons.push({type: IconType.tg,
+                link: data!.visit!.contacts!.tgLink,
+                onClick: () => {
+                    window.location.href = urlize(data!.visit?.contacts?.tgLink!);
+                }
+            });
+        }
+    } catch{}
     
-    if (data?.visit?.contacts?.tgLink != "t.me/"){
-        icons.push({type: IconType.tg,
-            link: data!.visit!.contacts!.tgLink,
-            onClick: () => {
-                window.location.href = urlize(data!.visit?.contacts?.tgLink!);
-            }
-        });
-    }
+    try{
+        if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
+            icons.push({type: IconType.twitter,
+                link: data?.visit?.contacts?.twitterLink,
+                onClick: () => {
+                    window.location.href = urlize(data?.visit?.contacts?.twitterLink!);
+                }
+            });
+        }
+    } catch{}
     
-    if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
-        icons.push({type: IconType.twitter,
-            link: data?.visit?.contacts?.twitterLink,
-            onClick: () => {
-                window.location.href = urlize(data?.visit?.contacts?.twitterLink!);
-            }
-        });
-    }
+    try{
+        if (data?.visit?.contacts?.vkLink != "vk.com/"){
+            icons.push({type: IconType.vk,
+                link: data?.visit?.contacts?.vkLink,
+                onClick: () => {
+                    window.location.href = urlize(data?.visit?.contacts?.vkLink!);
+                }
+            });
+        }
+    }catch{}
     
-    if (data?.visit?.contacts?.vkLink != "vk.com/"){
-        icons.push({type: IconType.vk,
-            link: data?.visit?.contacts?.vkLink,
-            onClick: () => {
-                window.location.href = urlize(data?.visit?.contacts?.vkLink!);
-            }
-        });
-    }
     
     if (data?.visit?.contacts?.website){
         icons.push({type: IconType.web,
@@ -200,10 +212,13 @@ export const ViewCard:react.FC = () => {
     }
     photo_buffer.length ?
     photos.push(photo_buffer) : ""
-
-    for (var i = 0; i < 4 - photo_buffer.length; ++i) {
-        photos[photos.length-1].push("")
-    }
+    if (data?.visit?.photoSet.edges.length! % 3){
+    
+    if (photos.length){
+        for (var i = 0; i < 4 - photo_buffer.length; ++i) {
+            photos[photos.length-1].push("")
+        }
+    }}
 
     return <div className="view-card__global-container">
         <div className="view-card__container">
@@ -243,7 +258,8 @@ export const ViewCard:react.FC = () => {
             </div>
 
             <div className="obert">
-                <div className="new__contacts-container">
+                <div className={"new__contacts-container" + 
+                    (icons.length <= 4 ? " centrize" : "")}>
                     {
                         icons.map((e) => {
                             return <div onClick={() => {
@@ -255,7 +271,9 @@ export const ViewCard:react.FC = () => {
                     }
                 </div>
             </div>
-            <div className="blocks__container" style={{gap: 0}}>
+            {
+                blocks.length ?
+                <div className="blocks__container" style={{gap: 0}}>
                 <div className="blocks__header">
                     <Text dark={data?.visit?.theme == "Dark"}>
                         {
@@ -307,7 +325,9 @@ export const ViewCard:react.FC = () => {
                 }
             </div>
             
-            </div>
+            </div> : ""
+            }
+            
             
             {
                 data?.visit?.projectSet.edges.length ?

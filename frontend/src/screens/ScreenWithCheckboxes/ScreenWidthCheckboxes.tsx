@@ -10,7 +10,6 @@ import { ContactsScreen } from "../ContactsScreen/ContactsScreen";
 import { MapScreen } from "../MapScreen/MapScreen";
 import { PhotoScreen } from "../PhotoScreen/PhotoScreen";
 import { ProjectScreen } from "../ProjectsScreen/ProjectsScreen";
-import { SecondDescriptionScreen } from "../SeconDescrScreen/SecondDescrpitionScreen";
 import { SetCredsScreen } from "../SetCredsScreen/SetCredsScreen";
 import { SetBlockScreen } from "../BlockScreen/BlockScreen";
 import { SetLogoScreen } from "../SetLogoScreen/SetLogoScreen";

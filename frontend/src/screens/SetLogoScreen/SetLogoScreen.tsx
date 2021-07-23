@@ -78,7 +78,7 @@ export const SetLogoScreen:react.FC = () => {
 
     return <>
         <div className="set-logo__container">
-            <Navigation currentName={"Аватарка"} nextName={"ФИО"} nextLink={"/set/creds"}></Navigation>
+            <Navigation prevLink="/index" currentName={"Аватарка"} nextName={"ФИО"} nextLink={"/set/creds"}></Navigation>
             <div className="set-logo__content">
                 {
                     (store.getState() as RootType).profileReducer.cropped_img || data?.getVisitByUser?.fullImgUrl?.length ||
