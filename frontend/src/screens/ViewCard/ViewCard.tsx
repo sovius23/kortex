@@ -114,7 +114,7 @@ export const ViewCard:react.FC = () => {
             icons.push({type: IconType.facebook,  
                 link:data?.visit?.contacts?.facebookLink,
                 onClick: () => {
-                    window.location.href = urlize(data?.visit?.contacts?.facebookLink!)
+                    window.open(urlize(data?.visit?.contacts?.facebookLink!))
                 }
             });
         }
@@ -128,7 +128,7 @@ export const ViewCard:react.FC = () => {
             icons.push({type: IconType.inst,
                 link: data?.visit?.contacts?.instLink,
                 onClick: () => {
-                    window.location.href = urlize(data?.visit?.contacts?.instLink!);
+                    window.open(urlize(data?.visit?.contacts?.instLink!));
                 }
             });
         }
@@ -152,7 +152,7 @@ export const ViewCard:react.FC = () => {
             icons.push({type: IconType.tg,
                 link: data!.visit!.contacts!.tgLink,
                 onClick: () => {
-                    window.location.href = urlize(data!.visit?.contacts?.tgLink!);
+                    window.open(urlize(data!.visit?.contacts?.tgLink!));
                 }
             });
         }
@@ -165,7 +165,7 @@ export const ViewCard:react.FC = () => {
             icons.push({type: IconType.twitter,
                 link: data?.visit?.contacts?.twitterLink,
                 onClick: () => {
-                    window.location.href = urlize(data?.visit?.contacts?.twitterLink!);
+                    window.open(urlize(data?.visit?.contacts?.twitterLink!));
                 }
             });
         }
@@ -177,7 +177,7 @@ export const ViewCard:react.FC = () => {
             icons.push({type: IconType.vk,
                 link: data?.visit?.contacts?.vkLink,
                 onClick: () => {
-                    window.location.href = urlize(data?.visit?.contacts?.vkLink!);
+                    window.open(urlize(data?.visit?.contacts?.vkLink!));
                 }
             });
         }
@@ -188,7 +188,7 @@ export const ViewCard:react.FC = () => {
         icons.push({type: IconType.web,
         link: data.visit.contacts.website,
         onClick: () => {
-            window.location.href = urlize(data.visit?.contacts?.website!);
+            window.open(urlize(data.visit?.contacts?.website!));
         }
         });
     }
@@ -197,7 +197,7 @@ export const ViewCard:react.FC = () => {
         icons.push({type:IconType.ws,
             link: data.visit.contacts.whatsappLink,
             onClick: () => {
-                window.location.href = "https://api.whatsapp.com/send?phone=" + data.visit?.contacts?.whatsappLink!.replaceAll("+", "").replaceAll(" ", "");
+                window.open("https://api.whatsapp.com/send?phone=" + data.visit?.contacts?.whatsappLink!.replaceAll("+", "").replaceAll(" ", ""));
             }
         });
     }
