@@ -74,6 +74,11 @@ export type AddProject = {
   project?: Maybe<ProjectType>;
 };
 
+export type AddUserToCard = {
+  __typename?: 'AddUserToCard';
+  ok?: Maybe<Scalars['Boolean']>;
+};
+
 /**
  * Archive account and revoke refresh tokens.
  *
@@ -399,6 +404,7 @@ export type Mutation = {
   changeBlockDescr?: Maybe<ChangeBlockDescr>;
   isUserAdmin?: Maybe<IfUserAdmin>;
   changePassword?: Maybe<ChangePassword>;
+  addUserToCard?: Maybe<AddUserToCard>;
 };
 
 
@@ -661,6 +667,12 @@ export type MutationIsUserAdminArgs = {
 
 export type MutationChangePasswordArgs = {
   newPassword?: Maybe<Scalars['String']>;
+  token?: Maybe<Scalars['String']>;
+};
+
+
+export type MutationAddUserToCardArgs = {
+  cardId?: Maybe<Scalars['String']>;
   token?: Maybe<Scalars['String']>;
 };
 
@@ -2534,6 +2546,40 @@ export function useSignMutation(baseOptions?: Apollo.MutationHookOptions<SignMut
 export type SignMutationHookResult = ReturnType<typeof useSignMutation>;
 export type SignMutationResult = Apollo.MutationResult<SignMutation>;
 export type SignMutationOptions = Apollo.BaseMutationOptions<SignMutation, SignMutationVariables>;
+export const AddUserToCardDocument = gql`
+    mutation addUserToCard($token: String, $card_id: String) {
+  addUserToCard(cardId: $card_id, token: $token) {
+    ok
+  }
+}
+    `;
+export type AddUserToCardMutationFn = Apollo.MutationFunction<AddUserToCardMutation, AddUserToCardMutationVariables>;
+
+/**
+ * __useAddUserToCardMutation__
+ *
+ * To run a mutation, you first call `useAddUserToCardMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useAddUserToCardMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [addUserToCardMutation, { data, loading, error }] = useAddUserToCardMutation({
+ *   variables: {
+ *      token: // value for 'token'
+ *      card_id: // value for 'card_id'
+ *   },
+ * });
+ */
+export function useAddUserToCardMutation(baseOptions?: Apollo.MutationHookOptions<AddUserToCardMutation, AddUserToCardMutationVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useMutation<AddUserToCardMutation, AddUserToCardMutationVariables>(AddUserToCardDocument, options);
+      }
+export type AddUserToCardMutationHookResult = ReturnType<typeof useAddUserToCardMutation>;
+export type AddUserToCardMutationResult = Apollo.MutationResult<AddUserToCardMutation>;
+export type AddUserToCardMutationOptions = Apollo.BaseMutationOptions<AddUserToCardMutation, AddUserToCardMutationVariables>;
 export const GetVerbIdDocument = gql`
     query getVerbId($token: String) {
   getVisitByUser(token: $token) {
@@ -3139,6 +3185,14 @@ export type SignMutationVariables = Exact<{
 
 
 export type SignMutation = { __typename?: 'Mutation', tokenAuth?: Maybe<{ __typename?: 'ObtainJSONWebToken', token?: Maybe<string>, errors?: Maybe<any>, user?: Maybe<{ __typename?: 'UserNode', verified?: Maybe<boolean> }> }> };
+
+export type AddUserToCardMutationVariables = Exact<{
+  token?: Maybe<Scalars['String']>;
+  card_id?: Maybe<Scalars['String']>;
+}>;
+
+
+export type AddUserToCardMutation = { __typename?: 'Mutation', addUserToCard?: Maybe<{ __typename?: 'AddUserToCard', ok?: Maybe<boolean> }> };
 
 export type GetVerbIdQueryVariables = Exact<{
   token?: Maybe<Scalars['String']>;

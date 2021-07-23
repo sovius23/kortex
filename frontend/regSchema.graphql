@@ -340,7 +340,6 @@ mutation register($email:String!, $password:String!, $password2:String!){
   register(email:$email, password1:$password, username:$email, password2:$password2){
     token, errors
   }
-  
 }
 
 mutation sign($email:String, $password:String!) {
@@ -349,6 +348,12 @@ mutation sign($email:String, $password:String!) {
     user{
       verified
     }
+  }
+}
+
+mutation addUserToCard($token:String, $card_id:String){
+  addUserToCard(cardId:$card_id, token:$token) {
+    ok
   }
 }
 

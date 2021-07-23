@@ -23,6 +23,7 @@ import "./App.css";
 import { setSurname } from "./store/profileReducer";
 import { ActivateEmail } from "./screens/ActivateEmail/ActivateEmail";
 import { InfoActivate } from "./screens/InfoToActivate/InfoActivate";
+import { CardRegister } from "./screens/CardRegister/CardRegister";
 
 export enum Theme{
     Light,
@@ -98,6 +99,9 @@ export const App:react.FC = () => {
                     </Route>
                     <Route path="/activate/:id">
                         <ActivateEmail></ActivateEmail>
+                    </Route>
+                    <Route path="/:id/register">
+                        <CardRegister></CardRegister>
                     </Route>
                     <Route path="/:id/view">
                         <ViewCardEdit></ViewCardEdit>

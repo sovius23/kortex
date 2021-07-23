@@ -79,6 +79,39 @@
       },
       {
         "kind": "OBJECT",
+        "name": "AddUserToCard",
+        "description": null,
+        "fields": [
+          {
+            "name": "ok",
+            "description": null,
+            "args": [],
+            "type": {
+              "kind": "SCALAR",
+              "name": "Boolean",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          }
+        ],
+        "inputFields": null,
+        "interfaces": [],
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "SCALAR",
+        "name": "Boolean",
+        "description": "The `Boolean` scalar type represents `true` or `false`.",
+        "fields": null,
+        "inputFields": null,
+        "interfaces": null,
+        "enumValues": null,
+        "possibleTypes": null
+      },
+      {
+        "kind": "OBJECT",
         "name": "ArchiveAccount",
         "description": "Archive account and revoke refresh tokens.\n\nUser must be verified and confirm password.",
         "fields": [
@@ -109,16 +142,6 @@
         ],
         "inputFields": null,
         "interfaces": [],
-        "enumValues": null,
-        "possibleTypes": null
-      },
-      {
-        "kind": "SCALAR",
-        "name": "Boolean",
-        "description": "The `Boolean` scalar type represents `true` or `false`.",
-        "fields": null,
-        "inputFields": null,
-        "interfaces": null,
         "enumValues": null,
         "possibleTypes": null
       },
@@ -2742,6 +2765,43 @@
             "type": {
               "kind": "OBJECT",
               "name": "ChangePassword",
+              "ofType": null
+            },
+            "isDeprecated": false,
+            "deprecationReason": null
+          },
+          {
+            "name": "addUserToCard",
+            "description": null,
+            "args": [
+              {
+                "name": "cardId",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              },
+              {
+                "name": "token",
+                "description": null,
+                "type": {
+                  "kind": "SCALAR",
+                  "name": "String",
+                  "ofType": null
+                },
+                "defaultValue": null,
+                "isDeprecated": false,
+                "deprecationReason": null
+              }
+            ],
+            "type": {
+              "kind": "OBJECT",
+              "name": "AddUserToCard",
               "ofType": null
             },
             "isDeprecated": false,

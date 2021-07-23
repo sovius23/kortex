@@ -38,7 +38,7 @@ export const Textarea:react.FC<ITextarea> = (props) => {
         <div className="ta__head">{`Описание (${count}/200)`}</div>
         <textarea className={"ta " + ta_theme} onChange={(e) => {
             props.onChange(e.target.value);
-
+            console.log(e.target.value)
             setCount(e.target.value.length);
             setValue(e.target.value);
         }} maxLength={200}>{value}</textarea>

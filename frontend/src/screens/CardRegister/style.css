@@ -1,0 +1,55 @@
+.centered{
+    display: flex;
+    justify-content: center;
+}
+
+.reg__container{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.reg__form{
+    width: 400px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+}
+
+.reg__btn{
+    width: 100%;
+}
+
+.block__reg{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.have__acc-text{
+    text-decoration: underline;
+}
+
+.reg__container{
+    margin-top: 40px;
+}
+
+@media (max-width: 650px) {
+    .reg__form{
+        width: calc(100vw - 10px);
+    }
+}
+
+.error-msg{
+    align-self: center;
+    display: flex;
+    width: calc(100% - 40px); 
+    justify-content: center;
+    align-items: center;
+}
+
+.reg__input{
+    width:100%;
+}

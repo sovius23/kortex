@@ -12,6 +12,28 @@ from django_model_mutations import mutations
 from .serializers import BlockSerializer
 
 
+class AddUserToCard(graphene.Mutation):
+    class Arguments:
+        token = graphene.String()
+        card_id = graphene.String()
+
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, token, card_id):
+        card = VisitCard.objects.get(
+            id=from_global_id(card_id)[1]
+        )
+        ok = True
+        if not card.user:
+            ok = False
+        else:
+            card.user = info.context.user
+        card.save()
+
+        return AddUserToCard(ok=ok)
+
+
 class AddBlock(graphene.Mutation):
     class Arguments:
         card_id = graphene.ID()
@@ -514,3 +536,5 @@ class Mutation(graphene.ObjectType):
 
     is_user_admin = IfUserAdmin.Field()
     change_password = ChangePassword.Field()
+
+    add_user_to_card = AddUserToCard.Field()

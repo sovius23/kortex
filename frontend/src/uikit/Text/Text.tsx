@@ -17,5 +17,5 @@ export const Text:react.FC<IText> = (props) => {
         text_class = "text-dark";
     } 
 
-    return <span className={text_class + " " + props.className}>{props.children}</span>
+    return <span className={text_class + " " + props.className} style={{whiteSpace: "pre-wrap"}}>{props.children}</span>
 }
