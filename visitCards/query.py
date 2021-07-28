@@ -2,6 +2,7 @@ import graphene
 from graphene import relay
 from .gqlTypes import VisitCardType
 from .models import VisitCard
+from django.db.models import Count
 
 from graphene.relay.node import from_global_id
 
@@ -28,7 +29,7 @@ class Query(graphene.ObjectType):
         return ok
 
     def resolve_visits(self, info):
-        return VisitCard.objects.all()
+        return VisitCard.objects.annotate(user_count=Count("user")).filter(user_count=0)
 
     def resolve_visit(self, info, id):
         card = None

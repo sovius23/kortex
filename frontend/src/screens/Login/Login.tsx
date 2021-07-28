@@ -35,9 +35,11 @@ export const Login:react.FC<ILogin> = (props) => {
         setSwitcherVisibility(false);
     }
 
+    if (notRegUrl == "/registration"){
+
     if (localStorage.getItem("token")?.length) {
         history.push("/index");
-    }
+    }}
 
     if (errorMsg.length) {
         setTimeout(() => {

@@ -11,7 +11,7 @@ import { Text } from "../../uikit/Text/Text";
 import {YMaps, Map, Placemark} from "react-yandex-maps";
 
 import "./style.css";
-import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
+import { Link, Redirect, Route, Switch, useRouteMatch } from "react-router-dom";
 import { introspectionFromSchema } from "graphql";
 import { Theme, ThemeContext } from "../../App";
 import { CropperView } from "../../uikit/Cropper/CropperView";
@@ -460,7 +460,7 @@ export const ViewCard:react.FC = () => {
                 <Route path={`${url}/reg`}>
                     <Registration signUrl={`${url}`}></Registration>
                 </Route>
-                <Route path="">
+                <Route path={`${url}`}>
                     <Login notRegUrl={`${url}/reg`}></Login>
                 </Route>
             </Switch> : ""

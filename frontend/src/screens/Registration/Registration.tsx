@@ -34,9 +34,10 @@ export const Registration:react.FC<IRegistration> = (props) => {
         setFlag(true);
         setSwitcherVisibility(false);
     }
+    if (props.signUrl == undefined){
     if (localStorage.getItem("token")?.length) {
         history.push("/index");
-    }
+    }}
 
     window.document.body.style.setProperty("--back-color", "#fff");
 
