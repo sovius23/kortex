@@ -11,7 +11,13 @@ import "./style.css";
 import { Button, ButtonTypes } from "../../uikit/Button/Button";
 import { editImg } from "../../store/PhotoReducer";
 
-export const Registration:react.FC = () => {
+interface IRegistration{
+    signUrl?:string;
+}
+
+export const Registration:react.FC<IRegistration> = (props) => {
+
+    const regUrl = props.signUrl || "/login";
 
     const history = useHistory();
 
@@ -55,7 +61,7 @@ export const Registration:react.FC = () => {
             <Input type="password" className="reg__input" placeholder={"Пароль еще раз"} onChange={(e:string) => {
                 setPasswordAgain(e);
             }}></Input>
-            <Link to="/login" ><Text className="have__acc-text">Уже есть аккаунт</Text></Link>
+            <Link to={regUrl} ><Text className="have__acc-text">Уже есть аккаунт</Text></Link>
             <div className="reg__btn" onClick={() => {
                 if (!email.length) {
                     setErrorMsg("Введите Email")

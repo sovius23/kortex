@@ -29,20 +29,13 @@ export const CardRegister:react.FC = () => {
     const {setSwitcherVisibility} = useContext(ThemeContext);
     const [errorMsg, setErrorMsg] = useState("");
     const [flag, setFlag] = useState(false);
-    if (!flag) {
-        setFlag(true);
-        setSwitcherVisibility(false);
-    }
-    if (localStorage.getItem("token")?.length) {
-        history.push("/index");
-    }
 
     window.document.body.style.setProperty("--back-color", "#fff");
-
+    
 
     return <div className="reg__container">
         <div className="reg__header">
-            <Text>Регистрация</Text>
+            <Text>Зарегистрируйте визитку</Text>
         </div>
         {
             errorMsg.length ? <Block className="error-msg">
@@ -117,11 +110,12 @@ export const CardRegister:react.FC = () => {
                                     card_id: id
                                 }
                             }).then((e) => {
+                                console.log(e)
                                 if (!e.data?.addUserToCard?.ok) {
                                     setErrorMsg("Кто то уже зарегистрировал эту визитку")
                                 }
                                 else {
-                                    
+                                    history.push("/activate-info")
                                 }
                             })
 

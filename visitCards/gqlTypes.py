@@ -18,6 +18,7 @@ class VisitCardType(DjangoObjectType):
     full_img_url = graphene.String()
 
     class Meta:
+        exclude = []
         model = VisitCard
         interfaces = [relay.Node]
 

@@ -58,6 +58,11 @@ interface IState{
     contactsReducer:IinitialState;
 }
 
+export const getContacts = createSelector(
+    (state:IState) => state.contactsReducer,
+    a => a
+)
+
 export const getTg = createSelector(
     (state:IState) => state.contactsReducer.tg,
     tg => tg

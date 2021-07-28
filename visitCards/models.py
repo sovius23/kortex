@@ -13,7 +13,7 @@ class VisitCard(models.Model):
     surname = models.TextField(default="")
     midname = models.TextField(default="")
     position_in_company = models.TextField(null=True)
-    user = models.OneToOneField(User, on_delete=models.CASCADE, null=True)
+    user = models.ManyToManyField(User, null=True)
     description = models.CharField(max_length=200, null=True)
     second_descr = models.CharField(null=True, max_length=200)
 
@@ -29,7 +29,6 @@ class VisitCard(models.Model):
 
     verb_id = models.TextField(unique=True, max_length=20, null=True)
     block_descr = models.TextField(default="CV")
-
 
 
 class Contacts(models.Model):
@@ -76,6 +75,7 @@ def create_empty_visit_card(**kwargs):
     try:
         user_instance.visitcard
     except:
-        visit_card = VisitCard.objects.create(user=user_instance)
+        visit_card = VisitCard.objects.create()
+        user_instance.visitcard_set.set([visit_card])
         Contacts.objects.create(visit_card=visit_card)
         GeoPos.objects.create(card=visit_card)

@@ -19,15 +19,21 @@ import {useDispatch, useStore, useSelector} from "react-redux";
 import ReactDOM, {createPortal} from "react-dom";
 import { TelPopUp } from "../../uikit/PopUps/ShowTelPopUp/ShowTelPopUp";
 import { RootType } from "../../store/store";
-import { setFacebook, setInst, setTg, setTwitter, setVk, setWeb, setWhatsapp } from "../../store/ContactsReducer";
-import { setTheme, setCoords, setCroppedImg, setDescriptionFirst, setDescriptionSecond, setImgHead, setMapHead, setMidname, setName, setPosition, setProjectHead, setSurname, setZoom, setBlockDescr } from "../../store/profileReducer";
-import { addProject } from "../../store/ProjectsReducer";
-import { addImg } from "../../store/PhotoReducer";
+import { getContacts, setFacebook, setInst, setTg, setTwitter, setVk, setWeb, setWhatsapp } from "../../store/ContactsReducer";
+import { setTheme, setCoords, setCroppedImg, setDescriptionFirst, setDescriptionSecond, setImgHead, setMapHead, setMidname, setName, setPosition, setProjectHead, setSurname, setZoom, setBlockDescr, getProfile } from "../../store/profileReducer";
+import { addProject, getProjects } from "../../store/ProjectsReducer";
+import { addImg, getImages } from "../../store/PhotoReducer";
 import { changeGeo } from "../../store/GeolocationReducer";
 import { Pencil } from "../../uikit/Pencil/Pencil";
 import { Line } from "../../uikit/Line/Line";
 import { addBlock, editBlockAction, getBlocks } from "../../store/BlockReducer";
 import { PencilEditMode } from "./PencilEditMode/PencilEditMode";
+import {getGeo} from "../../store/GeolocationReducer";
+
+
+import {isIos} from "./platformDetect";
+import FileSaver from "file-saver";
+
 
 export function urlize(url:string) {
     if (url.startsWith("https://") || url.startsWith("http://")) {
@@ -37,6 +43,7 @@ export function urlize(url:string) {
         return "https://" + url;
     }
 }
+
 
 export const ViewCardEdit:react.FC = () => {
     const imgRef = useRef(null);
@@ -54,15 +61,19 @@ export const ViewCardEdit:react.FC = () => {
         
     })
 
+    const contacts = useSelector(getContacts);
+    const profile = useSelector(getProfile);
+    const projects = useSelector(getProjects);
+    const images = useSelector(getImages);
+    const geo = useSelector(getGeo)
+
 
     const [isUserAdmin] = useIsUserAdminMutation()
 
-    const store = useStore();
     const dispatch = useDispatch();
 
     const blocks = useSelector(getBlocks);
 
-    const storedData = store.getState() as RootType;
     
 
     const {id} = useParams<{id:string}>();
@@ -86,6 +97,7 @@ export const ViewCardEdit:react.FC = () => {
     if (loading) {
         return <div></div>
     }
+    console.log(data)
 
     console.log(data);
     var icons = [];
@@ -102,14 +114,14 @@ export const ViewCardEdit:react.FC = () => {
     })
     try{
         if (data?.visit?.contacts?.facebookLink != "facebook.com/"){
-            if (storedData.contactsReducer.facebook == "facebook.com/") {
+            if (contacts.facebook == "facebook.com/") {
                 dispatch(setFacebook(data?.visit?.contacts?.facebookLink!))
             }
-            if ((store.getState() as RootType).contactsReducer.facebook.length != 0){
+            if (contacts.facebook.length != 0){
                 icons.push({type: IconType.facebook,  
-                    link:(store.getState() as RootType).contactsReducer.facebook,
+                    link: contacts.facebook,
                     onClick: () => {
-                        window.open(urlize((store.getState() as RootType).contactsReducer.facebook))
+                        window.open(urlize(contacts.facebook))
                     }
                 });
             }
@@ -118,14 +130,14 @@ export const ViewCardEdit:react.FC = () => {
         
     try{
         if (data?.visit?.contacts?.twitterLink != "twitter.com/"){
-            if (storedData.contactsReducer.twitter == "twitter.com/") {
+            if (contacts.twitter == "twitter.com/") {
                 dispatch(setTwitter(data?.visit?.contacts?.twitterLink!))
             }
-            if ((store.getState() as RootType).contactsReducer.twitter.length){
+            if (contacts.twitter.length){
                 icons.push({type: IconType.twitter,  
-                    link:(store.getState() as RootType).contactsReducer.twitter,
+                    link:contacts.twitter,
                     onClick: () => {
-                        window.open(urlize((store.getState() as RootType).contactsReducer.twitter))
+                        window.open(urlize(contacts.twitter))
                     }
                 });
             }
@@ -134,41 +146,41 @@ export const ViewCardEdit:react.FC = () => {
         
     
     if (data?.visit?.contacts?.website){
-        if (storedData.contactsReducer.web == "None") {
-            console.log(data, storedData.contactsReducer.vk)
+        if (contacts.web == "None") {
+            console.log(data, contacts.vk)
             dispatch(setWeb(data?.visit?.contacts?.website!))
         }
-        if ((store.getState() as RootType).contactsReducer.web.length){
+        if (contacts.web.length){
         icons.push({type: IconType.web,  
-            link:(store.getState() as RootType).contactsReducer.web,
+            link:contacts.web,
             onClick: () => {
-                window.open(urlize((store.getState() as RootType).contactsReducer.web))
+                window.open(urlize(contacts.web))
             }
         });}
     }
     
     if (data?.visit?.contacts?.whatsappLink){
-        if (storedData.contactsReducer.whatsapp == "None") {
+        if (contacts.whatsapp == "None") {
             dispatch(setWhatsapp(data?.visit?.contacts?.whatsappLink!))
         }
-        if ((store.getState() as RootType).contactsReducer.whatsapp.length){
+        if (contacts.whatsapp.length){
         icons.push({type: IconType.ws,  
-            link:(store.getState() as RootType).contactsReducer.whatsapp,
+            link:contacts.whatsapp,
             onClick: () => {
-                window.open("https://api.whatsapp.com/send?phone=" + (store.getState() as RootType).contactsReducer.whatsapp.replaceAll("+", "").replaceAll(" ", ""))
+                window.open("https://api.whatsapp.com/send?phone=" + contacts.whatsapp.replaceAll("+", "").replaceAll(" ", ""))
             }
         });}
     }
     try{
         if (data?.visit?.contacts?.vkLink != "vk.com/"){
-            if (storedData.contactsReducer.vk == "vk.com/") {
+            if (contacts.vk == "vk.com/") {
                 dispatch(setVk(data?.visit?.contacts?.vkLink!))
             }
-            if ((store.getState() as RootType).contactsReducer.vk.length){
+            if (contacts.vk.length){
             icons.push({type: IconType.vk,  
-                link:(store.getState() as RootType).contactsReducer.vk,
+                link:contacts.vk,
                 onClick: () => {
-                    window.open(urlize((store.getState() as RootType).contactsReducer.vk))
+                    window.open(urlize(contacts.vk))
                 }
             });}
         }
@@ -176,14 +188,14 @@ export const ViewCardEdit:react.FC = () => {
         
     try{
         if (data?.visit?.contacts?.tgLink != "t.me/"){
-            if (storedData.contactsReducer.tg == "t.me/") {
+            if (contacts.tg == "t.me/") {
                 dispatch(setTg(data?.visit?.contacts?.tgLink!))
             }
-            if ((store.getState() as RootType).contactsReducer.tg.length){
+            if (contacts.tg.length){
             icons.push({type: IconType.tg,  
-                link:(store.getState() as RootType).contactsReducer.tg,
+                link:contacts.tg,
                 onClick: () => {
-                    window.open(urlize((store.getState() as RootType).contactsReducer.tg))
+                    window.open(urlize(contacts.tg))
                 }
             });}
         }
@@ -191,14 +203,14 @@ export const ViewCardEdit:react.FC = () => {
         
     try{
         if (data?.visit?.contacts?.instLink != "instagram.com/"){
-            if (storedData.contactsReducer.inst == "instagram.com/") {
+            if (contacts.inst == "instagram.com/") {
                 dispatch(setInst(data?.visit?.contacts?.instLink!))
             }
-            if ((store.getState() as RootType).contactsReducer.inst.length){
+            if (contacts.inst.length){
             icons.push({type: IconType.inst,  
-                link:(store.getState() as RootType).contactsReducer.inst,
+                link:contacts.inst,
                 onClick: () => {
-                    window.open(urlize((store.getState() as RootType).contactsReducer.inst))
+                    window.open(urlize(contacts.inst))
                 }
             });}
         }
@@ -206,63 +218,66 @@ export const ViewCardEdit:react.FC = () => {
         
     
     if (data?.visit?.contacts?.phone){
-        if (storedData.contactsReducer.tel == "None") {
+        if (contacts.tel == "None") {
             dispatch(setFacebook(data?.visit?.contacts?.phone!))
         }
-        if ((store.getState() as RootType).contactsReducer.tel.length){
+        if (contacts.tel.length){
         icons.push({type: IconType.tel,  
-            link:(store.getState() as RootType).contactsReducer.tel,
+            link:contacts.tel,
             onClick: () => {
-                setTel((store.getState() as RootType).contactsReducer.tel)
+                isIos(profile.midname, profile.surname, profile.name, contacts.tel, () => {
+                    setTel(contacts.tel)
+                })
+            
             }
         });}
     }
     
-    if (storedData.profileReducer.name == "None"){
+    if (profile.name == "None"){
         dispatch(setName(data?.visit?.name || ""))
     }
 
-    if (storedData.profileReducer.surname == "None"){
+    if (profile.surname == "None"){
         dispatch(setSurname(data?.visit?.surname || ""))
     }
 
-    if (storedData.profileReducer.midname == "None") {
+    if (profile.midname == "None") {
         dispatch(setMidname(data?.visit?.midname || ""))
     }
 
-    if (storedData.profileReducer.position == "None") {
+    if (profile.position == "None") {
         dispatch(setPosition(data?.visit?.positionInCompany || ""))
     }
 
-    if (storedData.profileReducer.image_cords.x == -1){
+    if (profile.image_cords.x == -1){
         dispatch(setCoords({
             x: data?.visit?.xLogo!,
             y: data?.visit?.yLogo!
         }))
     }
 
-    if (storedData.profileReducer.zoom == -1) {
+    if (profile.zoom == -1) {
         dispatch(setZoom(
             data?.visit?.zoomLogo!
         ))
     }
 
-    if (storedData.profileReducer.cropped_img == "None"){
+    if (profile.cropped_img == "None"){
         dispatch(setCroppedImg(
             data?.visit?.fullImgUrl || ""
         ))
     }
 
     
-    if ((store.getState() as RootType).profileReducer.description_first == "None"){
+    if (profile.description_first == "None"){
         dispatch(setDescriptionFirst(data?.visit?.description || ""))
     }
 
-    if ((store.getState() as RootType).profileReducer.description_second == "None") {
+    if (profile.description_second == "None") {
         dispatch(setDescriptionSecond(data?.visit?.secondDescr || ""))
     }
 
-    if ((store.getState() as RootType).projectReducer.projects.length == 0) {
+    if (projects.length == 0) {
         data?.visit?.projectSet.edges.map((e) => {
             dispatch(addProject({
                 name: e?.node?.name!,
@@ -272,46 +287,47 @@ export const ViewCardEdit:react.FC = () => {
         })
     }
 
-    if ((store.getState() as RootType).profileReducer.project_head == "None") {
+    if (profile.project_head == "None") {
         dispatch(setProjectHead(data?.visit?.projectDescr || ""));
     }
 
-    if ((store.getState() as RootType).photoReducer.images.length == 0) {
+    if (images.length == 0) {
+        console.log(data?.visit?.photoSet.edges)
+        if (data?.visit?.photoSet.edges.length){
         data?.visit?.photoSet.edges.map((e) => {
             dispatch(addImg({
                 url:e?.node?.url!,
                 id: e?.node?.id!
             }))
-        })
+        })}
     }
 
-    if ((store.getState() as RootType).profileReducer.img_head == "None") {
+    if (profile.img_head == "None") {
         dispatch(setImgHead(data?.visit?.photoDescr || ""));
     }
 
-    if ((store.getState() as RootType).geoReducer.lat == 0) {
+    if (geo.lat == 0) {
         dispatch(changeGeo({
             lat: data?.visit?.geopos?.lattitude || 0,
             long: data?.visit?.geopos?.longitude || 0
         }))
     }
 
-    if ((store.getState() as RootType).profileReducer.map_head == "None") {
+    if (profile.map_head == "None") {
         dispatch(setMapHead(data?.visit?.geoDescr || ""))
     }
 
-    if ((store.getState() as RootType).profileReducer.block_descr == "None") {
+    if (profile.block_descr == "None") {
         dispatch(setBlockDescr(data?.visit?.blockDescr!))
     }
 
-    var a = (store.getState() as RootType).profileReducer.is_dark
+    var a = profile.is_dark
     
-    console.log(a, store.getState())
     if (a == "None") {
         dispatch(setTheme(data?.visit?.theme || "Light"))
     }
 
-    const theme = ((store.getState() as RootType).profileReducer.is_dark == "Dark");
+    const theme = (profile.is_dark == "Dark");
     if (theme) {
         window.document.body.style.setProperty("--back-color", "rgba(28, 33, 37, 1)");
     }
@@ -332,17 +348,17 @@ export const ViewCardEdit:react.FC = () => {
     var photo_buffer = [""];
     photo_buffer = [];
     
-    for (var i = 0; i < (store.getState() as RootType).photoReducer.images.length; i++) {
+    for (var i = 0; i < images.length; i++) {
         if ((i) % 3 == 0) {
             photos.push(photo_buffer)
             photo_buffer = [];
         }
         
-        photo_buffer.push((store.getState() as RootType).photoReducer.images[i].url)
+        photo_buffer.push(images[i].url)
     }
     photo_buffer.length ?
     photos.push(photo_buffer) : ""
-    if ((store.getState() as RootType).photoReducer.images.length % 3){
+    if (images.length % 3){
     
     if (photos.length){
     for (var i = 0; i < 4 - photo_buffer.length; ++i) {
@@ -363,14 +379,14 @@ export const ViewCardEdit:react.FC = () => {
         }
         <div className="view-card__container">
             {
-                (store.getState() as RootType).profileReducer.cropped_img.length ?
+                profile.cropped_img.length ?
                 <div className="ava__edit-container">
                     <CropperView
                         black={theme}
-                        src={(store.getState() as RootType).profileReducer.cropped_img}
-                        zoom={(store.getState() as RootType).profileReducer.zoom}
-                        x={(store.getState() as RootType).profileReducer.image_cords.x}
-                        y={(store.getState() as RootType).profileReducer.image_cords.y}
+                        src={profile.cropped_img}
+                        zoom={profile.zoom}
+                        x={profile.image_cords.x}
+                        y={profile.image_cords.y}
                     ></CropperView>
                     {
                         withPencil ? <Pencil className="edit-link" link={"/set/ava"} dark={!theme} width={24} height={24}></Pencil> : ""
@@ -386,7 +402,7 @@ export const ViewCardEdit:react.FC = () => {
                 <div className="position">
                     <Text className="position" dark={theme}>
                         {
-                            (store.getState() as RootType).profileReducer.position
+                            profile.position
                         }
                     </Text>
                     {
@@ -399,7 +415,7 @@ export const ViewCardEdit:react.FC = () => {
                     <div className="fio">
                     <Text dark={theme}>
                     {
-                        `${(store.getState() as RootType).profileReducer.name} ${(store.getState() as RootType).profileReducer.surname} ${(store.getState() as RootType).profileReducer.midname}`
+                        `${profile.name} ${profile.surname} ${profile.midname}`
                     }
                     </Text>
                     {
@@ -429,7 +445,7 @@ export const ViewCardEdit:react.FC = () => {
                 <div className="my-project__global-container">
                 <div className="edit__heading">
                 <Text className="my-project__heading tal" dark={theme}>
-                    {(store.getState() as RootType).profileReducer.project_head}
+                    {profile.project_head}
                 </Text>
                 {
                     withPencil ? 
@@ -439,7 +455,7 @@ export const ViewCardEdit:react.FC = () => {
                 </div>
                 <div className="my-projects__container">
                     {
-                        (store.getState() as RootType).projectReducer.projects.map((e) =>
+                        projects.map((e) =>
                         <a href={e.link} className="project-link">
                             <Block className="proj-container">
                                     {e.name}
@@ -457,7 +473,7 @@ export const ViewCardEdit:react.FC = () => {
                 <div className="blocks__header">
                     <Text dark={theme}>
                         {
-                            (store.getState() as RootType).profileReducer.block_descr
+                            profile.block_descr
                         }
                     </Text>
                     {
@@ -510,11 +526,11 @@ export const ViewCardEdit:react.FC = () => {
             
             
             {
-                (store.getState() as RootType).photoReducer.images.length ?
+                images.length ?
                 <div className="my-image__container">
                 <div className="edit__heading">
                     <Text className="my-image__header tal" dark={theme}>
-                        {(store.getState() as RootType).profileReducer.img_head}
+                        {profile.img_head}
                     </Text>
                     {
                         withPencil ?
@@ -560,10 +576,10 @@ export const ViewCardEdit:react.FC = () => {
 
             
             {
-                (store.getState() as RootType).geoReducer.lat ? <div>
+                geo.lat ? <div>
                     <div className="map__heading edit__heading">
                         <Text dark={theme}>{
-                            (store.getState() as RootType).profileReducer.map_head
+                            profile.map_head
                         }</Text>
                         {
                             withPencil ? 
@@ -575,15 +591,15 @@ export const ViewCardEdit:react.FC = () => {
                 <YMaps>
                     <Map
                         defaultState={{ center: [
-                            (store.getState() as RootType).geoReducer.lat,
-                            (store.getState() as RootType).geoReducer.long
+                            geo.lat,
+                            geo.long
                         ], zoom: 12 } }
                         width="calc(100% - 0px)"
                     >
 
                         <Placemark geometry={[
-                            (store.getState() as RootType).geoReducer.lat,
-                            (store.getState() as RootType).geoReducer.long
+                            geo.lat,
+                            geo.long
                         ]}></Placemark>
                     </Map>
                 </YMaps>

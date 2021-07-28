@@ -31,6 +31,6 @@ interface IStore{
     geoReducer:IGeo;
 }
 
-const getGeo = createSelector(
+export const getGeo = createSelector(
     (store:IStore) => store.geoReducer,
     geo => geo);

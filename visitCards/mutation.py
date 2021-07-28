@@ -12,6 +12,19 @@ from django_model_mutations import mutations
 from .serializers import BlockSerializer
 
 
+def getVisit(id:str):
+    card = None
+    try:
+        card = VisitCard.objects.get(
+            id=from_global_id(id)[1]
+        )
+    except:
+        card = VisitCard.objects.get(
+            verb_id=id
+        )
+    return card
+
+
 class AddUserToCard(graphene.Mutation):
     class Arguments:
         token = graphene.String()
@@ -21,14 +34,12 @@ class AddUserToCard(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, token, card_id):
-        card = VisitCard.objects.get(
-            id=from_global_id(card_id)[1]
-        )
+        card = getVisit(card_id)
         ok = True
-        if not card.user:
+        if card.user.count():
             ok = False
         else:
-            card.user = info.context.user
+            card.user.set([info.context.user])
         card.save()
 
         return AddUserToCard(ok=ok)
@@ -100,6 +111,7 @@ class ChangeBlockDescr(graphene.Mutation):
         card.save()
         return ChangeBlockDescr(ok=True)
 
+
 class IfUserAdmin(graphene.Mutation):
     class Arguments:
         token = graphene.String()
@@ -109,20 +121,9 @@ class IfUserAdmin(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, token, card_id):
-        card = None
-        try:
-            card = VisitCard.objects.get(
-                id=from_global_id(card_id)[1]
-            )
-        except: pass
-
-        try:
-            card = VisitCard.objects.get(
-                verb_id=card_id
-            )
-        except:pass
-        ok =False
-        if str(info.context.user.visitcard.id) == str(card.id):
+        card = getVisit(card_id)
+        ok = False
+        if str(info.context.user.visitcard_set.all()[0].id) == str(card.id):
             ok = True
         return IfUserAdmin(isAdmin=ok)
 
@@ -509,7 +510,6 @@ class ChangeTheme(graphene.Mutation):
         card.save()
 
         return ChangeTheme(ok=True)
-
 
 class Mutation(graphene.ObjectType):
     create_user = CreateUser.Field()

@@ -419,3 +419,8 @@ mutation changeBlockDescr($card_id:ID, $new_descr:String) {
 		ok
   }
 }
+
+
+query isCardEmpty($card_id:ID) {
+  isCardEmpty(cardId:$card_id)
+}

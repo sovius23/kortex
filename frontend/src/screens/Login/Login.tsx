@@ -10,8 +10,11 @@ import {useSignMutation} from "../../generated/graphql";
 import "./style.css"
 import { Button, ButtonTypes } from "../../uikit/Button/Button";
 
+interface ILogin{
+    notRegUrl?:string;
+}
 
-export const Login:react.FC = () => {
+export const Login:react.FC<ILogin> = (props) => {
 
     const [login] = useSignMutation();
 
@@ -23,6 +26,8 @@ export const Login:react.FC = () => {
     const [flag, setFlag] = useState(false);
     const [errorMsg, setErrorMsg] = useState("");
     
+    const notRegUrl = props.notRegUrl || "/registration"
+
     const history = useHistory();
 
     if (!flag) {
@@ -63,7 +68,7 @@ export const Login:react.FC = () => {
                 <Input type="password" placeholder="Пароль" onChange={(e:string) => {
                     setPassword(e);
                 }}></Input>
-                <Link to="/registration" className="link__login">
+                <Link to={notRegUrl} className="link__login">
                     <Text className="link__login-text">Еще нет аккаунта</Text>
                 </Link>
                 <div className="log__btn" onClick={() => {

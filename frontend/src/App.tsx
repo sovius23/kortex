@@ -109,7 +109,7 @@ export const App:react.FC = () => {
                     <Route path="/:id">
                         <ViewCard></ViewCard>
                     </Route>
-                    <Route path="">
+                    <Route path="/" exact>
                         <Redirect to={"index"}></Redirect>
                     </Route>
                 </Switch>

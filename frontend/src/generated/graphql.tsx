@@ -827,7 +827,9 @@ export type Query = {
   user?: Maybe<UserNode>;
   users?: Maybe<UserNodeConnection>;
   visit?: Maybe<VisitCardType>;
+  visits?: Maybe<Array<Maybe<VisitCardType>>>;
   getVisitByUser?: Maybe<VisitCardType>;
+  isCardEmpty?: Maybe<Scalars['Boolean']>;
 };
 
 
@@ -860,6 +862,11 @@ export type QueryVisitArgs = {
 
 export type QueryGetVisitByUserArgs = {
   token?: Maybe<Scalars['String']>;
+};
+
+
+export type QueryIsCardEmptyArgs = {
+  cardId?: Maybe<Scalars['ID']>;
 };
 
 /** Same as `grapgql_jwt` implementation, with standard output. */
@@ -1029,11 +1036,20 @@ export type UserNode = Node & {
   /** Designates whether this user should be treated as active. Unselect this instead of deleting accounts. */
   isActive: Scalars['Boolean'];
   dateJoined: Scalars['DateTime'];
-  visitcard?: Maybe<VisitCardType>;
+  visitcardSet: VisitCardTypeConnection;
   pk?: Maybe<Scalars['Int']>;
   archived?: Maybe<Scalars['Boolean']>;
   verified?: Maybe<Scalars['Boolean']>;
   secondaryEmail?: Maybe<Scalars['String']>;
+};
+
+
+export type UserNodeVisitcardSetArgs = {
+  offset?: Maybe<Scalars['Int']>;
+  before?: Maybe<Scalars['String']>;
+  after?: Maybe<Scalars['String']>;
+  first?: Maybe<Scalars['Int']>;
+  last?: Maybe<Scalars['Int']>;
 };
 
 export type UserNodeConnection = {
@@ -1149,6 +1165,23 @@ export type VisitCardTypeBlockSetArgs = {
   after?: Maybe<Scalars['String']>;
   first?: Maybe<Scalars['Int']>;
   last?: Maybe<Scalars['Int']>;
+};
+
+export type VisitCardTypeConnection = {
+  __typename?: 'VisitCardTypeConnection';
+  /** Pagination data for this connection. */
+  pageInfo: PageInfo;
+  /** Contains the nodes in this connection. */
+  edges: Array<Maybe<VisitCardTypeEdge>>;
+};
+
+/** A Relay edge containing a `VisitCardType` and its cursor. */
+export type VisitCardTypeEdge = {
+  __typename?: 'VisitCardTypeEdge';
+  /** The item at the end of the edge */
+  node?: Maybe<VisitCardType>;
+  /** A cursor for use in pagination */
+  cursor: Scalars['String'];
 };
 
 
@@ -2905,6 +2938,39 @@ export function useChangeBlockDescrMutation(baseOptions?: Apollo.MutationHookOpt
 export type ChangeBlockDescrMutationHookResult = ReturnType<typeof useChangeBlockDescrMutation>;
 export type ChangeBlockDescrMutationResult = Apollo.MutationResult<ChangeBlockDescrMutation>;
 export type ChangeBlockDescrMutationOptions = Apollo.BaseMutationOptions<ChangeBlockDescrMutation, ChangeBlockDescrMutationVariables>;
+export const IsCardEmptyDocument = gql`
+    query isCardEmpty($card_id: ID) {
+  isCardEmpty(cardId: $card_id)
+}
+    `;
+
+/**
+ * __useIsCardEmptyQuery__
+ *
+ * To run a query within a React component, call `useIsCardEmptyQuery` and pass it any options that fit your needs.
+ * When your component renders, `useIsCardEmptyQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useIsCardEmptyQuery({
+ *   variables: {
+ *      card_id: // value for 'card_id'
+ *   },
+ * });
+ */
+export function useIsCardEmptyQuery(baseOptions?: Apollo.QueryHookOptions<IsCardEmptyQuery, IsCardEmptyQueryVariables>) {
+        const options = {...defaultOptions, ...baseOptions}
+        return Apollo.useQuery<IsCardEmptyQuery, IsCardEmptyQueryVariables>(IsCardEmptyDocument, options);
+      }
+export function useIsCardEmptyLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<IsCardEmptyQuery, IsCardEmptyQueryVariables>) {
+          const options = {...defaultOptions, ...baseOptions}
+          return Apollo.useLazyQuery<IsCardEmptyQuery, IsCardEmptyQueryVariables>(IsCardEmptyDocument, options);
+        }
+export type IsCardEmptyQueryHookResult = ReturnType<typeof useIsCardEmptyQuery>;
+export type IsCardEmptyLazyQueryHookResult = ReturnType<typeof useIsCardEmptyLazyQuery>;
+export type IsCardEmptyQueryResult = Apollo.QueryResult<IsCardEmptyQuery, IsCardEmptyQueryVariables>;
 export type CreateUserMutationVariables = Exact<{
   username?: Maybe<Scalars['String']>;
   password?: Maybe<Scalars['String']>;
@@ -3266,3 +3332,10 @@ export type ChangeBlockDescrMutationVariables = Exact<{
 
 
 export type ChangeBlockDescrMutation = { __typename?: 'Mutation', changeBlockDescr?: Maybe<{ __typename?: 'ChangeBlockDescr', ok?: Maybe<boolean> }> };
+
+export type IsCardEmptyQueryVariables = Exact<{
+  card_id?: Maybe<Scalars['ID']>;
+}>;
+
+
+export type IsCardEmptyQuery = { __typename?: 'Query', isCardEmpty?: Maybe<boolean> };

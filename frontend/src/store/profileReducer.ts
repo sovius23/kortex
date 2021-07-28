@@ -102,6 +102,11 @@ interface IStore{
     profileReducer:IinitialState;
 }
 
+export const getProfile = createSelector(
+    (store:IStore) => store.profileReducer,
+    a => a
+)
+
 export const getCroppedImg = createSelector(
     (store:IStore) => store.profileReducer.cropped_img,
     img => img

@@ -1,4 +1,5 @@
 import {createSlice, createSelector, PayloadAction} from "@reduxjs/toolkit";
+import { RootType } from "./store";
 
 
 interface IImages{
@@ -44,5 +45,5 @@ interface IStore{
 }
 
 export const getImages = createSelector(
-    (store:IStore) => store.imagesReducer.images,
+    (store:RootType) => store.photoReducer.images,
     images => images)

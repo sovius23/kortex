@@ -2,7 +2,7 @@ import react, {useContext, useState, useEffect} from "react";
 import { useHistory, useParams } from "react-router";
 import { isConstTypeReference } from "typescript";
 
-import {useGetVisitByIdQuery, useGetVisitIdLazyQuery, useIsUserAdminMutation} from "../../generated/graphql";
+import {useIsCardEmptyQuery, useGetVisitByIdQuery, useGetVisitIdLazyQuery, useIsUserAdminMutation, useIsCardEmptyLazyQuery} from "../../generated/graphql";
 import { Block } from "../../uikit/Block/Block";
 import { Icon, IconType } from "../../uikit/Icon/Icon";
 import { Image } from "../../uikit/Image/Image";
@@ -11,7 +11,7 @@ import { Text } from "../../uikit/Text/Text";
 import {YMaps, Map, Placemark} from "react-yandex-maps";
 
 import "./style.css";
-import { Link } from "react-router-dom";
+import { Link, Route, Switch, useRouteMatch } from "react-router-dom";
 import { introspectionFromSchema } from "graphql";
 import { Theme, ThemeContext } from "../../App";
 import { CropperView } from "../../uikit/Cropper/CropperView";
@@ -22,10 +22,17 @@ import { TelPopUp } from "../../uikit/PopUps/ShowTelPopUp/ShowTelPopUp";
 import { Line } from "../../uikit/Line/Line";
 
 import {urlize} from "./ViewCardEdit";
+import { Login } from "../Login/Login";
+import { Registration } from "../Registration/Registration";
+import { isIos } from "./platformDetect";
 
 export const ViewCard:react.FC = () => {
 
     const {id} = useParams<{id:string}>();
+
+    const is_empty_query = useIsCardEmptyQuery({variables:{
+        card_id: id
+    }})
 
     const [getData] = useGetVisitIdLazyQuery();
 
@@ -41,6 +48,9 @@ export const ViewCard:react.FC = () => {
     const [tel, setTel] = useState("");
 
     const history = useHistory();
+
+    const {url} = useRouteMatch();
+
 
     useEffect(() => {
         console.log(window.document.getElementsByClassName("images__container"))
@@ -74,7 +84,13 @@ export const ViewCard:react.FC = () => {
     if (loading) {
         return <div></div>
     }
-    console.log("fuck")
+
+    if (!is_empty_query.loading){
+        if (is_empty_query.data?.isCardEmpty) {
+            history.push(`/${id}/register`)
+        }
+    }
+    
     if (localStorage.getItem("token") != null){ 
     isUserAdminCheck({variables:{
         token:localStorage.getItem("token"),
@@ -82,7 +98,6 @@ export const ViewCard:react.FC = () => {
     }}).then((e) => {
         console.log(e);
         if (e.data?.isUserAdmin?.isAdmin == true) {
-            console.log("alsdkfjalsd")
             history.push(`/${id}/view`)
         }
     })}
@@ -139,7 +154,12 @@ export const ViewCard:react.FC = () => {
             icons.push({type: IconType.tel,
             link: data.visit.contacts.phone,
                 onClick: () => {
-                    setTel(data.visit?.contacts?.phone!)
+                    isIos(
+                        data.visit?.name,
+                        data.visit?.surname,
+                        data.visit?.midname,
+                        setTel(data.visit?.contacts?.phone!)
+                    )
                 }
             });
         }
@@ -434,6 +454,17 @@ export const ViewCard:react.FC = () => {
             
             
         </div>
+        {
+            url == "/easy" ? 
+            <Switch>
+                <Route path={`${url}/reg`}>
+                    <Registration signUrl={`${url}`}></Registration>
+                </Route>
+                <Route path="">
+                    <Login notRegUrl={`${url}/reg`}></Login>
+                </Route>
+            </Switch> : ""
+        }
         </div>
         {
             tel.length ? 

@@ -66,7 +66,7 @@ export const ScreenWithCheckboxes:react.FC = () => {
 
     console.log("asdf")
     if (history.location.pathname =="/index" && localStorage.getItem("token") == null ) {
-        history.push("/login");
+        history.push("/easy");
     }
 
     
