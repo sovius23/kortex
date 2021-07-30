@@ -76,17 +76,17 @@ export function isIos(name, surname,
             saveAs(new Blob([
                 vcard.generate({
                     name : {
-                        familyName: name,
-                        middleName : midname,
-                        givenName: surname
+                        familyName: "name",
+                        middleName : "midname",
+                        givenName: "surname"
                     },
                     phones : [
                         {
-                            type: "work",
+                            type: "other",
                             text : phone
                         }
                     ],
-                    urls: contacts,
+                    //urls: contacts,
                     photos: [photo]
                 })
            ]), name+".vcf")
