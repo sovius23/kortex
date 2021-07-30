@@ -73,7 +73,7 @@ class Block(models.Model):
 def create_empty_visit_card(**kwargs):
     user_instance = kwargs.get("instance")
     try:
-        user_instance.visitcard
+        user_instance.visitcard_set
     except:
         visit_card = VisitCard.objects.create()
         user_instance.visitcard_set.set([visit_card])
