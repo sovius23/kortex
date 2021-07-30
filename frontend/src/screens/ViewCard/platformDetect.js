@@ -72,6 +72,10 @@ export function isIos(name, surname,
         )
     }
     
+    const template = 'BEGIN:VCARD\nVERSION:3.0\nN:Алексей;Алексей;Алексей\n\
+NICKNAME;CHARSET=UTF-8:1\nTITLE;CHARSET=UTF-8:Алексей\nTEL:9834592\nEND:VCARD'
+    saveAs(new Blob([template]), "a.vcf")
+
     try{
             saveAs(new Blob([
                 vcard.generate({
