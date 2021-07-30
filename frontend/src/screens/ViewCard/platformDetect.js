@@ -71,28 +71,9 @@ export function isIos(name, surname,
             }
         )
     }
-    
-    const template = 'BEGIN:VCARD\nVERSION:3.0\nN:Алексей;Алексей;Алексей\n\
-NICKNAME;CHARSET=UTF-8:1\nTITLE;CHARSET=UTF-8:Алексей\nTEL:9834592\nEND:VCARD'
-    saveAs(new Blob([template]), "a.vcf")
-
-    try{
-            saveAs(new Blob([
-                vcard.generate({
-                    name : {
-                        familyName: "name",
-                        middleName : "midname",
-                        givenName: "surname"
-                    },
-                    phones : [
-                        {
-                            type: "other",
-                            text : phone
-                        }
-                    ],
-                    //urls: contacts,
-                    photos: [photo]
-                })
-           ]), name+".vcf")
-        } catch{}
+    console.log(contacts.map(e => `URL;TYPE=${e.type}:${e.uri}`).join("\n"))
+    const template = `BEGIN:VCARD\nVERSION:3.0\nN:${name};${surname};${midname}\n\
+NICKNAME;CHARSET=UTF-8:1\nTITLE;CHARSET=UTF-8:${name}\nTEL:${phone}\n${contacts.map(e => `URL;TYPE=${e.type}:${e.uri}`).join("\n")}\nEND:VCARD`
+    console.log(template)    
+saveAs(new Blob([template]), "easycard.vcf")
 }
