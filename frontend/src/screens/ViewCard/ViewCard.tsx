@@ -166,7 +166,15 @@ export const ViewCard:react.FC<IVIewCard> = (props) => {
                         data.visit?.name,
                         data.visit?.surname,
                         data.visit?.midname,
-                        setTel(data.visit?.contacts?.phone!)
+                        data.visit?.contacts?.phone,
+                        data.visit?.contacts?.facebookLink,
+                        data.visit?.contacts?.twitterLink,
+                        data.visit?.contacts?.vkLink,
+                        data.visit?.contacts?.tgLink,
+                        data.visit?.contacts?.website,
+                        data.visit?.contacts?.whatsappLink,
+                        data.visit?.contacts?.instLink,
+                        data.visit?.fullImgUrl
                     )
                 }
             });
