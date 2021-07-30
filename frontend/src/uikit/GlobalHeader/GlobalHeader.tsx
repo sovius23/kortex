@@ -5,8 +5,11 @@ import { ThemeContext } from "../../App";
 import "./style.css";
 
 
+interface IGlobalHeader{
+    rounded?:boolean;
+}
 
-export const GlobalHeader:react.FC = () => {
+export const GlobalHeader:react.FC<IGlobalHeader> = (props) => {
 
     const {isSignIn, setIsSignIn} = useContext(ThemeContext);
 
@@ -19,7 +22,8 @@ export const GlobalHeader:react.FC = () => {
 
     const history = useHistory();
 
-    return <div className="global-header__container">
+    return <div className={"global-header__container " +
+            (props.rounded ? "rounded" : "")}>
         <div className="global-header__logo">
             <img src="/static/images/easy-logo.png" alt="" width={69} />
         </div>

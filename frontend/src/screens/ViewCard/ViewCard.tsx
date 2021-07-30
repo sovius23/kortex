@@ -26,9 +26,17 @@ import { Login } from "../Login/Login";
 import { Registration } from "../Registration/Registration";
 import { isIos } from "./platformDetect";
 
-export const ViewCard:react.FC = () => {
+interface IVIewCard{
+    id?:string;
+}
 
-    const {id} = useParams<{id:string}>();
+export const ViewCard:react.FC<IVIewCard> = (props) => {
+
+    var {id} = useParams<{id:string}>();
+
+    if (props.id) {
+        id = props.id;
+    }
 
     const is_empty_query = useIsCardEmptyQuery({variables:{
         card_id: id
@@ -455,13 +463,24 @@ export const ViewCard:react.FC = () => {
             
         </div>
         {
-            url == "/easy" ? 
+            url == "/easy"? 
             <Switch>
                 <Route path={`${url}/reg`}>
                     <Registration signUrl={`${url}`}></Registration>
                 </Route>
                 <Route path={`${url}`}>
                     <Login notRegUrl={`${url}/reg`}></Login>
+                </Route>
+            </Switch> : ""
+        }
+        {
+            url == "/" ?
+            <Switch>
+                <Route path={`${url}easy/reg`}>
+                    <Registration signUrl={`${url}`}></Registration>
+                </Route>
+                <Route path={`${url}`}>
+                    <Login notRegUrl={`${url}easy/reg`}></Login>
                 </Route>
             </Switch> : ""
         }

@@ -17,6 +17,8 @@
     display: flex;
     flex-direction: column;
     width: 300px;
+    align-self:center;
+
 }
 
 .image-upload__button{

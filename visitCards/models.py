@@ -66,7 +66,7 @@ class Block(models.Model):
     descr = models.TextField(max_length=50)
     name = models.TextField(max_length=50)
     card = models.ForeignKey(VisitCard, on_delete=models.CASCADE, null=True)
-    main_part = models.TextField(max_length=200, default="")
+    main_part = models.TextField(max_length=1000, default="")
 
 
 @receiver(post_save, sender=User)

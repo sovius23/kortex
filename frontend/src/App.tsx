@@ -40,6 +40,9 @@ export const ThemeContext = react.createContext({
 
 export const App:react.FC = () => {
 
+    const screen = window.matchMedia("(max-width:500px)")
+
+    
     const {data, loading} = useGetStateQuery({
         variables:{token:localStorage.getItem("token")},
         onCompleted:(e) => {
@@ -110,12 +113,22 @@ export const App:react.FC = () => {
                         <ViewCard></ViewCard>
                     </Route>
                     <Route path="/" exact>
-                        <Redirect to={"index"}></Redirect>
+                        <ViewCard id={"easy"}></ViewCard>
                     </Route>
                 </Switch>
+                {
+                    !screen.matches ?
+                    <GlobalHeader rounded></GlobalHeader>
+                    : ""
+                }
+
                 </div>
+                
             </div>
-            <GlobalHeader></GlobalHeader>
+            {
+                    screen.matches ? 
+                    <GlobalHeader></GlobalHeader> : ""
+            }
             </div>
             
         </Router>

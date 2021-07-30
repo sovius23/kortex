@@ -8,6 +8,10 @@
     width: 800px;
     display: flex;
     justify-content: center;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: space-between;
+    min-height: 100vh;
 }
 
 @media (max-width: 900px) {

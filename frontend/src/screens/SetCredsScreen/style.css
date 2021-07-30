@@ -9,6 +9,7 @@
     flex-direction: column;
     gap: 80px;
     margin-top: 43px;
+    width: 100%;
 }
 
 .set-creds__content{

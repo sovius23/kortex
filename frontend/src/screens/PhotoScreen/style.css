@@ -3,7 +3,7 @@
     flex-direction: column;
     gap: 80px;
     padding-top: 43px;
-    width: 725px!important;
+    width: 100%;
 }
 
 .global-photo__container{
