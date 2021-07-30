@@ -9,7 +9,7 @@ import { saveAs } from "file-saver";
 
 
 export function isIos(name, surname, midname, phone, androidFunc) {
-    try{
+    /*try{
         if (isAndroid) {
             androidFunc()
         }
@@ -32,6 +32,7 @@ export function isIos(name, surname, midname, phone, androidFunc) {
         }        
     }catch (e){
         console.log(e)
-    }
+    }*/
+    androidFunc()
 
 }
