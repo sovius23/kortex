@@ -424,3 +424,12 @@ mutation changeBlockDescr($card_id:ID, $new_descr:String) {
 query isCardEmpty($card_id:ID) {
   isCardEmpty(cardId:$card_id)
 }
+
+mutation setInst($cardId:ID, $inst_username:String){
+  changeInstUsername(cardId: $cardId, username: $inst_username){
+    ok
+  }
+}
+query getInstPhotos($cardId:ID){
+  getFbImages(cardId:$cardId)
+}

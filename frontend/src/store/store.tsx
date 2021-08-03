@@ -8,9 +8,10 @@ import photoReducer from "./PhotoReducer";
 import geoReducer from "./GeolocationReducer";
 import blockReducer from "./BlockReducer";
 import newIdReducer from "./newIdReducer";
+import instReducer from "./InstReducer";
 
 const RootReducer = combineReducers(
-    {profileReducer, contactsReducer, projectReducer, photoReducer, geoReducer, blockReducer, newIdReducer}
+    {instReducer, profileReducer, contactsReducer, projectReducer, photoReducer, geoReducer, blockReducer, newIdReducer}
 )
 
 export type RootType = ReturnType<typeof RootReducer>

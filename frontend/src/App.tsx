@@ -113,7 +113,11 @@ export const App:react.FC = () => {
                         <ViewCard></ViewCard>
                     </Route>
                     <Route path="/" exact>
+                        {
+                        localStorage.getItem("token") ?
+                        <Redirect to="/index"></Redirect> :
                         <ViewCard id={"easy"}></ViewCard>
+                        }
                     </Route>
                 </Switch>
                 {

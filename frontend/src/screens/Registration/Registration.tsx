@@ -113,7 +113,7 @@ export const Registration:react.FC<IRegistration> = (props) => {
 
                         
                         if (valid) {
-                            history.push("activate-info")
+                            history.push("/activate-info")
                         }
                     })
                 } catch{

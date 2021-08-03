@@ -30,6 +30,9 @@ class VisitCard(models.Model):
     verb_id = models.TextField(unique=True, max_length=20, null=True)
     block_descr = models.TextField(default="CV")
 
+    inst_username = models.TextField(null=True)
+    is_inst_photos = models.BooleanField(default=False)
+
 
 class Contacts(models.Model):
     phone = models.TextField(null=True)
@@ -72,9 +75,8 @@ class Block(models.Model):
 @receiver(post_save, sender=User)
 def create_empty_visit_card(**kwargs):
     user_instance = kwargs.get("instance")
-    try:
-        user_instance.visitcard_set
-    except:
+
+    if user_instance.visitcard_set.count() == 0:
         visit_card = VisitCard.objects.create()
         user_instance.visitcard_set.set([visit_card])
         Contacts.objects.create(visit_card=visit_card)

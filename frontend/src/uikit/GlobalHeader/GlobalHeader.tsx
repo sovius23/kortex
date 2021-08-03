@@ -1,5 +1,6 @@
 import react, { useContext } from "react";
 import { useHistory } from "react-router";
+import { useRouteMatch } from "react-router-dom";
 import { ThemeContext } from "../../App";
 
 import "./style.css";
@@ -22,18 +23,26 @@ export const GlobalHeader:react.FC<IGlobalHeader> = (props) => {
 
     const history = useHistory();
 
+    const {url} = useRouteMatch();
+
     return <div className={"global-header__container " +
             (props.rounded ? "rounded" : "")}>
-        <div className="global-header__logo">
+        <div className="global-header__logo" style={{cursor: "pointer"}} onClick={() => {
+            if (url =="/"){
+            history.push("/index")}
+            else {
+                history.push("/")
+            }
+        }}>
             <img src="/static/images/easy-logo.png" alt="" width={69} />
         </div>
-        <div className="global-header__button" onClick={() => {
+        <div className="global-header__button" style={{cursor: 'pointer'}} onClick={() => {
             if (isSignIn) {
                 localStorage.removeItem("token");
-                history.push("/login")
+                history.push("/")
             }
             else {
-                history.push("/login")
+                history.push("/")
             }
         }}>
             {

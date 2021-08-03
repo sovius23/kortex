@@ -142,6 +142,21 @@ class ChangePassword(graphene.Mutation):
         return ChangePassword(ok=True)
 
 
+class ChangeInstUsername(graphene.Mutation):
+    class Arguments:
+        username = graphene.String()
+        card_id = graphene.ID()
+    ok = graphene.Boolean()
+
+    @classmethod
+    def mutate(cls, root, info, username, card_id):
+        card = getVisit(card_id)
+        card.inst_username = username
+        card.save()
+
+        return ChangeInstUsername(ok=True)
+
+
 class UpdateVerbId(graphene.Mutation):
     class Arguments:
         token = graphene.String()
@@ -154,7 +169,7 @@ class UpdateVerbId(graphene.Mutation):
 
         ok = True
 
-        card = info.context.user.visitcard
+        card = info.context.user.visitcard_set.all()[0]
         card.verb_id = new_id
         try:
             card.save()
@@ -180,8 +195,6 @@ class UpdateFullPhoto(graphene.Mutation):
             card.full_profile_photo = None
         else:
             card.full_profile_photo = photo
-
-        print(photo, card.full_profile_photo)
 
         card.save()
         sleep(1)
@@ -259,7 +272,6 @@ class ChangeVisitCardProfilePhoto(graphene.Mutation):
 
     @classmethod
     def mutate(cls, root, info, photo, visit_card_id):
-        print("fuck")
         visit_card = VisitCard.objects.get(id=from_global_id(visit_card_id)[1])
         my_photo = File(photo)
 
@@ -267,7 +279,6 @@ class ChangeVisitCardProfilePhoto(graphene.Mutation):
             visit_card.ProfilePhoto = None
         else:
             visit_card.ProfilePhoto = File(photo)
-        print(photo, "photo")
         visit_card.save()
         return ChangeVisitCardProfilePhoto(new_path=visit_card.ProfilePhoto.url)
 
@@ -291,7 +302,7 @@ class ChangeContacts(graphene.Mutation):
         contacts = Contacts.objects.filter(
             id=from_global_id(contacts_id)[1]
         )
-        print(kwargs)
+        #if kwargs.get("inst_link")
         contacts.update(**kwargs)
         return ChangeContacts(ok=True)
 
@@ -538,3 +549,5 @@ class Mutation(graphene.ObjectType):
     change_password = ChangePassword.Field()
 
     add_user_to_card = AddUserToCard.Field()
+
+    change_inst_username = ChangeInstUsername.Field()

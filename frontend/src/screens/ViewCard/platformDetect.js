@@ -74,6 +74,6 @@ export function isIos(name, surname,
     console.log(contacts.map(e => `URL;TYPE=${e.type}:${e.uri}`).join("\n"))
     const template = `BEGIN:VCARD\nVERSION:3.0\nN:${name};${surname};${midname}\n\
 NICKNAME;CHARSET=UTF-8:1\nTITLE;CHARSET=UTF-8:${name}\nTEL:${phone}\n${contacts.map(e => `URL;TYPE=${e.type}:${e.uri}`).join("\n")}\nEND:VCARD`
-    console.log(template)    
+    console.log(template)
 saveAs(new Blob([template]), "easycard.vcf")
 }
