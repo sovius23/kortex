@@ -14,9 +14,9 @@ const defaultOptions = {
 }
 
 const client = new ApolloClient({
-  uri: "http://127.0.0.1:3000/graphql/", 
+  uri: "http://www.cardeasy.ru/graphql/", 
   cache: new InMemoryCache(),
-  link: createUploadLink({  uri: "http://127.0.0.1:3000/graphql/"}),
+  link: createUploadLink({  uri: "http://www.cardeasy.ru/graphql/"}),
 })
 
 export default client;
