@@ -10,6 +10,7 @@
     width: 400px;
     margin-top: 40px;
     gap: 20px;
+    align-self: center;
 }
 
 .login__form{
