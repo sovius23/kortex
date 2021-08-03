@@ -8,7 +8,7 @@ import { Arrow } from "../../uikit/uiArrow/Arrow";
 
 import { ContactsScreen } from "../ContactsScreen/ContactsScreen";
 import { MapScreen } from "../MapScreen/MapScreen";
-import { InstScreen } from "../PhotoScreen/PhotoScreen";
+import { PhotoScreen } from "../PhotoScreen/PhotoScreen";
 import { ProjectScreen } from "../ProjectsScreen/ProjectsScreen";
 import { SetCredsScreen } from "../SetCredsScreen/SetCredsScreen";
 import { SetBlockScreen } from "../BlockScreen/BlockScreen";
@@ -53,7 +53,7 @@ export const ScreenWithCheckboxes:react.FC = () => {
         {text: "Блоки", link: "/blocks", widget: <SetBlockScreen></SetBlockScreen>},
         {text: "Контакты", link: "/contacts", widget: <ContactsScreen></ContactsScreen>},
         {text: "Проекты", link: "/projects", widget: <ProjectScreen></ProjectScreen>},
-        {text: "Фотографии", link: "/photos", widget: <InstScreen></InstScreen>},
+        {text: "Фотографии", link: "/photos", widget: <PhotoScreen></PhotoScreen>},
         {text: "Карта", link: "/map", widget: <MapScreen></MapScreen>},
         {text: "Тема", link: "/theme", widget: <ThemeScreen></ThemeScreen>}
     ];
