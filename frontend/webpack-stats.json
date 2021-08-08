@@ -1,1 +1,1 @@
-{"status":"done","chunks":{"main":["main.js"]},"error":"ModuleNotFoundError","message":"Module not found: Error: Can't resolve './Instagram/inst' in 'C:\\Users\\Ilia\\Documents\\project_template\\backend\\frontend\\src'","assets":{"main.js":{"name":"main.js","path":"C:\\Users\\Ilia\\Documents\\project_template\\backend\\frontend\\static\\frontend\\main.js"}}}
+{"status":"done","chunks":{"main":["main.js"]},"assets":{"main.js":{"name":"main.js","path":"C:\\Users\\Ilia\\Documents\\project_template\\backend\\frontend\\static\\frontend\\main.js"}}}
