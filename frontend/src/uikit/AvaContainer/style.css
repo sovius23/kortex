@@ -1,9 +1,0 @@
-.ava-container{
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 300px;
-    height: 300px;
-    overflow: hidden;
-    border-radius: 50%;
-}

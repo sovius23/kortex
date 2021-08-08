@@ -1,6 +1,4 @@
 import graphene
-import visitCards.query
-import visitCards.mutation
 import graphql_jwt
 
 
@@ -33,11 +31,14 @@ class AuthMutation(graphene.ObjectType):
     revoke_token = mutations.RevokeToken.Field()
 
 
-class Query(visitCards.query.Query, UserQuery, graphene.ObjectType):
-    pass
+class Query(UserQuery, graphene.ObjectType):
+    hello = graphene.Field(graphene.String)
+
+    def resolve_hello(self, info):
+        return "hello"
 
 
-class Mutation(visitCards.mutation.Mutation, AuthMutation, graphene.ObjectType):
+class Mutation(AuthMutation, graphene.ObjectType):
     pass
 
 

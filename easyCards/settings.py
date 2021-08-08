@@ -52,7 +52,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'django_filters',
-    'visitCards',
     "webpack_loader",
     'frontend',
     "graphql_auth",
@@ -130,7 +129,7 @@ WSGI_APPLICATION = 'easyCards.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'visit-cards',
+        'NAME': 'evgenapp3',
         'USER' : 'postgres',
         'PASSWORD' : 'Ilvas2006',
         'HOST' : '127.0.0.1',
