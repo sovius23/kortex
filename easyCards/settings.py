@@ -58,7 +58,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "answers",
     "tests",
-    "class"
+    "classes"
 
 ]
 GRAPHENE = {
