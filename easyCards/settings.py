@@ -55,7 +55,10 @@ INSTALLED_APPS = [
     "webpack_loader",
     'frontend',
     "graphql_auth",
-    "rest_framework"
+    "rest_framework",
+    "answers",
+    "tests",
+    "class"
 
 ]
 GRAPHENE = {
