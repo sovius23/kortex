@@ -19,5 +19,5 @@ class IAnswerBriefDescr:
 
     def __new__(cls, *args, **kwargs):
         if kwargs.get("graphql"):
-            return IAnswerBriefDescrGraphql()
+            return IAnswerBriefDescrGraphql
         return namedtuple("IAnswerBriefDescr", ["id", "type"])

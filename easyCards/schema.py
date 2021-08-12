@@ -1,6 +1,6 @@
 import graphene
 import graphql_jwt
-
+from api.query import  Query
 
 import graphene
 
@@ -31,7 +31,7 @@ class AuthMutation(graphene.ObjectType):
     revoke_token = mutations.RevokeToken.Field()
 
 
-class Query(UserQuery, graphene.ObjectType):
+class Query(Query, UserQuery, graphene.ObjectType):
     hello = graphene.Field(graphene.String)
 
     def resolve_hello(self, info):
