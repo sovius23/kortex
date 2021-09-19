@@ -5,7 +5,8 @@
 2) Создать базу данных в PGAdmin и внести изменения в файл `easyCards/settings.py` константа `DATABASE` (https://docs.djangoproject.com/en/3.2/ref/databases/#connecting-to-the-database)
 3) Установить все модули `pip install -r requirements.txt` в папке проекта (для линукса: `pip3 install -r requirements.txt`)
 4) Применить миграции `python manage.py migrate` (для линукса `pip3 manage.py migrate`)
-5) Запустить сервер командой `python manage.py runserver 3000` (для линукса `python3 manage.py runserver 3000`)
+5) Запустить сервер командой `python manage.py runserver 3000` (для линукса `python3 manage.py runserver 3000`) 
+*иногда, если не срабатывает и так, то  `python manage.py runserver 4000`
 
 ### Если лень настраивать постгрес
 1) Переключитесь на ветку без постгреса: `git switch without-postgres`
