@@ -1,0 +1,36 @@
+.menu{
+    background-color: #299FF4;
+    display: inline-flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 56px;
+    padding: 10px;
+    border-right: 1px solid #2794E2;
+    height: calc(100vh - 55px);
+    padding-top: 43px;
+}
+
+.menu-item{
+    display: inline-flex;
+    flex-direction: row-reverse;
+    align-items: center;
+    gap: 7px;
+    cursor: pointer;
+    font-size: 14px;
+}
+
+.bottom-menu{
+    align-self: flex-end;
+}
+
+.buttom-block{
+    justify-self: flex-end;
+}
+
+.top-block{
+    display: flex;
+    flex-direction: column;
+    gap: 56px;
+    align-items: flex-start;
+}

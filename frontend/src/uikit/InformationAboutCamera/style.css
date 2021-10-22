@@ -1,0 +1,27 @@
+.info-about-cam__container{
+    background-color: #299FF4;
+    position: fixed;
+    top: 0px;
+    right: 10px;
+    border-radius: 10px;
+}
+
+.cross__paddings{
+    padding: 5px;
+}
+
+.cross__area{
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-between;
+    cursor:pointer;
+}
+
+.main-info-part{
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    justify-content: center;
+    text-align: center;
+    padding: 15px;
+}

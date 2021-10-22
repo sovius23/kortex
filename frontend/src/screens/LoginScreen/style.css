@@ -1,0 +1,19 @@
+.centered{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.title{
+    text-align: center;
+}
+
+.login__container{
+    display: inline-flex;
+    width: 345px;
+    flex-direction: column;
+    align-items: center;
+    gap: 40px;
+    margin-top: 50px;
+}
