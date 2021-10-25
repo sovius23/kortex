@@ -39,9 +39,11 @@ const ListObject: react.FC = () => {
                     <span>Умеренное</span>
                 </div>
             </div>
-            <Button onClick={() => {
-                history.push("/index/1/details");
-            }} text="Подробнее"></Button>
+            <div className="blue-btn" onClick={() => {
+                history.push("/index/1/details")
+            }}>
+                Подробнее
+            </div>
         </div>
     </div>
 }

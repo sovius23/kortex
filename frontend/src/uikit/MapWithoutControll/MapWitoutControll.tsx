@@ -14,7 +14,7 @@ export const MapWithoutControll:react.FC<IClearMap> = (props) => {
         const mapboxMap = new mapboxgl.Map({
             container: mapNode.current!,
                   accessToken: "pk.eyJ1IjoiaWxpYXZhcyIsImEiOiJjazcwdXU0dHkwMGViM21ta3VxaHB2YWNqIn0.yHEDUiatwp4dy4MM3ywnOQ",
-                  style: "mapbox://styles/iliavas/ckub224qn0mn918qj4x96qllx",
+                  style: "mapbox://styles/iliavas/ckv6rsqn93klj15lheonz10zp",
             center: props.position,
             zoom: 9,
             dragPan: false,

@@ -2,6 +2,7 @@ import * as React from "react";
 import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css"; 
 import { InformationAboutCamera } from "../InformationAboutCamera/InformationAboutCamera";
+import { SortWidget } from "../SortWidget/SortWidget";
 // импортируем стили mapbox-gl чтобы карта отображалась коррекно
 
 function MapboxMap() {
@@ -28,7 +29,7 @@ function MapboxMap() {
     const mapboxMap = new mapboxgl.Map({
       container: node,
             accessToken: "pk.eyJ1IjoiaWxpYXZhcyIsImEiOiJjazcwdXU0dHkwMGViM21ta3VxaHB2YWNqIn0.yHEDUiatwp4dy4MM3ywnOQ",
-            style: "mapbox://styles/iliavas/ckub224qn0mn918qj4x96qllx",
+            style: "mapbox://styles/iliavas/ckv6rsqn93klj15lheonz10zp",
       center: [102.023, 55.906],
       zoom: 9,
     });
@@ -83,15 +84,17 @@ function MapboxMap() {
     };
   }, []);
 
-    return <div>
-      <div ref={mapNode} style={{ width: "100vw", height: "100vh" }} />;
-      {
-        isClicked ? <InformationAboutCamera onCross={() => {
-          setIsClicked(false)
-        }}></InformationAboutCamera> : ""
 
-      }
-    </div> 
+  return <div>
+    <SortWidget></SortWidget>
+    <div ref={mapNode} style={{ width: "100vw", height: "100vh" }} />;
+    {
+      isClicked ? <InformationAboutCamera onCross={() => {
+        setIsClicked(false)
+      }}></InformationAboutCamera> : ""
+
+    }
+  </div> 
 }
 
 export default MapboxMap

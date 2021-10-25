@@ -1,0 +1,49 @@
+.sort-widget__public-container{
+    position: absolute;
+    top: 30px;
+    left: 100px;
+    z-index: 1;
+    display: flex;
+    gap: 10px;
+}
+
+.circle{
+    width: 48px;
+    height: 48px;
+    border-radius: 24px;
+    background-color: #299FF4;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.sort-widget__container{
+    padding: 20px;
+    width: 546px;
+    background-color: #299FF4;
+    border-radius: 5px;
+    
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.checkboxes{
+    display: flex;
+    justify-content: space-between;
+}
+
+.checkbox-row{
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    justify-content: start;
+}
+
+.disabled{
+    transform: rotate(180deg);
+}
+
+.hid{
+    display: none;
+}

@@ -4,6 +4,7 @@ import MapboxMap from "../../uikit/Map/Map";
 import { Sidebar } from "../../uikit/Sidebar/Sidebar";
 import { DetailsScreen } from "../DetailScreen/DetailScreen";
 import { ListOfObjects } from "../ListOfObjects/ListOfObjects";
+import { ProfileScreen } from "../ProfileScreen/ProfileScreen";
 
 import "./style.css";
 
@@ -22,6 +23,9 @@ export const ScreenWithMap:react.FC = () => {
             </Route>
             <Route path="/index/viewed">
                 <ListOfObjects></ListOfObjects>
+            </Route>
+            <Route path="/index/profile">
+                <ProfileScreen></ProfileScreen>    
             </Route>
             <Route path="">
                 <MapboxMap></MapboxMap>

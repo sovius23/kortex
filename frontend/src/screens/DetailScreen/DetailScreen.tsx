@@ -1,6 +1,5 @@
 import react from "react";
 import { Button } from "../../uikit/Button/Button";
-
 import "./style.css";
 
 export const DetailsScreen:react.FC = () => {
@@ -44,7 +43,10 @@ export const DetailsScreen:react.FC = () => {
                     </div>
                     
                 </div>
-                <Button onClick={() =>{}} text="Выгрузить отчет"></Button>
+                <a href="/static/images/Деформационный отчет.docx" download>
+                    <Button onClick={() =>{}} text="Выгрузить отчет"></Button>
+                </a>
+                
             </div>
         </div>
     </div>

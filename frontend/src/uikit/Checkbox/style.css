@@ -1,0 +1,13 @@
+.checkbox__box{
+    width: 24px;
+    height: 24px;
+    background-color: #2794E2;
+    border-radius: 2;
+    display: flex;
+    align-items: center;
+}
+
+.checkbox__container{
+    display: flex;
+    gap: 5px;
+}
