@@ -43,7 +43,7 @@ export const DetailsScreen:react.FC = () => {
                     </div>
                     
                 </div>
-                <a href="/static/images/Деформационный отчет.docx" download>
+                <a href="/static/images/Деформационный отчет.docx" download style={{display: "block", width: "100%"}}>
                     <Button onClick={() =>{}} text="Выгрузить отчет"></Button>
                 </a>
                 
