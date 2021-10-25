@@ -60,7 +60,14 @@ function MapboxMap() {
           "circle-color": "#F36385"
         }
       })
-      mapboxMap.on("click", "point", () => {
+      mapboxMap.on("mousemove", "point", () => {
+        mapboxMap.getCanvas().style.cursor = "pointer";
+
+      })
+      mapboxMap.on("mouseleave", "point", () => {
+        mapboxMap.getCanvas().style.cursor = "";
+      })
+      mapboxMap.on("click", "point", (e) => {
         setIsClicked(true);
       })
     })

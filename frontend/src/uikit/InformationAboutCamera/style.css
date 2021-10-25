@@ -1,7 +1,7 @@
 .info-about-cam__container{
     background-color: #299FF4;
     position: fixed;
-    top: 0px;
+    top: 10px;
     right: 10px;
     border-radius: 10px;
 }
