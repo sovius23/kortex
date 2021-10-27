@@ -1,22 +1,49 @@
 import react from "react";
 import { Button } from "../../uikit/Button/Button";
+import { ImageWithBboxes } from "../../uikit/ImageWithBBoxes/ImageWithBBoxes";
 import "./style.css";
 
 export const DetailsScreen:react.FC = () => {
     return <div className="centered">
         <div className="details__content">
-            <img src="/static/images/info-cam.png" alt="" className="base-img"/>
+        <ImageWithBboxes 
+        src={"http://31.14.41.164/inputs/58402fcf-6aaa-4ca4-824d-3b20aa0e9c8f.png"} 
+        height={300}
+        bboxes={[
+            { bbox: [422, 366, 801, 499], type: 1 },
+            { bbox: [369, 514, 829, 652], type: 1},
+            {bbox: [10, 4, 356, 114], type: 1}
+        ]}
+        
+        ></ImageWithBboxes>
             <div className="info__content">
                 <div className="info-header">Объект: Камера №12141234</div>
                 <div className="address">Адрес: ул. Колмогорова 45</div>
                 <div className="changes">
                     <div className="img-with-data">
-                        <img src="/static/images/info-cam.png" alt="" />
+        <ImageWithBboxes 
+            src={"http://31.14.41.164/inputs/58402fcf-6aaa-4ca4-824d-3b20aa0e9c8f.png"} 
+            bboxes={[
+                { bbox: [422, 366, 801, 499], type: 1 },
+                { bbox: [369, 514, 829, 652], type: 1},
+            ]}
+            height={120}
+        
+        ></ImageWithBboxes>
                         <span>12.02.2020</span>
                     </div>
                     <img src="/static/images/arrow.svg" alt="" />
                     <div className="img-with-data">
-                        <img src="/static/images/info-cam.png" alt="" />
+                    <ImageWithBboxes 
+                        src={"http://31.14.41.164/inputs/58402fcf-6aaa-4ca4-824d-3b20aa0e9c8f.png"} 
+                        bboxes={[
+                            { bbox: [422, 366, 801, 499], type: 1 },
+                            { bbox: [369, 514, 829, 652], type: 1},
+                            {bbox: [10, 4, 356, 114], type: 1}
+                        ]}
+                        height={120}
+                    
+                    ></ImageWithBboxes>
                         <span>12.02.2020</span>
                     </div>
                 </div>
@@ -49,5 +76,6 @@ export const DetailsScreen:react.FC = () => {
                 
             </div>
         </div>
+        
     </div>
 }
