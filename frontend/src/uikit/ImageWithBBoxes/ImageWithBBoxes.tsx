@@ -17,28 +17,8 @@ export const ImageWithBboxes:react.FC<IImageWithBboxes> = (props) => {
     const img = useRef(null)
     useEffect(() => {
         setTimeout(() => {
-            var box = (img.current! as HTMLElement).getBoundingClientRect();
-        setValues(props.bboxes.map((e) => {
-            return <Bbox
-                bbox={
-                    [
-                        e.bbox[0] * ( box.width / (img.current! as any).naturalWidth),
-                        e.bbox[1] * ( box.height /(img.current! as any).naturalHeight),
-                        e.bbox[2] * ( box.width / (img.current! as any).naturalWidth),
-                        e.bbox[3] * ( box.height / (img.current! as any).naturalHeight)
-                    
-                    ]
-                }
-                img_cords={
-                    [
-                        box.top,
-                        box.left
-                    ]
-                }
-                type={1}
-            ></Bbox>
-        }))
-        }, 0)
+        
+        }, 500)
         
 
     }, [img]);
@@ -47,7 +27,29 @@ export const ImageWithBboxes:react.FC<IImageWithBboxes> = (props) => {
         {
             ...values
         }
-        <img src={props.src} ref={img} alt="" height={props.height || 300}/>
+        <img src={props.src} ref={img} alt="" height={props.height || 300} onLoad={() =>{
+            var box = (img.current! as HTMLElement).getBoundingClientRect();
+            setValues(props.bboxes.map((e) => {
+                return <Bbox
+                    bbox={
+                        [
+                            e.bbox[0] * ( box.width / (img.current! as any).naturalWidth),
+                            e.bbox[1] * ( box.height /(img.current! as any).naturalHeight),
+                            e.bbox[2] * ( box.width / (img.current! as any).naturalWidth),
+                            e.bbox[3] * ( box.height / (img.current! as any).naturalHeight)
+                        
+                        ]
+                    }
+                    img_cords={
+                        [
+                            box.top,
+                            box.left
+                        ]
+                    }
+                    type={1}
+                ></Bbox>
+            }))
+        }}/>
     </div> 
     
 }
