@@ -7,7 +7,7 @@ export const DetailsScreen:react.FC = () => {
     return <div className="centered">
         <div className="details__content">
         <ImageWithBboxes 
-        src={"http://31.14.41.164/inputs/58402fcf-6aaa-4ca4-824d-3b20aa0e9c8f.png"} 
+        src={"/static/images/ex.png"} 
         height={300}
         bboxes={[
             { bbox: [422, 366, 801, 499], type: 1 },
@@ -22,7 +22,7 @@ export const DetailsScreen:react.FC = () => {
                 <div className="changes">
                     <div className="img-with-data">
         <ImageWithBboxes 
-            src={"http://31.14.41.164/inputs/58402fcf-6aaa-4ca4-824d-3b20aa0e9c8f.png"} 
+            src={"/static/images/ex.png"} 
             bboxes={[
                 { bbox: [422, 366, 801, 499], type: 1 },
                 { bbox: [369, 514, 829, 652], type: 1},
@@ -35,7 +35,7 @@ export const DetailsScreen:react.FC = () => {
                     <img src="/static/images/arrow.svg" alt="" />
                     <div className="img-with-data">
                     <ImageWithBboxes 
-                        src={"http://31.14.41.164/inputs/58402fcf-6aaa-4ca4-824d-3b20aa0e9c8f.png"} 
+                        src={"/static/images/ex.png"} 
                         bboxes={[
                             { bbox: [422, 366, 801, 499], type: 1 },
                             { bbox: [369, 514, 829, 652], type: 1},
