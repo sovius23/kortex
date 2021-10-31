@@ -48,6 +48,13 @@ export const Sidebar:react.FC = () => {
                 history.push("/index/favorites")
             }
         },
+        {
+            img: "/static/images/cam.svg",
+            text: "Загрузить видео",
+            onClick: () => {
+                history.push("/index/video-upload")
+            }
+        }
     ];
     const menuItemsButtom = [
         {

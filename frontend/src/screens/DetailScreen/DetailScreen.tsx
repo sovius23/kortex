@@ -1,18 +1,45 @@
+import axios from "axios";
 import react from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { useParams } from "react-router";
+import { getPoints, setPoints } from "../../store/geoSlice";
 import { Button } from "../../uikit/Button/Button";
 import { ImageWithBboxes } from "../../uikit/ImageWithBBoxes/ImageWithBBoxes";
 import "./style.css";
 
 export const DetailsScreen:react.FC = () => {
+
+    const dispatch = useDispatch();
+    const {id} = useParams<{id:string}>();
+
+    const points = useSelector(getPoints);
+
+    if (points.length == 0) {
+        axios.get("http://127.0.0.1:5000/api/camera").then((e) => {
+            console.log(e)
+            dispatch(setPoints(
+                e.data.map((e:any) => {
+                  return {
+                    id: e.id,
+                    position: [e.position.longitude, e.position.latitude],
+                    bboxes: [],
+                    image: e.image
+                  }
+                })
+              )
+            )
+          })
+    }
+    
+    const point = points.filter(e => e.id == parseInt(id))[0]
+
     return <div className="centered">
-        <div className="details__content">
+        { points.length ?
+            <div className="details__content">
         <ImageWithBboxes 
-        src={"/static/images/ex.png"} 
+        src={"/static/images/"+ point.image} 
         height={300}
         bboxes={[
-            { bbox: [422, 366, 801, 499], type: 1 },
-            { bbox: [369, 514, 829, 652], type: 1},
-            {bbox: [10, 4, 356, 114], type: 1}
         ]}
         
         ></ImageWithBboxes>
@@ -22,10 +49,9 @@ export const DetailsScreen:react.FC = () => {
                 <div className="changes">
                     <div className="img-with-data">
         <ImageWithBboxes 
-            src={"/static/images/ex.png"} 
+            src={"/static/images/"+ point.image} 
             bboxes={[
-                { bbox: [422, 366, 801, 499], type: 1 },
-                { bbox: [369, 514, 829, 652], type: 1},
+                
             ]}
             height={120}
         
@@ -35,11 +61,8 @@ export const DetailsScreen:react.FC = () => {
                     <img src="/static/images/arrow.svg" alt="" />
                     <div className="img-with-data">
                     <ImageWithBboxes 
-                        src={"/static/images/ex.png"} 
+                        src={"/static/images/"+ point.image} 
                         bboxes={[
-                            { bbox: [422, 366, 801, 499], type: 1 },
-                            { bbox: [369, 514, 829, 652], type: 1},
-                            {bbox: [10, 4, 356, 114], type: 1}
                         ]}
                         height={120}
                     
@@ -76,6 +99,6 @@ export const DetailsScreen:react.FC = () => {
                 
             </div>
         </div>
-        
+        : ""}
     </div>
 }

@@ -3,38 +3,49 @@ import mapboxgl from "mapbox-gl";
 import "mapbox-gl/dist/mapbox-gl.css"; 
 import { InformationAboutCamera } from "../InformationAboutCamera/InformationAboutCamera";
 import { SortWidget } from "../SortWidget/SortWidget";
-// импортируем стили mapbox-gl чтобы карта отображалась коррекно
+
+import axios from "axios";
+import {useDispatch, useSelector} from "react-redux";
+import { getPoints, setActive, setPoints } from "../../store/geoSlice";
 
 function MapboxMap() {
-    // здесь будет хранится инстанс карты после инициализации
+  const dispatch = useDispatch();
+  const points = useSelector(getPoints);
   const [map, setMap] = React.useState<mapboxgl.Map>();
-
+  
   const [isClicked, setIsClicked] = React.useState(false);
-
-  // React ref для хранения ссылки на DOM ноду который будет 
-  // использоваться как обязательный параметр `container` 
-  // при инициализации карты `mapbox-gl`
-  // по-умолчанию будет содержать `null`
-    const mapNode = React.useRef(null);
-
+  const mapNode = React.useRef(null);
+  var mapboxMap = React.useRef<mapboxgl.Map>();
+  
+  console.log(points)
   React.useEffect(() => {
+    
     const node = mapNode.current;
-        // если объект window не найден,
-        // то есть компонент рендерится на сервере
-        // или dom node не инициализирована, то ничего не делаем
     if (typeof window === "undefined" || node === null) return;
-
-    // иначе создаем инстанс карты передавая ему ссылку на DOM ноду
-    // а также accessToken для mapbox
-    const mapboxMap = new mapboxgl.Map({
+    
+    mapboxMap.current = new mapboxgl.Map({
       container: node,
             accessToken: "pk.eyJ1IjoiaWxpYXZhcyIsImEiOiJjazcwdXU0dHkwMGViM21ta3VxaHB2YWNqIn0.yHEDUiatwp4dy4MM3ywnOQ",
             style: "mapbox://styles/iliavas/ckv6rsqn93klj15lheonz10zp",
-      center: [102.023, 55.906],
-      zoom: 9,
+      center: [37.30, 55.70],
+      zoom: 11,
     });
-    mapboxMap.on("load", () => {
-      mapboxMap.addSource('point', {
+    mapboxMap.current.on("load", () => {
+      axios.get("http://127.0.0.1:5000/api/camera").then((e) => {
+    console.log(e)
+    dispatch(setPoints(
+        e.data.map((e:any) => {
+          return {
+            id: e.id,
+            position: [e.position.longitude, e.position.latitude],
+            bboxes: [],
+            image: e.image
+          }
+        })
+      )
+    )
+  })
+      mapboxMap.current!.addSource('point', {
           'type': 'geojson',
           'data': {
             type: "FeatureCollection",
@@ -47,42 +58,103 @@ function MapboxMap() {
                   
                 },
                 properties: []
+              },
+              {
+                type: "Feature",
+                geometry: {
+                  type: "Point",
+                  coordinates: [102.5,56.2],
+                  
+                },
+                id: "012",
+                properties: []
               }
             ]
           }
         });
 
-      mapboxMap.addLayer({
+      mapboxMap.current!.addLayer({
         id: "point",
         type: "circle",
         source: "point",
+        
         paint: {
           "circle-radius": 5,
           "circle-color": "#F36385"
         }
-      })
-      mapboxMap.on("mousemove", "point", () => {
-        mapboxMap.getCanvas().style.cursor = "pointer";
+      });
+      
+      mapboxMap.current!.on("mousemove", "point", () => {
+        mapboxMap.current!.getCanvas().style.cursor = "pointer";
 
       })
-      mapboxMap.on("mouseleave", "point", () => {
-        mapboxMap.getCanvas().style.cursor = "";
+      mapboxMap.current!.on("mouseleave", "point", () => {
+        mapboxMap.current!.getCanvas().style.cursor = "";
       })
-      mapboxMap.on("click", "point", (e) => {
+      mapboxMap.current!.on("click", "point", (e) => {
+        console.log(e.features![0].id)
+        dispatch(setActive({
+          id: e.features![0].id as number
+        }))
         setIsClicked(true);
       })
-    })
+    });
+    
 
-    // и сохраняем созданный объект карты в React.useState
-    setMap(mapboxMap);
+
+    setMap(mapboxMap.current);
     
     
-    // чтобы избежать утечки памяти удаляем инстанс карты
-		// когда компонент будет демонтирован
     return () => {
-      mapboxMap.remove();
+      mapboxMap.current!.remove();
     };
   }, []);
+
+  try {
+    console.log(points)
+    mapboxMap.current!.removeLayer("point");
+    mapboxMap.current!.removeSource("point");
+    mapboxMap.current!.addSource('point', {
+      'type': 'geojson',
+      'data': {
+        type: "FeatureCollection",
+        features: [ 
+          ...points.map((e) => {
+            return {
+              type: "Feature",
+              geometry: {
+                type: "Point",
+                coordinates: e.position
+              },
+              id: e.id.toString(),
+              properties: []
+            } as any
+          }),
+          {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: [101.5,56.2],
+              
+            },
+            properties: []
+          }
+        ]
+      }
+    });
+    mapboxMap.current!.addLayer({
+      id: "point",
+      type: "circle",
+      source: "point",
+      
+      paint: {
+        "circle-radius": 5,
+        "circle-color": "#F36385"
+      }
+    });
+  } catch (e) {
+    console.log(e)
+  }
 
 
   return <div>

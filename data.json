@@ -1,0 +1,114 @@
+[
+  {
+    "model": "backend.Position",
+    "pk": 1,
+    "fields": {
+      "latitude": "55.720913",
+      "longitude": "37.325040"
+    }
+  },
+  {
+    "model": "backend.Position",
+    "pk": 2,
+    "fields": {
+      "latitude": "55.710921",
+      "longitude": "37.313246"
+    }
+  },
+  {
+    "model": "backend.Position",
+    "pk": 3,
+    "fields": {
+      "latitude": "55.707639",
+      "longitude": "37.309488"
+    }
+  },
+  {
+    "model": "backend.Position",
+    "pk": 4,
+    "fields": {
+      "latitude": "55.667558",
+      "longitude": "37.224154"
+    }
+  },
+  {
+    "model": "backend.Position",
+    "pk": 5,
+    "fields": {
+      "latitude": "55.690626",
+      "longitude": "37.254122"
+    }
+  },
+  {
+    "model": "backend.Position",
+    "pk": 6,
+    "fields": {
+      "latitude": "55.683013",
+      "longitude": "37.238515"
+    }
+  },
+  {
+    "model": "backend.Position",
+    "pk": 7,
+    "fields": {
+      "latitude": "55.671528",
+      "longitude": "37.224411"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 1,
+    "fields": {
+      "position": 1,
+      "image": "3+600 ПХ.png"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 2,
+    "fields": {
+      "position": 2,
+      "image": "4+900 ПХ.png"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 3,
+    "fields": {
+      "position": 3,
+      "image": "5+300 ПХ.png"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 4,
+    "fields": {
+      "position": 4,
+      "image": "12+800 ПХ.png"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 5,
+    "fields": {
+      "position": 5,
+      "image": "9+500 ОХ.png"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 6,
+    "fields": {
+      "position": 6,
+      "image": "10+800 ОХ.png"
+    }
+  },
+  {
+    "model": "backend.Camera",
+    "pk": 7,
+    "fields": {
+      "position": 7,
+      "image": "11+800 ОХ.png"
+    }
+  }
+]

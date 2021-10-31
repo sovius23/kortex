@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'frontend',
     "graphql_auth",
     "rest_framework",
-
+    "backend"
 ]
 GRAPHENE = {
     'SCHEMA': 'easyCards.schema.schema',

@@ -1,0 +1,11 @@
+.file-input__input{
+    width: 100%;
+    background-color: white;
+    color: #124971;
+    padding: 20px;
+    border-radius: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
