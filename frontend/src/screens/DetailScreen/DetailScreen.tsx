@@ -15,7 +15,7 @@ export const DetailsScreen:react.FC = () => {
     const points = useSelector(getPoints);
 
     if (points.length == 0) {
-        axios.get("http://127.0.0.1:5000/api/camera").then((e) => {
+        axios.get("https://kortex.herokuapp.com/api/camera").then((e) => {
             console.log(e)
             dispatch(setPoints(
                 e.data.map((e:any) => {
