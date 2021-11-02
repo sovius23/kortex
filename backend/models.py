@@ -8,4 +8,4 @@ class Position(models.Model):
 
 class Camera(models.Model):
     position = models.ForeignKey(Position, on_delete=models.CASCADE)
-    image = models.TextField()
+    image = models.ImageField(null=True)

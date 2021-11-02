@@ -60,7 +60,7 @@
     "pk": 1,
     "fields": {
       "position": 1,
-      "image": "3+600 ПХ.png"
+      "image": "3+600 ПХ.PNG"
     }
   },
   {
@@ -68,7 +68,7 @@
     "pk": 2,
     "fields": {
       "position": 2,
-      "image": "4+900 ПХ.png"
+      "image": "4+900 ПХ.PNG"
     }
   },
   {
@@ -76,7 +76,7 @@
     "pk": 3,
     "fields": {
       "position": 3,
-      "image": "5+300 ПХ.png"
+      "image": "5+300 ПХ.PNG"
     }
   },
   {
@@ -84,7 +84,7 @@
     "pk": 4,
     "fields": {
       "position": 4,
-      "image": "12+800 ПХ.png"
+      "image": "12+800 ПХ.PNG"
     }
   },
   {
@@ -92,7 +92,7 @@
     "pk": 5,
     "fields": {
       "position": 5,
-      "image": "9+500 ОХ.png"
+      "image": "9+500 ОХ.PNG"
     }
   },
   {
@@ -100,7 +100,7 @@
     "pk": 6,
     "fields": {
       "position": 6,
-      "image": "10+800 ОХ.png"
+      "image": "10+800 ОХ.PNG"
     }
   },
   {
@@ -108,7 +108,7 @@
     "pk": 7,
     "fields": {
       "position": 7,
-      "image": "11+800 ОХ.png"
+      "image": "11+800 ОХ.PNG"
     }
   }
 ]

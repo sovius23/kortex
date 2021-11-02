@@ -37,7 +37,7 @@ export const DetailsScreen:react.FC = () => {
         { points.length ?
             <div className="details__content">
         <ImageWithBboxes 
-        src={"/static/images/"+ point.image} 
+        src={point.image} 
         height={300}
         bboxes={[
         ]}
@@ -49,7 +49,7 @@ export const DetailsScreen:react.FC = () => {
                 <div className="changes">
                     <div className="img-with-data">
         <ImageWithBboxes 
-            src={"/static/images/"+ point.image} 
+            src={point.image} 
             bboxes={[
                 
             ]}
@@ -61,7 +61,7 @@ export const DetailsScreen:react.FC = () => {
                     <img src="/static/images/arrow.svg" alt="" />
                     <div className="img-with-data">
                     <ImageWithBboxes 
-                        src={"/static/images/"+ point.image} 
+                        src={point.image} 
                         bboxes={[
                         ]}
                         height={120}

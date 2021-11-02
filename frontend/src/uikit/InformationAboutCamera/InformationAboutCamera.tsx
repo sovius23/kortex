@@ -25,7 +25,7 @@ export const InformationAboutCamera:react.FC<IInfo> = (props) => {
             <div className="main-info-part">
             <span>Ул. Березина дом 3</span>
 
-                <img src={"/static/images/"+active?.image} alt=""  width={300}/>
+                <img src={active?.image} alt=""  width={300}/>
                 <span>Поврежденная дорога</span>
                 <Button text="Добавить в избранное"></Button>
                 <Button text="Подробная информация" onClick={() => {

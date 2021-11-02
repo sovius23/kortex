@@ -11,7 +11,7 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
-
+CORS_ALLOW_ALL_ORIGINS = True
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -71,12 +71,12 @@ GCS_PROJECT = "My First Project"
 from google.oauth2 import service_account
 
 GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "./client-secret.json"
+    "./client_secret.json"
 )
 
 
 
-CORS_ORIGIN_ALLOW_ALL = False
+CORS_ORIGIN_ALLOW_ALL = True
 
 CORS_ORIGIN_WHITELIST = (
     'localhost:3000',
@@ -198,7 +198,7 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/2.0/howto/static-files/
 MEDIA_URL = "/media/"
-
+MEDIA_ROOT = "/media"
 STATIC_ROOT = os.path.join(BASE_DIR, "frontend", "static")
 
 STATIC_URL = '/static/'
