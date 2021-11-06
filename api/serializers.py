@@ -17,6 +17,8 @@ class CameraSerializer(ModelSerializer):
 
 
 class FavoriteSerializer(ModelSerializer):
+    camera=CameraSerializer()
+
     class Meta:
         model = Favorites
         fields = ["name", "camera"]
