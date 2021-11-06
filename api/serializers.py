@@ -1,5 +1,5 @@
 from rest_framework.serializers import ModelSerializer
-from backend.models import Position, Camera
+from backend.models import Position, Camera, Favorites
 
 
 class PositionSerializer(ModelSerializer):
@@ -14,3 +14,9 @@ class CameraSerializer(ModelSerializer):
     class Meta:
         model = Camera
         fields = ["image", "position", "id"]
+
+
+class FavoriteSerializer(ModelSerializer):
+    class Meta:
+        model = Favorites
+        fields = ["name", "camera"]
