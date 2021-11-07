@@ -15,13 +15,8 @@ export const ImageWithBboxes:react.FC<IImageWithBboxes> = (props) => {
     
     var [values, setValues] = useState([<div></div>]);
     const img = useRef(null)
-    useEffect(() => {
-        setTimeout(() => {
-        
-        }, 500)
-        
 
-    }, [img]);
+    
     
     return <div className="img-with-bb__container" style={{height: props.height || 300}}>
         {
@@ -33,10 +28,10 @@ export const ImageWithBboxes:react.FC<IImageWithBboxes> = (props) => {
                 return <Bbox
                     bbox={
                         [
-                            e.bbox[0] * ( box.width / (img.current! as any).naturalWidth),
-                            e.bbox[1] * ( box.height /(img.current! as any).naturalHeight),
-                            e.bbox[2] * ( box.width / (img.current! as any).naturalWidth),
-                            e.bbox[3] * ( box.height / (img.current! as any).naturalHeight)
+                            e.bbox[1] * ( box.width / (img.current! as any).naturalWidth),
+                            e.bbox[0] * ( box.height /(img.current! as any).naturalHeight),
+                            e.bbox[3] * ( box.width / (img.current! as any).naturalWidth),
+                            e.bbox[2] * ( box.height / (img.current! as any).naturalHeight)
                         
                         ]
                     }
@@ -61,12 +56,12 @@ interface IBBox{
 }
 
 const Bbox:react.FC<IBBox> = (props) => {
-    console.log(props.bbox[0] + props.img_cords[0], props)
+    console.log(props.bbox, props)
     return <div className="bbox__container"
      style={{
             position: 'absolute',
-            top: (props.bbox[0] + props.img_cords[0]).toString() + "px", 
-            left: (props.bbox[1] + props.img_cords[1]).toString() + "px", 
+            top: (props.bbox[1] + props.img_cords[0]).toString() + "px", 
+            left: (props.bbox[0] ).toString() + "px", 
             width: (props.bbox[2] - props.bbox[0]).toString() + "px",
             height: (props.bbox[3] - props.bbox[1]).toString() + "px",
             backgroundColor: "#F5433838",

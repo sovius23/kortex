@@ -4,6 +4,7 @@ import { useHistory } from "react-router";
 import cross from "../../images/cross.svg";
 import { getActive, setActive } from "../../store/geoSlice";
 import { Button } from "../Button/Button";
+import { ImageWithBboxes } from "../ImageWithBBoxes/ImageWithBBoxes";
 import "./style.css";
 
 interface IInfo{
@@ -14,9 +15,7 @@ export const InformationAboutCamera:react.FC<IInfo> = (props) => {
     const history = useHistory();
 
     const active = useSelector(getActive);
-    
     console.log(active)
-
     return <div className="info-about-cam__container">
         <div className="cross__paddings">
             <div className="cross__area" onClick={props.onCross}>
@@ -25,7 +24,7 @@ export const InformationAboutCamera:react.FC<IInfo> = (props) => {
             <div className="main-info-part">
             <span>Ул. Березина дом 3</span>
 
-                <img src={active?.image} alt=""  width={300}/>
+                <ImageWithBboxes src={active!.image} bboxes={active!.bboxes!}/>
                 <span>Поврежденная дорога</span>
                 <Button text="Добавить в избранное"></Button>
                 <Button text="Подробная информация" onClick={() => {

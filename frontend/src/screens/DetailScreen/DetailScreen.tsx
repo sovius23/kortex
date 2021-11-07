@@ -15,14 +15,16 @@ export const DetailsScreen:react.FC = () => {
     const points = useSelector(getPoints);
 
     if (points.length == 0) {
-        axios.get("https://kortex.herokuapp.com/api/camera").then((e) => {
+        axios.get("http://127.0.0.1:5000/api/camera").then((e) => {
             console.log(e)
             dispatch(setPoints(
                 e.data.map((e:any) => {
                   return {
                     id: e.id,
                     position: [e.position.longitude, e.position.latitude],
-                    bboxes: [],
+                    bboxes: [
+                       
+                    ],
                     image: e.image
                   }
                 })
@@ -37,9 +39,11 @@ export const DetailsScreen:react.FC = () => {
         { points.length ?
             <div className="details__content">
         <ImageWithBboxes 
+        height = {300}
         src={point.image} 
-        height={300}
         bboxes={[
+            /* [994, 503, 664, 1147] */
+            {'bbox': [375, 739, 643, 853], 'type': 8}
         ]}
         
         ></ImageWithBboxes>

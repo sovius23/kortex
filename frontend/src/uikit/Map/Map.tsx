@@ -6,7 +6,115 @@ import { SortWidget } from "../SortWidget/SortWidget";
 
 import axios from "axios";
 import {useDispatch, useSelector} from "react-redux";
-import { getPoints, setActive, setPoints } from "../../store/geoSlice";
+import { getPoints, Point, setActive, setPoints } from "../../store/geoSlice";
+import { clear } from "console";
+
+
+function initMap(mapboxMap:mapboxgl.Map, onPointClick:Function) {
+  mapboxMap.on("mousemove", "point", () => {
+    mapboxMap.getCanvas().style.cursor = "pointer";
+
+  })
+  mapboxMap.on("mouseleave", "point", () => {
+    mapboxMap.getCanvas().style.cursor = "";
+  })
+  mapboxMap!.on("click", "point", (e) => {
+    onPointClick(e)
+  })
+  mapboxMap.loadImage("/static/images/disable_pin.png", (err, image) => {
+    mapboxMap.addImage("disable_point", image!);
+  })
+
+  const layers = mapboxMap.getStyle().layers;
+  const labelLayerId = layers!.find(
+    (layer) => layer.type === 'symbol' && layer!.layout!['text-field']
+  )!.id;
+ 
+// The 'building' layer in the Mapbox Streets
+// vector tileset contains building height data
+// from OpenStreetMap.
+mapboxMap.addLayer(
+  {
+    'id': 'add-3d-buildings',
+    'source': 'composite',
+    'source-layer': 'building',
+    'filter': ['==', 'extrude', 'true'],
+    'type': 'fill-extrusion',
+    'minzoom': 15,
+    'paint': {
+      'fill-extrusion-color': '#aaa',
+            'fill-extrusion-height': [
+              'interpolate',
+              ['linear'],
+              ['zoom'],
+              15,
+              0,
+              15.05,
+              ['get', 'height']
+            ],
+            'fill-extrusion-base': [
+            'interpolate',
+            ['linear'],
+            ['zoom'],
+            15,
+            0,
+            15.05,
+            ['get', 'min_height']
+          ],
+          'fill-extrusion-opacity': 0.6
+        }
+      },
+    labelLayerId
+  );
+}
+
+
+function loadPointsToMap(mapboxMap:mapboxgl.Map, points: Point[]) {
+
+  mapboxMap!.addSource('point', {
+    'type': 'geojson',
+    'data': {
+      type: "FeatureCollection",
+      features: [ 
+        ...points.map((e) => {
+          return {
+            type: "Feature",
+            geometry: {
+              type: "Point",
+              coordinates: e.position
+            },
+            id: e.id.toString(),
+            properties: []
+          } as any
+        }),
+        {
+          type: "Feature",
+          geometry: {
+            type: "Point",
+            coordinates: [101.5,56.2],
+            
+          },
+          properties: []
+        }
+      ]
+    }
+  });
+  mapboxMap.addLayer({
+    id: "point",
+    type: "circle",
+    source: "point",
+    paint: {
+      "circle-radius": 5,
+      "circle-color": "#F36385"
+    }
+  });
+}
+
+function clearMap(mapboxMap:mapboxgl.Map) {
+  mapboxMap.removeLayer("point");
+  mapboxMap.removeSource("point");
+}
+
 
 function MapboxMap() {
   const dispatch = useDispatch();
@@ -17,7 +125,6 @@ function MapboxMap() {
   const mapNode = React.useRef(null);
   var mapboxMap = React.useRef<mapboxgl.Map>();
   
-  console.log(points)
   React.useEffect(() => {
     
     const node = mapNode.current;
@@ -31,73 +138,26 @@ function MapboxMap() {
       zoom: 11,
     });
     mapboxMap.current.on("load", () => {
-      axios.get("https://kortex.herokuapp.com/api/camera").then((e) => {
-    console.log(e)
-    dispatch(setPoints(
-        e.data.map((e:any) => {
-          return {
-            id: e.id,
-            position: [e.position.longitude, e.position.latitude],
-            bboxes: [],
-            image: e.image
-          }
-        })
-      )
-    )
-  })
-      mapboxMap.current!.addSource('point', {
-          'type': 'geojson',
-          'data': {
-            type: "FeatureCollection",
-            features: [ 
-              {
-                type: "Feature",
-                geometry: {
-                  type: "Point",
-                  coordinates: [101.5,56.2],
-                  
-                },
-                properties: []
-              },
-              {
-                type: "Feature",
-                geometry: {
-                  type: "Point",
-                  coordinates: [102.5,56.2],
-                  
-                },
-                id: "012",
-                properties: []
+      axios.get("http://127.0.0.1:5000/api/camera").then((e) => {
+        dispatch(setPoints(
+          e.data.map((e:any) => {
+            return {
+              id: e.id,
+              position: [e.position.longitude, e.position.latitude],
+              bboxes: [],
+              image: e.image
               }
-            ]
-          }
-        });
-
-      mapboxMap.current!.addLayer({
-        id: "point",
-        type: "circle",
-        source: "point",
-        
-        paint: {
-          "circle-radius": 5,
-          "circle-color": "#F36385"
-        }
-      });
-      
-      mapboxMap.current!.on("mousemove", "point", () => {
-        mapboxMap.current!.getCanvas().style.cursor = "pointer";
-
+            })
+          )
+        )
       })
-      mapboxMap.current!.on("mouseleave", "point", () => {
-        mapboxMap.current!.getCanvas().style.cursor = "";
-      })
-      mapboxMap.current!.on("click", "point", (e) => {
-        console.log(e.features![0].id)
+      initMap(mapboxMap.current!, (e:mapboxgl.EventData) => {
         dispatch(setActive({
           id: e.features![0].id as number
         }))
         setIsClicked(true);
       })
+      loadPointsToMap(mapboxMap.current!, [])
     });
     
 
@@ -111,49 +171,10 @@ function MapboxMap() {
   }, []);
 
   try {
-    console.log(points)
-    mapboxMap.current!.removeLayer("point");
-    mapboxMap.current!.removeSource("point");
-    mapboxMap.current!.addSource('point', {
-      'type': 'geojson',
-      'data': {
-        type: "FeatureCollection",
-        features: [ 
-          ...points.map((e) => {
-            return {
-              type: "Feature",
-              geometry: {
-                type: "Point",
-                coordinates: e.position
-              },
-              id: e.id.toString(),
-              properties: []
-            } as any
-          }),
-          {
-            type: "Feature",
-            geometry: {
-              type: "Point",
-              coordinates: [101.5,56.2],
-              
-            },
-            properties: []
-          }
-        ]
-      }
-    });
-    mapboxMap.current!.addLayer({
-      id: "point",
-      type: "circle",
-      source: "point",
-      
-      paint: {
-        "circle-radius": 5,
-        "circle-color": "#F36385"
-      }
-    });
+    clearMap(mapboxMap.current!)
+    
+    loadPointsToMap(mapboxMap.current!, points);
   } catch (e) {
-    console.log(e)
   }
 
 
