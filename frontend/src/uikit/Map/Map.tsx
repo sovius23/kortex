@@ -138,7 +138,7 @@ function MapboxMap() {
       zoom: 11,
     });
     mapboxMap.current.on("load", () => {
-      axios.get("http://127.0.0.1:5000/api/camera").then((e) => {
+      axios.get("https://kortex.herokuapp.com/api/camera").then((e) => {
         dispatch(setPoints(
           e.data.map((e:any) => {
             return {
