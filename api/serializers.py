@@ -26,11 +26,14 @@ class FavoriteSerializer(ModelSerializer):
 class ProfileSerializer(ModelSerializer):
     class Meta:
         model = Profile
-        fields = ["id", "name", "surname", "midname", "photo", "email", "user", "tel"]
+        fields = ["id", "name", "surname", "midname", "photo", "email", "tel"]
 
 
 class UserSerializer(ModelSerializer):
+
     class Meta:
         model = User
-        write_only_fields = ('password')
-        read_only_fields = ('profile_set')
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'profile_set': {'read_only': True}
+        }

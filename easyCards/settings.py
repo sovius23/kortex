@@ -11,6 +11,9 @@ https://docs.djangoproject.com/en/2.0/ref/settings/
 """
 
 import os
+from datetime import timedelta
+
+
 CORS_ALLOW_ALL_ORIGINS = True
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -136,12 +139,12 @@ WSGI_APPLICATION = 'easyCards.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'maibase',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'pybase',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': '127.0.0.1',
-        'PORT': '5432',
+        'PORT': '3306',
     }
 }
 
@@ -231,4 +234,8 @@ REST_FRAMEWORK = {
         'rest_framework.authentication.SessionAuthentication',
         'rest_framework.authentication.BasicAuthentication',
     ),
+}
+
+JWT_AUTH = {
+    'JWT_EXPIRATION_DELTA': timedelta(days=1),
 }

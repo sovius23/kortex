@@ -21,17 +21,18 @@ class Favorites(models.Model):
 
 class Profile(models.Model):
     name = models.TextField()
-    surname = models.TextField(default="")
+    surname = models.TextField()
     midname = models.TextField(default="")
-    photo = models.ImageField(default="")
+    photo = models.ImageField(null=True)
     email = models.EmailField(max_length=254)
-    user = models.ForeignKey(User, on_delete=models.CASCADE,default="")
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     tel = PhoneNumberField()
 
 
 def createProfile(sender, **kwargs):
     if kwargs["created"]:
-        user_profile = Profile.objects.create(kwargs["instance"])
+        instance = kwargs["instance"]
+        Profile.objects.create(name=kwargs["instance"], user=kwargs["instance"])
 
 
 post_save.connect(createProfile, sender=User)
