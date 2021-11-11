@@ -25,7 +25,8 @@ export const DetailsScreen:react.FC = () => {
                     bboxes: [
                        
                     ],
-                    image: e.image
+                    image: e.image,
+                    name: e.name
                   }
                 })
               )

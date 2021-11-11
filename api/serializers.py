@@ -14,7 +14,7 @@ class CameraSerializer(ModelSerializer):
 
     class Meta:
         model = Camera
-        fields = ["image", "position", "id"]
+        fields = ["image", "position", "id", "name"]
 
 
 class FavoriteSerializer(ModelSerializer):

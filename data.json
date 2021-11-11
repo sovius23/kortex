@@ -60,7 +60,8 @@
     "pk": 1,
     "fields": {
       "position": 1,
-      "image": "3+600 ПХ.PNG"
+      "image": "3+600 ПХ.PNG",
+      "name": "3+600 ПХ"
     }
   },
   {
@@ -68,7 +69,8 @@
     "pk": 2,
     "fields": {
       "position": 2,
-      "image": "4+900 ПХ.PNG"
+      "image": "4+900 ПХ.PNG",
+      "name": "4+900 ПХ"
     }
   },
   {
@@ -76,7 +78,8 @@
     "pk": 3,
     "fields": {
       "position": 3,
-      "image": "5+300 ПХ.PNG"
+      "image": "5+300 ПХ.PNG",
+      "name": "5+300 ПХ"
     }
   },
   {
@@ -84,7 +87,8 @@
     "pk": 4,
     "fields": {
       "position": 4,
-      "image": "12+800 ПХ.PNG"
+      "image": "12+800 ПХ.PNG",
+      "name": "12+800 ПХ"
     }
   },
   {
@@ -92,7 +96,8 @@
     "pk": 5,
     "fields": {
       "position": 5,
-      "image": "9+500 ОХ.PNG"
+      "image": "9+500 ОХ.PNG",
+      "name": "9+500 ОХ"
     }
   },
   {
@@ -100,7 +105,8 @@
     "pk": 6,
     "fields": {
       "position": 6,
-      "image": "10+800 ОХ.PNG"
+      "image": "10+800 ОХ.PNG",
+      "name": "10+800 ОХ"
     }
   },
   {
@@ -108,7 +114,8 @@
     "pk": 7,
     "fields": {
       "position": 7,
-      "image": "11+800 ОХ.PNG"
+      "image": "11+800 ОХ.PNG",
+      "name": "11+800 ОХ"
     }
   }
 ]

@@ -8,7 +8,8 @@ export interface Point{
     bboxes: {
         type: number,
         bbox: number[]
-    }[]
+    }[],
+    name: string;
 }
 
 interface IGeoSlice{

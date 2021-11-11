@@ -11,6 +11,7 @@ class Position(models.Model):
 class Camera(models.Model):
     position = models.ForeignKey(Position, on_delete=models.CASCADE)
     image = models.ImageField(null=True)
+    name = models.TextField(null=True)
 
 
 class Favorites(models.Model):
