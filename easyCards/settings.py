@@ -62,7 +62,7 @@ INSTALLED_APPS = [
     "backend",
     "storages",
     "storage",
-    'phonenumber_field',
+    #'phonenumber_field',
     'rest_framework_jwt',
     'rest_framework.authtoken',
 ]
@@ -134,13 +134,9 @@ WSGI_APPLICATION = 'easyCards.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'pybase',
-        'USER': 'root',
-        'PASSWORD': 'root',
-        'HOST': '127.0.0.1',
-        'PORT': '3306',
+    "default": {
+        "ENGINE": "django.db.backends.sqlite3",
+        "NAME": str(BASE_DIR + "/" + "db.sqlite3"),
     }
 }
 

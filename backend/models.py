@@ -1,5 +1,4 @@
 from django.db import models
-from phonenumber_field.modelfields import PhoneNumberField
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 
@@ -26,7 +25,7 @@ class Profile(models.Model):
     photo = models.ImageField(null=True)
     email = models.EmailField(max_length=254)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
-    tel = PhoneNumberField()
+    tel = models.TextField()
 
 
 def createProfile(sender, **kwargs):
