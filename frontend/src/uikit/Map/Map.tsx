@@ -145,7 +145,8 @@ function MapboxMap() {
               id: e.id,
               position: [e.position.longitude, e.position.latitude],
               bboxes: [],
-              image: e.image
+              image: e.image,
+              name: e.name
               }
             })
           )

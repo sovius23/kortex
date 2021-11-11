@@ -22,9 +22,7 @@ export const DetailsScreen:react.FC = () => {
                   return {
                     id: e.id,
                     position: [e.position.longitude, e.position.latitude],
-                    bboxes: [
-                       
-                    ],
+                    bboxes: [],
                     image: e.image,
                     name: e.name
                   }
@@ -50,7 +48,7 @@ export const DetailsScreen:react.FC = () => {
         ></ImageWithBboxes>
             <div className="info__content">
                 <div className="info-header">Объект: {
-                    point.image.split("/").reverse()[0]
+                    point.name
                 }</div>
                 <div className="address">Адрес: Северный объезд Одинцова</div>
                 <div className="changes">
