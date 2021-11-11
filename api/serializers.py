@@ -1,5 +1,6 @@
 from rest_framework.serializers import ModelSerializer
-from backend.models import Position, Camera, Favorites
+from backend.models import Position, Camera, Favorites, Profile
+from django.contrib.auth.models import User
 
 
 class PositionSerializer(ModelSerializer):
@@ -17,7 +18,22 @@ class CameraSerializer(ModelSerializer):
 
 
 class FavoriteSerializer(ModelSerializer):
-
     class Meta:
         model = Favorites
         fields = ["name", "camera", "id"]
+
+
+class ProfileSerializer(ModelSerializer):
+    class Meta:
+        model = Profile
+        fields = ["id", "name", "surname", "midname", "photo", "email", "tel"]
+
+
+class UserSerializer(ModelSerializer):
+
+    class Meta:
+        model = User
+        extra_kwargs = {
+            'password': {'write_only': True},
+            'profile_set': {'read_only': True}
+        }

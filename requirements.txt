@@ -19,6 +19,8 @@ django-storages==1.11.1
 django-taggit==1.4.0
 django-webpack-loader==1.1.0
 djangorestframework==3.12.4
+djangorestframework-jwt==1.11.0
+django-phonenumber-field==5.2.0
 Flask==1.1.2
 google-api-core==1.30.0
 google-auth==1.32.0
