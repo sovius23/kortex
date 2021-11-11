@@ -64,7 +64,6 @@ INSTALLED_APPS = [
     "storage",
     'phonenumber_field',
     'rest_framework_jwt',
-    'rest_framework_jwt.blacklist',
     'rest_framework.authtoken',
 ]
 GRAPHENE = {
@@ -76,15 +75,12 @@ GRAPHENE = {
 
 STATIC_URL = "/static/"
 GCS_PROJECT = "My First Project"
-from google.oauth2 import service_account
 AWS_SECRET_ACCESS_KEY = "FhpWE6iIruKGom-c7-Au4Rz-CrRxp5W4kvxYzTEu"
 AWS_ACCESS_KEY_ID = "MviWvlu4HpNY9zTwHNek"
 DEFAULT_FILE_STORAGE = 'storages.backends.s3boto3.S3Boto3Storage'
 AWS_S3_ENDPOINT_URL = "https://storage.yandexcloud.net"
 AWS_STORAGE_BUCKET_NAME = "kortex1"
-GS_CREDENTIALS = service_account.Credentials.from_service_account_file(
-    "./client_secret.json"
-)
+
 
 
 
