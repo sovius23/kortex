@@ -49,7 +49,7 @@ export const Sidebar:react.FC = () => {
             }
         },
         {
-            img: "/static/images/cam.svg",
+            img: "/static/images/kopter.svg",
             text: "Загрузить видео",
             onClick: () => {
                 history.push("/index/video-upload")

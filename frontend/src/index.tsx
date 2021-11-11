@@ -9,8 +9,6 @@ import {ApolloProvider} from "@apollo/client";
 ReactDOM.render(
   <ApolloProvider client={client}>
       <App></App>
-  </ApolloProvider>
-  
-    ,
+  </ApolloProvider>,
   document.getElementById('root')
 );

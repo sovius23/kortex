@@ -49,7 +49,7 @@ export const DetailsScreen:react.FC = () => {
         ></ImageWithBboxes>
             <div className="info__content">
                 <div className="info-header">Объект: Камера №12141234</div>
-                <div className="address">Адрес: ул. Колмогорова 45</div>
+                <div className="address">Адрес: Северный объезд Одинцова</div>
                 <div className="changes">
                     <div className="img-with-data">
         <ImageWithBboxes 

@@ -22,10 +22,15 @@ export const InformationAboutCamera:react.FC<IInfo> = (props) => {
                 <img src={"/static/images/cross.svg"} alt="" />
             </div>
             <div className="main-info-part">
-            <span>Ул. Березина дом 3</span>
+            <span>Северный объезд Одинцова</span>
 
-                <ImageWithBboxes src={active!.image} bboxes={active!.bboxes!}/>
-                <span>Поврежденная дорога</span>
+                <ImageWithBboxes src={active!.image} bboxes={active!.bboxes!} height={187}/>
+                <span>
+                    {
+                        active?.bboxes.length ?
+                        "Поврежденная дорога": "Дорога не повреждена"
+                    }
+                </span>
                 <Button text="Добавить в избранное"></Button>
                 <Button text="Подробная информация" onClick={() => {
                     history.push(`/index/${active!.id}/details`);
