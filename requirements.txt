@@ -126,7 +126,6 @@ prometheus-client==0.11.0
 promise==2.3
 prompt-toolkit==3.0.19
 protobuf==3.17.3
-psycopg2==2.8.6
 PuLP==2.4
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
