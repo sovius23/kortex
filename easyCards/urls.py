@@ -15,7 +15,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include, re_path
-
+from rest_framework_jwt.views import obtain_jwt_token
 from graphene_django.views import GraphQLView
 from django.views.decorators.csrf import csrf_exempt
 from graphene_file_upload.django import FileUploadGraphQLView
@@ -26,5 +26,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     re_path("index/*", include("frontend.urls")),
     path("login", include("frontend.urls")),
-    path("api/", include(urls))
+    path("api/", include(urls)),
+    path("api-token-auth", obtain_jwt_token)
 ]
