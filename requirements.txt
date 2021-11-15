@@ -171,3 +171,4 @@ whitenoise==5.2.0
 wrapt==1.12.1
 XlsxWriter==1.4.4
 zope.interface==5.4.0
+psycopg2
