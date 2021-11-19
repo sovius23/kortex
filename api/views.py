@@ -2,8 +2,11 @@ from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView
 from .serializers import CameraSerializer, FavoriteSerializer, ProfileSerializer
 from backend.models import Camera, Favorites, Profile
-from rest_framework.response import Response
-from rest_framework import permissions
+from django.http import HttpResponse, FileResponse
+import os
+
+
+from .service import report_handler
 
 
 class GetCameras(ListAPIView):
@@ -43,3 +46,15 @@ class ProfileDetails(RetrieveUpdateAPIView):
 #             "tel": request.user.profile_set.get().tel,
 #         }
 #         return Response(result)
+
+
+class CreateReport(APIView):
+
+    def post(self, request):
+        report_handler(request)
+        with open("gen.docx", 'rb') as report:
+            response = HttpResponse(FileResponse(report),
+                                    content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+            response['Content-Disposition'] = 'attachment; filename=report.docx'
+            os.remove("gen.docx")
+            return response
