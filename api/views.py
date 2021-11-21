@@ -1,12 +1,13 @@
+from requests import Response
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView
-from .serializers import CameraSerializer, FavoriteSerializer, ProfileSerializer
-from backend.models import Camera, Favorites, Profile
+from .serializers import CameraSerializer, FavoriteSerializer, ProfileSerializer, HistorySerializer
+from backend.models import Camera, Favorites, Profile, History
 from django.http import HttpResponse, FileResponse
 import os
+from django.core.files import File
 
-
-from .service import report_handler
+from api.service.report_handler import report_handler
 
 
 class GetCameras(ListAPIView):
@@ -49,12 +50,19 @@ class ProfileDetails(RetrieveUpdateAPIView):
 
 
 class CreateReport(APIView):
-
     def post(self, request):
-        report_handler(request)
-        with open("gen.docx", 'rb') as report:
-            response = HttpResponse(FileResponse(report),
-                                    content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
-            response['Content-Disposition'] = 'attachment; filename=report.docx'
-            os.remove("gen.docx")
-            return response
+        doc = report_handler(request)
+        doc.save("Report.docx")
+        try:
+            with open("Report.docx", 'rb') as report:
+                History.objects.create(file=File(report))
+                q=History.objects.latest("id").id
+                print(q)
+                # в одном with-open не выходит
+            with open("Report.docx", 'rb') as report:
+                response = HttpResponse(FileResponse(report),
+                                        content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+                response['Content-Disposition'] = 'attachment; filename=report.docx'
+                return response
+        finally:
+            os.remove("Report.docx")

@@ -145,12 +145,12 @@ WSGI_APPLICATION = 'easyCards.wsgi.application'
 # https://docs.djangoproject.com/en/2.0/ref/settings/#databases
 DATABASES = {
     "default": {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'ENGINE': 'django.db.backends.mysql',
         'NAME': 'pybase',
-        'USER': 'postgres',
-        'PASSWORD': 'admin',
+        'USER': 'root',
+        'PASSWORD': 'root',
         'HOST': 'localhost',
-        'PORT': '5432',
+        'PORT': '3306',
     }
 }
 
