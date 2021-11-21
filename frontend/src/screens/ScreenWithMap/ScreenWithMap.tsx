@@ -1,5 +1,7 @@
-import react from "react";
+import react, { useState } from "react";
 import { Route, Switch } from "react-router-dom";
+import { AppBar } from "../../uikit/AppBar/AppBar";
+import { Drawer } from "../../uikit/Drawer/Drawer";
 import MapboxMap from "../../uikit/Map/Map";
 import { Sidebar } from "../../uikit/Sidebar/Sidebar";
 import { DetailsScreen } from "../DetailScreen/DetailScreen";
@@ -10,8 +12,16 @@ import { VideoUploadScreen } from "../VideoUploadScreen/VideoUploadScreen";
 import "./style.css";
 
 export const ScreenWithMap:react.FC = () => {
+
+    const [menuElapsed, setMenuElapsed] = useState(false);
+
     return <div className="screen-with-map__container">
-        <Sidebar></Sidebar>
+        <AppBar onMenuClicked={() => {setMenuElapsed(!menuElapsed)}}>
+        </AppBar>
+        
+        <Drawer opened={menuElapsed}/>
+
+
         <Switch>
             <Route path="/index/:id/details">
                 <DetailsScreen></DetailsScreen>

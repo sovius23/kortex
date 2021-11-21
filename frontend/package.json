@@ -5,9 +5,12 @@
   "dependencies": {
     "@apollo/client": "^3.3.13",
     "@babel/plugin-transform-typescript": "^7.14.6",
+    "@emotion/react": "^11.6.0",
     "@graphql-codegen/introspection": "^1.18.1",
     "@graphql-codegen/typescript-operations": "^1.17.15",
     "@graphql-codegen/typescript-react-apollo": "^2.2.3",
+    "@mui/icons-material": "^5.1.1",
+    "@mui/material": "^5.1.1",
     "@reduxjs/toolkit": "^1.6.2",
     "@testing-library/jest-dom": "^5.11.9",
     "@testing-library/react": "^11.2.5",

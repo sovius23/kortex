@@ -13,6 +13,7 @@
     display: flex;
     gap: 30px;
     padding: 20px;
+    margin-left: 80px;
 }
 .map__info{
     display: flex;
