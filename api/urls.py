@@ -7,5 +7,6 @@ urlpatterns = [
     path("favorite/<pk>", SetFavorites.as_view()),
     path("profile_details/<pk>", ProfileDetails.as_view()),
     path("create_report",CreateReport.as_view()),
+    path("download_report/<id>", CreateReport.get_report),
 
 ]

@@ -35,5 +35,5 @@ post_save.connect(create_profile, sender=User)
 
 
 class History(models.Model):
-    date = models.DateTimeField(auto_now=True)
+    date = models.DateTimeField(auto_now_add=True)
     file = models.FileField( null=True, blank=True)

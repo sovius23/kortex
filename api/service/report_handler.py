@@ -1,10 +1,15 @@
+import json
+import os
+
+from django.core.files import File
+from django.http import HttpResponse, FileResponse
+
 from docx.enum.text import WD_BREAK
 from docxcompose.composer import Composer
 from docxtpl import DocxTemplate
-import json
 
 
-def report_handler(request):
+def report_handler(request, Model):
     table_dict = {
         "earth_canvas": {
             "Земляное полотно, полоса отвода": {"deformations": "Отдельные повреждения (деформации и разрушения)",
@@ -104,27 +109,40 @@ def report_handler(request):
         }
         },
     }
-    filepath = 'api/src/docs/DeformationReportMain.docx'
+    filepath = 'media/DeformationReportMain.docx'
     main_doc = DocxTemplate(filepath)
 
     json_from_post = json.loads(request.POST["post"])
     plots = json_from_post["plots"][0]
 
     main_table(json_from_post, main_doc.tables[0])
+
     for table_name, defect_and_info in plots.items():
         if isinstance(defect_and_info, dict):
             for table in main_doc.tables[1:]:
                 if table.rows[0].cells[0].text.strip() == json_to_rus(table_name, table_dict):
-                    for rows in table.rows[2:]:
-                        for defect, info in defect_and_info.items():
-                            if rows.cells[0].text.strip() == json_to_rus(defect, table_dict):
-                                rows.cells[2].text = info["date"]
-                                rows.cells[3].text = str(info["number_of_annix"])
-                                rows.cells[4].text = "Обнаружено"
+                    if len(table.rows) > 3:
+                        for rows in table.rows[2:]:
+                            for defect, info in defect_and_info.items():
+                                if rows.cells[0].text.strip() == json_to_rus(defect, table_dict):
+                                    rows.cells[2].text = info["date"]
+                                    rows.cells[3].text = str(info["number_of_annix"])
+                                    rows.cells[4].text = "Обнаружено"
+                    else:
+                        table.rows[2].cells[2].text = defect_and_info["date"]
+                        table.rows[2].cells[3].text = str(defect_and_info["number_of_annix"])
+                        table.rows[2].cells[4].text = "Обнаружено"
 
     delete_empty_fields(main_doc.tables)
-    context = {'num': "7", "city": json_from_post['city'], "time": json_from_post['time'],
-               "date": json_from_post['date'], "whos": json_from_post['whos']}
+    report_num = Model.objects.latest("id").id
+    context = {"report_num": report_num,
+               "city": json_from_post['city'],
+               "time": json_from_post['time'],
+               "date": json_from_post['date'],
+               "whos": json_from_post['whos'],
+               "road_name": json_from_post['city'],
+               "season": "Лето",
+               "adress": json_from_post['city']}
     main_doc.render(context)
     add_page_break(main_doc)
     delete_empty_fields(main_doc.tables)
@@ -163,7 +181,23 @@ def json_to_rus(json, table_dict):
 
 def add_page_break(main_doc):
     for par in main_doc.paragraphs:
-        if "Таблица по объекту" in par.text:
-            br = par.insert_paragraph_before(" ")
+        if par.text.find("Таблица по объекту №")>-1:
+            q=par.text.find("Таблица по объекту №")
+            br = par.insert_paragraph_before("")
             run = br.add_run()
             run.add_break(WD_BREAK.PAGE)
+
+
+def report_to_save(Model, name):
+    with open(name, 'rb') as report:
+        Model.objects.create(file=File(report))
+        # в одном with-open не выходит
+    with open(name, 'rb') as report:
+        return file_response(report)
+
+
+def file_response(file):
+    response = HttpResponse(FileResponse(file),
+                            content_type='application/vnd.openxmlformats-officedocument.wordprocessingml.document')
+    response['Content-Disposition'] = 'attachment; filename=' + file.name
+    return response
