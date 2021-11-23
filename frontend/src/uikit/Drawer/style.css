@@ -1,0 +1,22 @@
+.css-oyvf4u{
+    margin-top: 64px!important;
+    padding-top: 12px;
+    background-color: #299FF4!important;
+    z-index: 1000!important;
+    display: flex!important;
+    height: calc(98vh - 64px)!important;
+    justify-content: space-between;
+    padding-top: 16px;
+    padding-bottom: 16px;
+}
+
+.drawer__container{
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.drawer-container__bottom{
+    display: flex;
+    flex-direction: column;
+}

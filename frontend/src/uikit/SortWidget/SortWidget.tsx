@@ -2,15 +2,18 @@ import react, { useState } from "react";
 import { CheckBox } from "../Checkbox/Checkbox";
 import { Input } from "../Input/Input";
 
+import {IconButton} from "@mui/material";
+
 import "./style.css";
 
 export const SortWidget:react.FC = () => {
     const [isClosed, setIsClosed] = useState(false);
 
     return <div className="sort-widget__public-container">
-        <div className="circle" onClick={() => {
+        <IconButton style={{background: "#299FF4"}} className="circle" onClick={() => {
             setIsClosed(!isClosed);
         }}>
+            
             <img 
                 src="/static/images/arrow.svg" 
                 alt="" 
@@ -18,7 +21,8 @@ export const SortWidget:react.FC = () => {
                 style={{cursor: "pointer"}}
                 className = {isClosed ? "disabled" : ""} 
             />
-        </div>
+            
+        </IconButton>
         <div className={"sort-widget__container " + (isClosed ? "hid" : "")}>
             <Input placeholder="Место..." icon="/static/images/search.svg"></Input>
             <div className="analyse__info">Анализ дороги</div>

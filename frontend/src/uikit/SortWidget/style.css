@@ -1,7 +1,7 @@
 .sort-widget__public-container{
     position: absolute;
-    top: 30px;
-    left: 100px;
+    top: 80px;
+    left: 80px;
     z-index: 1;
     display: flex;
     gap: 10px;
@@ -36,7 +36,7 @@
 .checkbox-row{
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: -3px;
     justify-content: start;
 }
 
@@ -47,3 +47,4 @@
 .hid{
     display: none;
 }
+
