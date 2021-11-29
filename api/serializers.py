@@ -41,4 +41,4 @@ class UserSerializer(ModelSerializer):
 class HistorySerializer(ModelSerializer):
     class Meta:
         model = History
-        fields = ["file"]
+        fields = ["file","date","id"]

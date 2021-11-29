@@ -1,3 +1,5 @@
+import datetime
+
 from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
@@ -35,5 +37,5 @@ post_save.connect(create_profile, sender=User)
 
 
 class History(models.Model):
-    date = models.DateTimeField(auto_now_add=True)
+    date = models.DateTimeField(datetime.datetime)
     file = models.FileField( null=True, blank=True)

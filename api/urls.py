@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import GetCameras, GetFavorites, SetFavorites, ProfileDetails, CreateReport
+from .views import GetCameras, GetFavorites, SetFavorites, ProfileDetails, CreateReport,ReportList
 
 urlpatterns = [
     path("camera", GetCameras.as_view()),
@@ -8,5 +8,6 @@ urlpatterns = [
     path("profile_details/<pk>", ProfileDetails.as_view()),
     path("create_report",CreateReport.as_view()),
     path("download_report/<id>", CreateReport.get_report),
+    path("show_reports", ReportList.as_view()),
 
 ]

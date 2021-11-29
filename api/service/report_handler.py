@@ -1,5 +1,7 @@
+
 import json
 import os
+from datetime import datetime
 
 from django.core.files import File
 from django.http import HttpResponse, FileResponse
@@ -141,7 +143,7 @@ def report_handler(request, Model):
                "date": json_from_post['date'],
                "whos": json_from_post['whos'],
                "road_name": json_from_post['city'],
-               "season": "Лето",
+               "season": get_season(json_from_post['date']),
                "adress": json_from_post['city']}
     main_doc.render(context)
     add_page_break(main_doc)
@@ -186,6 +188,19 @@ def add_page_break(main_doc):
             br = par.insert_paragraph_before("")
             run = br.add_run()
             run.add_break(WD_BREAK.PAGE)
+
+def get_season(date_from_post):
+    currentMonth = datetime.strptime(date_from_post, '%d/%m').month
+    if currentMonth <= 2 or currentMonth == 12:
+        return "Зимний"
+    elif currentMonth > 2 and currentMonth <= 5:
+        return "Весенний"
+    elif currentMonth > 5 and currentMonth <= 8:
+        return "Летний"
+    elif currentMonth > 8 and currentMonth <= 11:
+        return "Осенний"
+    elif currentMonth > 12 or currentMonth <= 0:
+        return "Не определен"
 
 
 def report_to_save(Model, name):

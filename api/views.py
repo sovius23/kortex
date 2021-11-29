@@ -1,9 +1,10 @@
 import os
+import datetime
 from datetime import date
 
 from rest_framework.views import APIView
 from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpdateDestroyAPIView, RetrieveUpdateAPIView
-from .serializers import CameraSerializer, FavoriteSerializer, ProfileSerializer
+from .serializers import CameraSerializer, FavoriteSerializer, ProfileSerializer, HistorySerializer
 from backend.models import Camera, Favorites, Profile, History
 
 from api.service.report_handler import report_handler, report_to_save, file_response
@@ -53,7 +54,7 @@ class CreateReport(APIView):
         now = date.today()
         name = now.strftime("%d-%m-%Y") + '-Report.docx'
 
-        doc = report_handler(request,History)
+        doc = report_handler(request, History)
         doc.save(name)
         try:
             response = report_to_save(History, name)
@@ -61,6 +62,18 @@ class CreateReport(APIView):
             os.remove(name)
         return response
 
-    def get_report(self,id):
+    def get_report(self, id):
         file = History.objects.get(pk=id).file
         return file_response(file)
+
+
+class ReportList(ListAPIView):
+    serializer_class = HistorySerializer
+
+    def get_queryset(self):
+        now = date.today()
+        date_before = self.request.query_params.get("date_before") if self.request.query_params.get(
+            "date_before") else now.strftime("%Y-%m-%d")
+        date_after = self.request.query_params.get("date_after") if self.request.query_params.get(
+            "date_after") else (now - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
+        return History.objects.filter(date__range=[date_after, date_before])
