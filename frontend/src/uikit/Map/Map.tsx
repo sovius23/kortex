@@ -138,7 +138,11 @@ function MapboxMap() {
       zoom: 11,
     });
     mapboxMap.current.on("load", () => {
-      axios.get("https://kortex.herokuapp.com/api/camera").then((e) => {
+      axios.get("https://kortex.herokuapp.com/api/camera", {
+        headers: {
+          "Authorization": "Bearer eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VybmFtZSI6IkpvZSIsImlhdCI6MTYzNzUxMjkxMywiZXhwIjoxNjM3NTk5MzEzLCJqdGkiOiI5MWMzMzc0Zi02NjVmLTQzZTQtYTc1Mi1hYjEwNjc5OGMxYmQiLCJ1c2VyX2lkIjoxLCJvcmlnX2lhdCI6MTYzNzUxMjkxM30.Dear1nLpCz2VbipIgd7lCfrcyFne0nCtUI_hSTKqc0Y"
+        }
+      }).then((e) => {
         dispatch(setPoints(
           e.data.map((e:any) => {
             return {
@@ -181,7 +185,7 @@ function MapboxMap() {
 
   return <div>
     <SortWidget></SortWidget>
-    <div ref={mapNode} style={{ width: "100vw", height: "100vh" }} />;
+    <div ref={mapNode} style={{ width: "calc(100vw)", height: "100vh", transform: "translateX(30px)"}} />;
     {
       isClicked ? <InformationAboutCamera onCross={() => {
         setIsClicked(false)

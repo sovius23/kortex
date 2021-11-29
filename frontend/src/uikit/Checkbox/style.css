@@ -5,9 +5,17 @@
     border-radius: 2;
     display: flex;
     align-items: center;
+    justify-content: center;
+}
+
+.chb__text{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .checkbox__container{
     display: flex;
-    gap: 5px;
+    gap: 0px;
 }
