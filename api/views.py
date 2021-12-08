@@ -7,7 +7,10 @@ from rest_framework.generics import ListAPIView, ListCreateAPIView, RetrieveUpda
 from .serializers import CameraSerializer, FavoriteSerializer, ProfileSerializer, HistorySerializer
 from backend.models import Camera, Favorites, Profile, History
 
+from django.http import HttpResponse
+
 from api.service.report_handler import report_handler, report_to_save, file_response
+from api.service.mask_union import mask_union
 
 
 class GetCameras(ListAPIView):
@@ -53,8 +56,8 @@ class CreateReport(APIView):
     def post(self, request):
         now = date.today()
         name = now.strftime("%d-%m-%Y") + '-Report.docx'
-
-        doc = report_handler(request, History)
+        data=request.data
+        doc = report_handler(data, History)
         doc.save(name)
         try:
             response = report_to_save(History, name)
@@ -77,3 +80,10 @@ class ReportList(ListAPIView):
         date_after = self.request.query_params.get("date_after") if self.request.query_params.get(
             "date_after") else (now - datetime.timedelta(days=7)).strftime("%Y-%m-%d")
         return History.objects.filter(date__range=[date_after, date_before])
+
+class MaskUnion(APIView):
+    def get(self,request):
+        response=""
+        data=request.data
+        response="data:image/jpeg;base64,"+mask_union(data)
+        return HttpResponse(response)
